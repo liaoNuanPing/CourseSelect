@@ -175,7 +175,7 @@ $(function(){
         submitHandler:function(form){
             $(form).ajaxSubmit({
                 type: 'post',
-                url: "http://localhost:8080/mapping-course-add" ,
+                url: "mapping-course-add" ,
                 async:false,
                 success: function(data){
                     layer.msg('添加成功!',{icon:1,time:1000});
@@ -208,7 +208,7 @@ $(function(){
 		swf: 'lib/webuploader/0.1.5/Uploader.swf',
 	
 		// 文件接收服务端。
-		server: 'http://localhost:8080/uploadImage',
+		server: 'uploadImage',
 	
 		// 选择文件的按钮。可选。
 		// 内部根据当前运行是创建，可能是input元素，也可能是flash.
@@ -452,7 +452,7 @@ $(function(){
             swf: 'lib/webuploader/0.1.5/Uploader.swf',
             chunked: false,
             chunkSize: 512 * 1024,
-            server: 'http://localhost:8080/uploadImage',
+            server: 'uploadImage',
             // runtimeOrder: 'flash',
 
             // accept: {

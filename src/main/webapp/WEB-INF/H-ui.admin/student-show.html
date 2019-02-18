@@ -6,6 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
 <meta http-equiv="Cache-Control" content="no-siteapp" />
+	<link href="lib/lightbox2/2.8.1/css/lightbox.css" rel="stylesheet" type="text/css" >
 <!--[if lt IE 9]>
 <script type="text/javascript" src="lib/html5shiv.js"></script>
 <script type="text/javascript" src="lib/respond.min.js"></script>
@@ -23,7 +24,8 @@
 </head>
 <body>
 <div class="cl pd-20" style=" background-color:#5bacb6">
-	<img class="avatar size-XL l"  id="head_img" src="static/h-ui/images/ucnter/avatar-default.jpg">
+    <!--<div class="picbox"><img class="avatar size-XL l"  id="head_img" src="static/h-ui/images/ucnter/avatar-default.jpg"></div>-->
+     <div class="picbox"><a id="head_img_big" href="static/h-ui/images/ucnter/avatar-default.jpg" data-lightbox="gallery" data-title=""><img id="head_img_small" class="avatar size-XL l" src="static/h-ui/images/ucnter/avatar-default.jpg"></a></div>";
 	<dl style="margin-left:80px; color:#fff">
 		<dt>
 			<span class="f-18" id="stu_name">---</span>
@@ -61,7 +63,9 @@
 <script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
 <script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script>
-<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script> 
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="lib/lightbox2/2.8.1/js/lightbox.min.js"></script>
+
 <!--/_footer 作为公共模版分离出去-->
 
 <!--请在下方写此页面业务相关的脚本-->
@@ -70,7 +74,7 @@
         $.ajax({
         type: 'POST',
         async:"false",
-        url: 'http://localhost:8080/mapping-student-page-show',
+        url: 'mapping-student-page-show',
         data:{"id":getUrlParam("id")},
 //        dataType: 'json',
         success: function(data){
@@ -83,7 +87,8 @@
                 document.getElementById("parent_name").innerHTML = nnn;
 //                document.getElementById("parent_name").innerHTML = arr["parentName"]==null?"--":arr["parentName"];
                 document.getElementById("phone").innerHTML = arr["parentPhone"]==null?"--":arr["parentPhone"];
-                document.getElementById("head_img").setAttribute("src", arr["headImg"]==null?"static/h-ui/images/ucnter/avatar-default.jpg":arr["headImg"]);
+                document.getElementById("head_img_big").setAttribute("href", arr["headImg"]==null?"static/h-ui/images/ucnter/avatar-default.jpg":arr["headImg"]);
+                document.getElementById("head_img_small").setAttribute("src", arr["headImg"]==null?"static/h-ui/images/ucnter/avatar-default.jpg":arr["headImg"]);
 
             }
         },

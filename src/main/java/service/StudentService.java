@@ -22,4 +22,11 @@ public interface StudentService {
 
     Student selectById(Integer id);
 
+    /**
+     * 通过插入新的，删除原先的实现更新
+     * @param id 通过id删除
+     * @param student 插入的学生
+     */
+    void updateByDel(Integer id,Student student);
+
 }

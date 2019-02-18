@@ -56,7 +56,7 @@ $(function(){
 	$(".portfolio-area li").Huihover();
     $.ajax({
         type:"post",
-        url:"http://localhost:8080/select-picture-show?ids="+getUrlParam("id"),
+        url:"select-picture-show?ids="+getUrlParam("id"),
         contentType:"application/json;charset=utf-8",
         dataType:"JSON",
         success:function(data){
@@ -95,7 +95,7 @@ $('#delAllButton').click(function() {
             n.remove();
         });
         $.ajax({
-            url : "http://localhost:8080/mapping-picture-del",
+            url : "mapping-picture-del",
             data : {"ids":ids},
             type : "post",
             traditional: true,//这里设置为true

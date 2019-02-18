@@ -151,7 +151,7 @@
             swf: '../Uploader.swf',
             chunked: false,
             chunkSize: 512 * 1024,
-            server: 'http://localhost:8080/uploadImage',
+            server: 'uploadImage',
             // runtimeOrder: 'flash',
 
             // accept: {

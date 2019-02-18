@@ -36,14 +36,25 @@ DROP TABLE IF EXISTS student;
 CREATE TABLE student(
   id int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT '学号',
   stu_name VARCHAR(20) NOT NULL  COMMENT '姓名',
-  sex VARCHAR(10) COMMENT '性别男、女,'
+  grade VARCHAR(10) COMMENT '年级',
+  class_now VARCHAR(10) COMMENT '班级',
+  parent_name VARCHAR(20) NOT NULL  COMMENT '家长姓名',
+  parent_phone VARCHAR(11) COMMENT '家长手机',
+  head_img  VARCHAR(100) COMMENT '合照'
+)engine=InnoDB default charset 'utf8' comment '学生表';
+
+DROP TABLE IF EXISTS identity_auditing;
+CREATE TABLE identity_auditing(
+  id int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT '主键',
+  stu_name VARCHAR(20) NOT NULL  COMMENT '姓名',
   grade VARCHAR(10) COMMENT '年级',
   class_now VARCHAR(10) COMMENT '班级',
   parent_name VARCHAR(20) NOT NULL  COMMENT '家长姓名',
   parent_phone VARCHAR(11) COMMENT '家长手机',
   head_img  VARCHAR(100) COMMENT '合照',
-  registe_time TIMESTAMP DEFAULT now() COMMENT '注册时间',
-)engine=InnoDB default charset 'utf8' comment '学生表';
+  register_time timestamp default now() comment '注册时间',
+  auditing_status CHAR DEFAULT '0' COMMENT '审核状态，0待审核、1通过、2不通过'
+)engine=InnoDB default charset 'utf8' comment '学生身份审核表';
 
 
 DROP TABLE IF EXISTS stu_select;

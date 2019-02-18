@@ -106,7 +106,7 @@ var Uploader = (function() {
 
                 // fileSingleSizeLimit: 2 * 1024 * 1024,
 
-                server: 'http://localhost:8080/uploadImage',
+                server: 'uploadImage',
                 swf: '../Uploader.swf',
                 fileNumLimit: 1,
                 onError: function() {

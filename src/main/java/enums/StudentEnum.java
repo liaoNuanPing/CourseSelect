@@ -8,7 +8,8 @@ public enum StudentEnum {
     CLASS_NOW("class_now",4),
     PARENT_NAME("parent_name",5),
     PARENT_PHONE("parent_phone",6),
-    HEAD_IMG("head_img",7);
+    HEAD_IMG("head_img",7),
+    AUDITING("auditing_status",8);
 
     private String name;
     private int index;

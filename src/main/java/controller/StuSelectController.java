@@ -174,7 +174,7 @@ public class StuSelectController {
                         rs.getInt("course_id"),
                         rs.getString("c_name"),
                         rs.getString("c_desc"),
-                        rs.getTimestamp("select_time")
+                        rs.getDate("select_time")
                 );//end CourseShow
 
 //                    查有

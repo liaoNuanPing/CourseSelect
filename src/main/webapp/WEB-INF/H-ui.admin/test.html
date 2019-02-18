@@ -18,7 +18,7 @@
     function ObjectToJson(site) {
         $.ajax({
             type:"post",
-            url:"http://localhost:8080/"+site,
+            url:""+site,
             data:'{ "id":1,"name":"sdads"}',
             contentType : "application/json;charset=utf-8",
 		success:function(data){

@@ -255,6 +255,7 @@ html命名规范：
 	Name:			style_reset
 	Explain:		重定义浏览器默认样式
 */
+
 *{word-wrap:break-word}
 html,body,h1,h2,h3,h4,h5,h6,hr,p,iframe,dl,dt,dd,ul,ol,li,pre,form,button,input,textarea,th,td,fieldset{margin:0;padding:0}
 ul,ol,dl{list-style-type:none}

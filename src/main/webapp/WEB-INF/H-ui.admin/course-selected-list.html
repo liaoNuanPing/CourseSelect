@@ -24,13 +24,7 @@
 <body>
 <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 选课管理 <span class="c-gray en">&gt;</span> 选课列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
-	<div class="text-c"> 日期范围：
-		<input type="text" onfocus="WdatePicker({ maxDate:'#F{$dp.$D(\'datemax\')||\'%y-%M-%d\'}' })" id="datemin" class="input-text Wdate" style="width:120px;">
-		<input type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d' })" id="datemax" class="input-text Wdate" style="width:120px;">
-		<input type="text" class="input-text" style="width:250px" placeholder="输入会员名称、电话、邮箱" id="" name="">
-		<button type="submit" class="btn btn-success radius" id="submit" name=""><i class="Hui-iconfont">&#xe665;</i> 搜结果</button>
-	</div>
-	<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" id="delAllButton" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a href="javascript:;" onclick="member_add('添加选课数据','course-selected-add.html','','510')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加选课</a></span> <span class="r">共有数据：<strong>88</strong> 条</span> </div>
+	<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" id="delAllButton" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a href="javascript:;" onclick="member_add('添加选课数据','course-selected-add.html','','510')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加选课</a></span> </div>
 	<div class="mt-20">
 	<table class="table table-border table-bordered table-hover table-bg table-sort" id="dt">
 		<thead>
@@ -46,16 +40,6 @@
 			</tr>
 		</thead>
 		<tbody>
-			<!--<tr class="text-c">-->
-				<!--<td><input type="checkbox" value="1" name=""></td>-->
-				<!--<td>161150</td>-->
-				<!--<td>李四</td>-->
-				<!--<td>拼音</td>-->
-				<!--<td>大班</td>-->
-				<!--<td>1班</td>-->
-				<!--<td>2014-6-11 11:11:42</td>-->
-				<!--<td class="td-manage">  <a title="编辑" href="javascript:;" onclick="member_edit('编辑','course-selected-add.html','4','','510')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a> <a title="删除" href="javascript:;" onclick="member_del(this,'1')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a></td>-->
-			<!--</tr>-->
 		</tbody>
 	</table>
 	</div>
@@ -124,20 +108,21 @@ function member_edit(title,url,w,h){
 }
 
 /*用户-删除*/
-function member_del(obj,id){
-    layer.confirm('确认要删除吗？',function(index){
+function member_del(obj, id) {
+    layer.confirm('确认要删除吗？', function (index) {
         $.ajax({
             type: 'POST',
-            url: 'http://localhost:8080/mapping-select-del',
-            data:{"perId":id},
-            success: function(data){
+            url: 'mapping-select-del',
+            data: {"perId": id},
+            success: function (data) {
                 $(obj).parents("tr").remove();
-                layer.msg('已删除!',{icon:1,time:1000});
+                layer.msg('已删除!', {icon: 1, time: 1000});
             },
-            error:function(data) {
+            error: function (data) {
                 console.log(data);
             }
         });
+        $('.table-sort').DataTable().draw( false );
     });
 }
 
@@ -148,7 +133,6 @@ $('#delAllButton').click(function() {
         return;
     }
     if (confirm("确认删除吗？")) {
-
         var ids = new Array;
         $("input[name='dels']:checked").each(function() {
             ids.push($(this).val());
@@ -156,7 +140,7 @@ $('#delAllButton').click(function() {
             $("#dt").find("tr:eq(" + n + ")").remove();
         });
         $.ajax({
-            url : "http://localhost:8080/mapping-select-del",
+            url : "mapping-select-del",
             data : {"ids":ids},
             type : "post",
             traditional: true,//这里设置为true
@@ -167,6 +151,7 @@ $('#delAllButton').click(function() {
                 layer.msg('删除错误!',{icon:1,time:1000});
             }
         });
+        $('.table-sort').DataTable().draw( false );
     }
 })
 </script> 

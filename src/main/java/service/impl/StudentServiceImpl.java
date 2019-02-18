@@ -36,6 +36,14 @@ public class StudentServiceImpl implements StudentService {
         return studentMapper.countByExample(examplp);
     }
 
+    public void updateByDel(Integer id,Student student){
+        studentMapper.deleteByPrimaryKey(id);
+        studentMapper.insert(student);
+    }
+
+
+
+
 
 
 }
