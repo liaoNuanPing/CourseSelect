@@ -18,7 +18,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class IdentityAuditingController {
@@ -136,21 +138,73 @@ public class IdentityAuditingController {
 
 
     /**
+     * 微信提交：
      * 身份审核提交
      * */
-    @RequestMapping(value="/wc-Audit")
+    @RequestMapping(value="/wx-Audit-submit")
     @ResponseBody
-    public String identityAudit(HttpServletRequest request){
+    public String identityAudit(HttpServletRequest request) {
+        Map<String, String> map=new HashMap<String, String>();
+        try {
 //        TODO 数据名称校验
-        String stuId = request.getParameter("student_id");
-        String stuName = request.getParameter("student_name");
-        String parentName = request.getParameter("parent_name");
-        String mobile = request.getParameter("mobile");
-        String grade = request.getParameter("grade");
-        String classNow = request.getParameter("class_now");
+            String stuId = request.getParameter("student_id");
+            String stuName = request.getParameter("student_name");
+            String parentName = request.getParameter("parent_name");
+            String mobile = request.getParameter("mobile");
+            String grade = request.getParameter("grade");
+            String classNow = request.getParameter("class_now");
 
-        return null;
+            IdentityAuditing identityAuditing = new IdentityAuditing(
+                    null,
+                    stuName,
+                    parentName,
+                    mobile, grade,
+                    classNow,
+                    FileuploadController.studentHeadImg,
+                    null,
+                    null);
+
+            FileuploadController.studentHeadImg = "";
+            identityAuditingService.insert(identityAuditing);
+
+            map.put("isSuccessful", "1");
+            map.put("message", "");
+        } catch (Exception e) {
+            map.put("isSuccessful", "0");
+            map.put("message", "");
+        }
+        return JsonUtils.objectToJson(map);
     }
 
+    /**
+     *  微信提交：
+     *  审核状态查询
+     * @return
+     */
+    @RequestMapping(value="/wx-Audit")
+    @ResponseBody
+    public String AuditStatus(){
+        //        TODO 身份认证方式
+        Map<String, String> map=new HashMap<String, String>();
+        String id="根据身份认证方式找到id";
+        String status;
+        String result="正在审核中";
+        try {
+            IdentityAuditing identityAuditing = identityAuditingService.selectById(Integer.valueOf(id));
+            status = identityAuditing.getAuditingStatus();
+        }catch (Exception e){
+            status="0";
+        }
+
+        if ("0".equals(status))
+            result="正在审核中";
+        else if ("1".equals(status))
+            result="审核通过";
+        else if ("2".equals(status))
+            result="审核不通过";
+
+        map.put("status",result);
+        return JsonUtils.objectToJson(map);
+    }
 
 }

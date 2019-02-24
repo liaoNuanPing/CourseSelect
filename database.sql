@@ -32,6 +32,18 @@ DROP TABLE IF EXISTS `teacher`;
 #   photo VARCHAR(50) COMMENT '头像地址'
 # )engine=InnoDB default charset 'utf8' comment '教师表';
 
+DROP TABLE IF EXISTS admin_info;
+CREATE TABLE admin_info(
+  id int primary key auto_increment,
+  login_name VARCHAR(20) NOT NULL  COMMENT '帐号',
+  psw VARCHAR(30) NOT NULL  COMMENT '密码',
+  person_in_charge VARCHAR(20) COMMENT '负责人姓名',
+  email VARCHAR(30) COMMENT '邮箱',
+  phone VARCHAR(11) COMMENT '手机',
+  this_login_time  TIMESTAMP DEFAULT now() COMMENT '本次登录时间',
+  last_login_time  TIMESTAMP DEFAULT now() COMMENT '上次登录时间'
+)engine=InnoDB default charset 'utf8' comment '管理员表';
+
 DROP TABLE IF EXISTS student;
 CREATE TABLE student(
   id int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT '学号',

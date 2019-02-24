@@ -38,4 +38,8 @@ public class IdentityAuditingServiceImpl implements IdentityAuditingService {
         studentService.insert(student);
     }
 
+    public int insert(IdentityAuditing identityAuditing){
+        return identityAuditingMapper.insert(identityAuditing);
+    }
+
 }

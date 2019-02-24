@@ -13,5 +13,7 @@ public interface IdentityAuditingService {
 
     int delById(Integer id);
 
+    int insert(IdentityAuditing identityAuditing);
+
     void updateSelfAndInsertStudent(IdentityAuditing identityAuditing, Student student);
 }

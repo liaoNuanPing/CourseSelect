@@ -18,371 +18,428 @@
     <schema id="12" parent="1" name="taotao"/>
     <schema id="13" parent="1" name="web"/>
     <schema id="14" parent="1" name="yingdong"/>
-    <table id="15" parent="2" name="course">
+    <table id="15" parent="2" name="admin_info">
+      <Comment>管理员表</Comment>
+    </table>
+    <table id="16" parent="2" name="course">
       <Comment>课程表</Comment>
     </table>
-    <table id="16" parent="2" name="course_pic">
+    <table id="17" parent="2" name="course_pic">
       <Comment>各年级各班选课信息表</Comment>
     </table>
-    <table id="17" parent="2" name="identity_auditing">
+    <table id="18" parent="2" name="identity_auditing">
       <Comment>学生身份审核表</Comment>
     </table>
-    <table id="18" parent="2" name="per_class_course">
+    <table id="19" parent="2" name="per_class_course">
       <Comment>各年级各班选课信息表</Comment>
     </table>
-    <table id="19" parent="2" name="select">
+    <table id="20" parent="2" name="select">
       <Comment>学生选课表</Comment>
     </table>
-    <table id="20" parent="2" name="stu_select">
+    <table id="21" parent="2" name="stu_select">
       <Comment>学生选课表</Comment>
     </table>
-    <table id="21" parent="2" name="student">
+    <table id="22" parent="2" name="student">
       <Comment>学生表</Comment>
     </table>
-    <column id="22" parent="15" name="id">
+    <column id="23" parent="15" name="id">
+      <Position>1</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>&apos;1&apos;</DefaultExpression>
+    </column>
+    <column id="24" parent="15" name="login_name">
+      <Position>2</Position>
+      <Comment>帐号</Comment>
+      <DataType>varchar(20)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="25" parent="15" name="psw">
+      <Position>3</Position>
+      <Comment>密码</Comment>
+      <DataType>varchar(30)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="26" parent="15" name="person_in_charge">
+      <Position>4</Position>
+      <Comment>负责人姓名</Comment>
+      <DataType>varchar(20)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="27" parent="15" name="email">
+      <Position>5</Position>
+      <Comment>邮箱</Comment>
+      <DataType>varchar(30)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="28" parent="15" name="phone">
+      <Position>6</Position>
+      <Comment>手机</Comment>
+      <DataType>varchar(11)|0</DataType>
+    </column>
+    <column id="29" parent="15" name="this_login_time">
+      <Position>7</Position>
+      <Comment>本次登录时间</Comment>
+      <DataType>timestamp|0</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+    </column>
+    <column id="30" parent="15" name="last_login_time">
+      <Position>8</Position>
+      <Comment>上次登录时间</Comment>
+      <DataType>timestamp|0</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+    </column>
+    <key id="31" parent="15" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="32" parent="16" name="id">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
     </column>
-    <column id="23" parent="15" name="c_name">
+    <column id="33" parent="16" name="c_name">
       <Position>2</Position>
       <Comment>课程名</Comment>
       <DataType>varchar(20)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="24" parent="15" name="c_desc">
+    <column id="34" parent="16" name="c_desc">
       <Position>3</Position>
       <Comment>课程描述</Comment>
       <DataType>varchar(100)|0</DataType>
     </column>
-    <key id="25" parent="15" name="PRIMARY">
+    <key id="35" parent="16" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="26" parent="16" name="id">
+    <column id="36" parent="17" name="id">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
     </column>
-    <column id="27" parent="16" name="course_id">
+    <column id="37" parent="17" name="course_id">
       <Position>2</Position>
       <Comment>外键--课程号</Comment>
       <DataType>int(11)|0</DataType>
     </column>
-    <column id="28" parent="16" name="pic">
+    <column id="38" parent="17" name="pic">
       <Position>3</Position>
       <Comment>图片地址</Comment>
       <DataType>varchar(100)|0</DataType>
     </column>
-    <index id="29" parent="16" name="course_id">
+    <index id="39" parent="17" name="course_id">
       <ColNames>course_id</ColNames>
     </index>
-    <key id="30" parent="16" name="PRIMARY">
+    <key id="40" parent="17" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="31" parent="16" name="course_pic_ibfk_1">
+    <foreign-key id="41" parent="17" name="course_pic_ibfk_1">
       <ColNames>course_id</ColNames>
       <RefSchemaName>courses_selection</RefSchemaName>
       <RefTableName>course</RefTableName>
       <RefColNames>id</RefColNames>
       <OnDelete>cascade</OnDelete>
     </foreign-key>
-    <column id="32" parent="17" name="id">
+    <column id="42" parent="18" name="id">
       <Position>1</Position>
       <Comment>主键</Comment>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
     </column>
-    <column id="33" parent="17" name="stu_name">
+    <column id="43" parent="18" name="stu_name">
       <Position>2</Position>
       <Comment>姓名</Comment>
       <DataType>varchar(20)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="34" parent="17" name="grade">
+    <column id="44" parent="18" name="grade">
       <Position>3</Position>
       <Comment>年级</Comment>
       <DataType>varchar(10)|0</DataType>
     </column>
-    <column id="35" parent="17" name="class_now">
+    <column id="45" parent="18" name="class_now">
       <Position>4</Position>
       <Comment>班级</Comment>
       <DataType>varchar(10)|0</DataType>
     </column>
-    <column id="36" parent="17" name="parent_name">
+    <column id="46" parent="18" name="parent_name">
       <Position>5</Position>
       <Comment>家长姓名</Comment>
       <DataType>varchar(20)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="37" parent="17" name="parent_phone">
+    <column id="47" parent="18" name="parent_phone">
       <Position>6</Position>
       <Comment>家长手机</Comment>
       <DataType>varchar(11)|0</DataType>
     </column>
-    <column id="38" parent="17" name="head_img">
+    <column id="48" parent="18" name="head_img">
       <Position>7</Position>
       <Comment>合照</Comment>
       <DataType>varchar(100)|0</DataType>
     </column>
-    <column id="39" parent="17" name="register_time">
+    <column id="49" parent="18" name="register_time">
       <Position>8</Position>
       <Comment>注册时间</Comment>
       <DataType>timestamp|0</DataType>
       <NotNull>1</NotNull>
       <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
     </column>
-    <column id="40" parent="17" name="auditing_status">
+    <column id="50" parent="18" name="auditing_status">
       <Position>9</Position>
       <Comment>审核状态，0待审核、1通过、2不通过</Comment>
       <DataType>char(1)|0</DataType>
       <DefaultExpression>&apos;0&apos;</DefaultExpression>
     </column>
-    <key id="41" parent="17" name="PRIMARY">
+    <key id="51" parent="18" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="42" parent="18" name="id">
-      <Position>1</Position>
-      <DataType>int(11)|0</DataType>
-      <NotNull>1</NotNull>
-      <SequenceIdentity>1</SequenceIdentity>
-    </column>
-    <column id="43" parent="18" name="course_id">
-      <Position>2</Position>
-      <Comment>外键--课程号</Comment>
-      <DataType>int(11)|0</DataType>
-    </column>
-    <column id="44" parent="18" name="grade">
-      <Position>3</Position>
-      <Comment>年级【0默认全部可选，1小班，2中班，3大班】</Comment>
-      <DataType>varchar(10)|0</DataType>
-    </column>
-    <column id="45" parent="18" name="term">
-      <Position>4</Position>
-      <Comment>学期【0默认全部可选，1，2】</Comment>
-      <DataType>varchar(10)|0</DataType>
-    </column>
-    <column id="46" parent="18" name="to_class">
-      <Position>5</Position>
-      <Comment>班级【0默认全部可选】</Comment>
-      <DataType>varchar(10)|0</DataType>
-    </column>
-    <column id="47" parent="18" name="total_need_stu_amount">
-      <Position>6</Position>
-      <Comment>收学生数</Comment>
-      <DataType>int(11)|0</DataType>
-      <DefaultExpression>&apos;9999&apos;</DefaultExpression>
-    </column>
-    <column id="48" parent="18" name="have_stu_amount">
-      <Position>7</Position>
-      <DataType>int(11)|0</DataType>
-      <DefaultExpression>&apos;0&apos;</DefaultExpression>
-    </column>
-    <index id="49" parent="18" name="course_id">
-      <ColNames>course_id</ColNames>
-    </index>
-    <key id="50" parent="18" name="PRIMARY">
-      <NameSurrogate>1</NameSurrogate>
-      <ColNames>id</ColNames>
-      <Primary>1</Primary>
-    </key>
-    <foreign-key id="51" parent="18" name="per_class_course_ibfk_1">
-      <ColNames>course_id</ColNames>
-      <RefSchemaName>courses_selection</RefSchemaName>
-      <RefTableName>course</RefTableName>
-      <RefColNames>id</RefColNames>
-      <OnDelete>cascade</OnDelete>
-    </foreign-key>
     <column id="52" parent="19" name="id">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
     </column>
-    <column id="53" parent="19" name="student_card">
+    <column id="53" parent="19" name="course_id">
+      <Position>2</Position>
+      <Comment>外键--课程号</Comment>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <column id="54" parent="19" name="grade">
+      <Position>3</Position>
+      <Comment>年级【0默认全部可选，1小班，2中班，3大班】</Comment>
+      <DataType>varchar(10)|0</DataType>
+    </column>
+    <column id="55" parent="19" name="term">
+      <Position>4</Position>
+      <Comment>学期【0默认全部可选，1，2】</Comment>
+      <DataType>varchar(10)|0</DataType>
+    </column>
+    <column id="56" parent="19" name="to_class">
+      <Position>5</Position>
+      <Comment>班级【0默认全部可选】</Comment>
+      <DataType>varchar(10)|0</DataType>
+    </column>
+    <column id="57" parent="19" name="total_need_stu_amount">
+      <Position>6</Position>
+      <Comment>收学生数</Comment>
+      <DataType>int(11)|0</DataType>
+      <DefaultExpression>&apos;9999&apos;</DefaultExpression>
+    </column>
+    <column id="58" parent="19" name="have_stu_amount">
+      <Position>7</Position>
+      <DataType>int(11)|0</DataType>
+      <DefaultExpression>&apos;0&apos;</DefaultExpression>
+    </column>
+    <index id="59" parent="19" name="course_id">
+      <ColNames>course_id</ColNames>
+    </index>
+    <key id="60" parent="19" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="61" parent="19" name="per_class_course_ibfk_1">
+      <ColNames>course_id</ColNames>
+      <RefSchemaName>courses_selection</RefSchemaName>
+      <RefTableName>course</RefTableName>
+      <RefColNames>id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <column id="62" parent="20" name="id">
+      <Position>1</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="63" parent="20" name="student_card">
       <Position>2</Position>
       <Comment>学号</Comment>
       <DataType>varchar(20)|0</DataType>
     </column>
-    <column id="54" parent="19" name="stu_name">
+    <column id="64" parent="20" name="stu_name">
       <Position>3</Position>
       <Comment>姓名</Comment>
       <DataType>varchar(20)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="55" parent="19" name="grade">
+    <column id="65" parent="20" name="grade">
       <Position>4</Position>
       <Comment>年级</Comment>
       <DataType>varchar(10)|0</DataType>
     </column>
-    <column id="56" parent="19" name="class_now">
+    <column id="66" parent="20" name="class_now">
       <Position>5</Position>
       <Comment>班级</Comment>
       <DataType>varchar(10)|0</DataType>
     </column>
-    <column id="57" parent="19" name="parent_name">
+    <column id="67" parent="20" name="parent_name">
       <Position>6</Position>
       <Comment>家长姓名</Comment>
       <DataType>varchar(20)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="58" parent="19" name="parent_phone">
+    <column id="68" parent="20" name="parent_phone">
       <Position>7</Position>
       <Comment>家长手机</Comment>
       <DataType>varchar(11)|0</DataType>
     </column>
-    <column id="59" parent="19" name="head_img">
+    <column id="69" parent="20" name="head_img">
       <Position>8</Position>
       <Comment>合照</Comment>
       <DataType>varchar(100)|0</DataType>
     </column>
-    <column id="60" parent="19" name="course_id">
+    <column id="70" parent="20" name="course_id">
       <Position>9</Position>
       <Comment>课程号</Comment>
       <DataType>int(11)|0</DataType>
     </column>
-    <column id="61" parent="19" name="c_name">
+    <column id="71" parent="20" name="c_name">
       <Position>10</Position>
       <Comment>课程名</Comment>
       <DataType>varchar(20)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="62" parent="19" name="c_desc">
+    <column id="72" parent="20" name="c_desc">
       <Position>11</Position>
       <Comment>课程描述</Comment>
       <DataType>varchar(100)|0</DataType>
     </column>
-    <column id="63" parent="19" name="select_time">
+    <column id="73" parent="20" name="select_time">
       <Position>12</Position>
       <Comment>选课时间</Comment>
       <DataType>timestamp|0</DataType>
       <NotNull>1</NotNull>
       <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
     </column>
-    <key id="64" parent="19" name="PRIMARY">
+    <key id="74" parent="20" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="65" parent="20" name="id">
+    <column id="75" parent="21" name="id">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
     </column>
-    <column id="66" parent="20" name="student_card">
+    <column id="76" parent="21" name="student_card">
       <Position>2</Position>
       <Comment>学号</Comment>
       <DataType>varchar(20)|0</DataType>
     </column>
-    <column id="67" parent="20" name="stu_name">
+    <column id="77" parent="21" name="stu_name">
       <Position>3</Position>
       <Comment>姓名</Comment>
       <DataType>varchar(20)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="68" parent="20" name="grade">
+    <column id="78" parent="21" name="grade">
       <Position>4</Position>
       <Comment>年级</Comment>
       <DataType>varchar(10)|0</DataType>
     </column>
-    <column id="69" parent="20" name="class_now">
+    <column id="79" parent="21" name="class_now">
       <Position>5</Position>
       <Comment>班级</Comment>
       <DataType>varchar(10)|0</DataType>
     </column>
-    <column id="70" parent="20" name="parent_name">
+    <column id="80" parent="21" name="parent_name">
       <Position>6</Position>
       <Comment>家长姓名</Comment>
       <DataType>varchar(20)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="71" parent="20" name="parent_phone">
+    <column id="81" parent="21" name="parent_phone">
       <Position>7</Position>
       <Comment>家长手机</Comment>
       <DataType>varchar(11)|0</DataType>
     </column>
-    <column id="72" parent="20" name="head_img">
+    <column id="82" parent="21" name="head_img">
       <Position>8</Position>
       <Comment>合照</Comment>
       <DataType>varchar(100)|0</DataType>
     </column>
-    <column id="73" parent="20" name="course_id">
+    <column id="83" parent="21" name="course_id">
       <Position>9</Position>
       <Comment>课程号</Comment>
       <DataType>int(11)|0</DataType>
     </column>
-    <column id="74" parent="20" name="c_name">
+    <column id="84" parent="21" name="c_name">
       <Position>10</Position>
       <Comment>课程名</Comment>
       <DataType>varchar(20)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="75" parent="20" name="c_desc">
+    <column id="85" parent="21" name="c_desc">
       <Position>11</Position>
       <Comment>课程描述</Comment>
       <DataType>varchar(100)|0</DataType>
     </column>
-    <column id="76" parent="20" name="select_time">
+    <column id="86" parent="21" name="select_time">
       <Position>12</Position>
       <Comment>选课时间</Comment>
       <DataType>timestamp|0</DataType>
       <NotNull>1</NotNull>
       <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
     </column>
-    <key id="77" parent="20" name="PRIMARY">
+    <key id="87" parent="21" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="78" parent="21" name="id">
+    <column id="88" parent="22" name="id">
       <Position>1</Position>
       <Comment>学号</Comment>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
     </column>
-    <column id="79" parent="21" name="stu_name">
+    <column id="89" parent="22" name="stu_name">
       <Position>2</Position>
       <Comment>姓名</Comment>
       <DataType>varchar(20)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="80" parent="21" name="grade">
+    <column id="90" parent="22" name="grade">
       <Position>3</Position>
       <Comment>年级</Comment>
       <DataType>varchar(10)|0</DataType>
     </column>
-    <column id="81" parent="21" name="class_now">
+    <column id="91" parent="22" name="class_now">
       <Position>4</Position>
       <Comment>班级</Comment>
       <DataType>varchar(10)|0</DataType>
     </column>
-    <column id="82" parent="21" name="parent_name">
+    <column id="92" parent="22" name="parent_name">
       <Position>5</Position>
       <Comment>家长姓名</Comment>
       <DataType>varchar(20)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="83" parent="21" name="parent_phone">
+    <column id="93" parent="22" name="parent_phone">
       <Position>6</Position>
       <Comment>家长手机</Comment>
       <DataType>varchar(11)|0</DataType>
     </column>
-    <column id="84" parent="21" name="head_img">
+    <column id="94" parent="22" name="head_img">
       <Position>7</Position>
       <Comment>合照</Comment>
       <DataType>varchar(100)|0</DataType>
     </column>
-    <key id="85" parent="21" name="PRIMARY">
+    <key id="95" parent="22" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>

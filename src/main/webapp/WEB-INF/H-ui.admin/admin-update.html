@@ -24,80 +24,43 @@
 </head>
 <body>
 <div class="page-container">
-	<form method="post" action="/mapping-course-add" class="form form-horizontal" id="form-course-add" name="forma">
+	<form method="post" action="/mapping-admin-update" class="form form-horizontal" id="form-course-add" name="forma">
 
-        <!--<div class="row cl">-->
-			<!--<label class="form-label col-xs-4 col-sm-3">课程ID：</label>-->
-			<!--<div class="formControls col-xs-8 col-sm-9">-->
-				<!--<input type="text" class="input-text" value="" placeholder="" id="course_id" name="course_id">-->
-			<!--</div>-->
-		<!--</div>-->
 
 		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>课程名：</label>
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>帐号：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" value="" placeholder="" id="course_name" name="course_name">
+				<input type="text" class="input-text" value="" placeholder="" id="login_name" name="login_name">
 			</div>
 		</div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-3">可选数：</label>
+            <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>密码：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="默认9999" name="total_need" id="total_need">
+                <input type="text" class="input-text" value="" placeholder="" name="password" id="password">
             </div>
         </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-3">已选数：</label>
+            <label class="form-label col-xs-4 col-sm-3">负责人：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="默认0" name="have" id="have">
+                <input type="text" class="input-text" value="" placeholder="" name="ic_name" id="ic_name">
             </div>
         </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>学期：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-				<select class="select" size="1" name="term" id="term">
-					<option value="" selected>请选择该课的学期</option>
-					<option value="0">全部</option>
-					<option value="1">上学期</option>
-					<option value="2">下学期</option>
-				</select>
-				</span></div>
-        </div>
-
 		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>可选年级：</label>
-			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-				<select class="select" size="1" name="grade" id="grade">
-					<option value="" selected>请选择该课可选的年级</option>
-					<option value="0">全部</option>
-					<option value="1">小班</option>
-					<option value="2">中班</option>
-					<option value="3">大班</option>
-				</select>
-				</span> </div>
-		</div>
-
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>可选班级：</label>
-			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-				<select class="select" size="1" name="classes" id="classes">
-					<option value="" selected>请选择该课对应年级可选的班级</option>
-					<option value="0">全部</option>
-					<option value="1">1班</option>
-					<option value="2">2班</option>
-					<option value="3">3班</option>
-				</select>
-				</span> </div>
-		</div>
-
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3">课程描述：</label>
+			<label class="form-label col-xs-4 col-sm-3">邮箱：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" value="" placeholder="" id="course_desc" name="course_desc">
+				<input type="text" class="input-text" value="" placeholder="" name="email" id="email">
 			</div>
 		</div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-3">手机：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="" name="mobile" id="mobile">
+            </div>
+        </div>
 
 		<div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
@@ -136,38 +99,31 @@ function getUrlParam(name) {
 
 
 $(function(){
-    document.getElementById("course_desc").setAttribute("value",getUrlParam("course_desc"));
-    document.getElementById("total_need").setAttribute("value",getUrlParam("total"));
-    document.getElementById("have").setAttribute("value",getUrlParam("have"));
-    document.getElementById("term").setAttribute("value",getUrlParam("term"));
-    document.getElementById("course_name").setAttribute("value",getUrlParam("course_name"));
-    document.getElementById("classes").value= getUrlParam("to_class");
-    document.getElementById("grade").value= getUrlParam("grade");
-    document.getElementById("classes").value= getUrlParam("term");
+    document.getElementById("login_name").setAttribute("value",getUrlParam("login_name"));
+    document.getElementById("password").setAttribute("value",getUrlParam("password"));
+    document.getElementById("ic_name").setAttribute("value",getUrlParam("ic_name"));
+    document.getElementById("email").setAttribute("value",getUrlParam("email"));
+    document.getElementById("mobile").setAttribute("value",getUrlParam("mobile"));
 
     $("#form-course-add").validate({
         rules:{
-            course_name:{
+            login_name:{
                 required:true,
                 minlength:2,
                 maxlength:16
             },
-            grade:{
-                required:true,
-            },
-            classes:{
-                required:true,
-            },
-            term:{
+            password:{
                 required:true
             },
-            total_need:{
-                required:true,
-                digits:true
+            ic_name:{
             },
-            have:{
-                required:true,
-                digits:true
+            email:{
+                email:true,
+            },
+            mobile:{
+                digits:true,
+                maxlength:11,
+                minlength:11
             }
         },
         onkeyup:false,
@@ -176,7 +132,7 @@ $(function(){
         submitHandler:function(form){
             $(form).ajaxSubmit({
                 type: 'post',
-                url: "mapping-course-update" ,
+                url: "mapping-admin-update" ,
                 async:false,
                 data:{
                     "id":getUrlParam("id"),
@@ -195,9 +151,6 @@ $(function(){
                     layer.msg('error!请重试或联系管理员',{icon:2,time:3500});
                 }
             });
-//        var index = parent.layer.getFrameIndex(window.name);
-//        parent.$('.btn-refresh').click();
-//        parent.layer.close(index);
     }
 
 });
