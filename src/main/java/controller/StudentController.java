@@ -12,6 +12,7 @@ import service.StudentService;
 import utils.ConnectDB;
 import utils.EncodingUtils;
 import utils.JsonUtils;
+import utils.PropertiesUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Connection;
@@ -55,7 +56,7 @@ public class StudentController {
 
             Connection conn = ConnectDB.getConnection();
             String orderString3 = "order by " + StudentEnum.getNameByIndex(Integer.valueOf(orderColumn)) + " " + order + " ";
-            String where = "where CONCAT(student_card,stu_name, grade,class_now,parent_name,parent_phone) LIKE '%" + search + "%'";
+            String where = "where CONCAT(id,stu_name, grade,class_now,parent_name,parent_phone) LIKE '%" + search + "%'";
 
             if ("".equals(search))
                 where="";
@@ -160,6 +161,16 @@ public class StudentController {
     }
 
 
+    @RequestMapping("/mapping-student-grade-modify")
+    @ResponseBody
+    public String modifyStudentGrade(String num){
+        if ("A".equals(num))
+            return String.valueOf( studentService.updateAllStudentGradeDown(-1));
+        else if ("B".equals(num))
+            return String.valueOf( studentService.updateAllStudentGradeUp(1,Integer.valueOf(PropertiesUtils.getPropertiesValue("config.properties","grade"))));
+        else
+            return "0";
+    }
 
 
 }

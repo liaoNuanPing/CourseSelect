@@ -50,7 +50,7 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>学期：</label>
             <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-				<select class="select" size="1" name="term">
+				<select class="select" size="1" name="term" id="term">
 					<option value="" selected>请选择该课的学期</option>
 					<option value="0">全部</option>
 					<option value="1">上学期</option>
@@ -62,12 +62,9 @@
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>可选年级：</label>
 			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-				<select class="select" size="1" name="grade">
+				<select class="select" size="1" name="grade" id="grade">
 					<option value="" selected>请选择该课可选的年级</option>
 					<option value="0">全部</option>
-					<option value="1">小班</option>
-					<option value="2">中班</option>
-					<option value="3">大班</option>
 				</select>
 				</span> </div>
 		</div>
@@ -75,12 +72,9 @@
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>可选班级：</label>
 			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-				<select class="select" size="1" name="classes">
+				<select class="select" size="1" name="classes" id="classes">
 					<option value="" selected>请选择该课对应年级可选的班级</option>
 					<option value="0">全部</option>
-					<option value="1">1班</option>
-					<option value="2">2班</option>
-					<option value="3">3班</option>
 				</select>
 				</span> </div>
 		</div>
@@ -134,23 +128,16 @@
 <script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script> 
 <script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.js"></script> 
 <script type="text/javascript" src="lib/webuploader/0.1.5/webuploader.js"></script>
+<script type="text/javascript" src="lib/ajax.js"></script>
 <script type="text/javascript">
 function article_save(){
 	alert("刷新父级的时候会自动关闭弹层。")
 	window.parent.location.reload();
 }
-function sub() {
-    document.forma.submit();
-    var index2 = parent.layer.getFrameIndex(window.name);
-
-//    parent.$('.btn-refresh').click();
-//    parent.layer.close(index2);
-//    layer.msg('添加!',{icon:1,time:1000});
-
-}
 
 $(function(){
 
+    gradeAndClasses();
 
     $("#form-course-add").validate({
         rules:{
@@ -160,13 +147,13 @@ $(function(){
                 maxlength:16
             },
             grade:{
-//                required:true,
+                required:true,
             },
             classes:{
-//                required:true,
+                required:true,
             },
             term:{
-//                required:true
+                required:true
             }
         },
         onkeyup:false,

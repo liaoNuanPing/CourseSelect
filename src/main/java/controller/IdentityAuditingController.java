@@ -44,7 +44,7 @@ public class IdentityAuditingController {
 
             Connection conn = ConnectDB.getConnection();
             String orderString3 = "order by " + StudentEnum.getNameByIndex(Integer.valueOf(orderColumn)) + " " + order + " ";
-            String where = "where CONCAT(student_card,stu_name, grade,class_now,parent_name,parent_phone) LIKE '%" + search + "%'";
+            String where = "where CONCAT(id,stu_name, grade,class_now,parent_name,parent_phone) LIKE '%" + search + "%'";
 
             if ("".equals(search))
                 where="";

@@ -57,4 +57,9 @@ public class CourseServiceImpl implements CourseService {
     public Course selectByPrimaryId(Integer id){
         return courseMapper.selectByPrimaryKey(id);
     }
+
+    public Course selectById(Integer id){
+        return courseMapper.selectByPrimaryKey(id);
+    }
+
 }

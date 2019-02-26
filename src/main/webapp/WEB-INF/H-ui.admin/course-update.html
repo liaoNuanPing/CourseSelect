@@ -22,7 +22,7 @@
 <title>新增图片</title>
 <link href="lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css" />
 </head>
-<body>
+<body onload="addSelected()">
 <div class="page-container">
 	<form method="post" action="/mapping-course-add" class="form form-horizontal" id="form-course-add" name="forma">
 
@@ -72,9 +72,6 @@
 				<select class="select" size="1" name="grade" id="grade">
 					<option value="" selected>请选择该课可选的年级</option>
 					<option value="0">全部</option>
-					<option value="1">小班</option>
-					<option value="2">中班</option>
-					<option value="3">大班</option>
 				</select>
 				</span> </div>
 		</div>
@@ -85,9 +82,6 @@
 				<select class="select" size="1" name="classes" id="classes">
 					<option value="" selected>请选择该课对应年级可选的班级</option>
 					<option value="0">全部</option>
-					<option value="1">1班</option>
-					<option value="2">2班</option>
-					<option value="3">3班</option>
 				</select>
 				</span> </div>
 		</div>
@@ -120,6 +114,7 @@
 <script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script> 
 <script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.js"></script> 
 <script type="text/javascript" src="lib/webuploader/0.1.5/webuploader.js"></script>
+<script type="text/javascript" src="lib/ajax.js"></script>
 <script type="text/javascript">
 function article_save(){
 	alert("刷新父级的时候会自动关闭弹层。")
@@ -133,9 +128,7 @@ function getUrlParam(name) {
     var r = decodeURI(decodeURI(window.location.search.substr(1))).match(reg);  //匹配目标参数
     if (r != null) return unescape(r[2]); return null; //返回参数值
 }
-
-
-$(function(){
+function addSelected() {
     document.getElementById("course_desc").setAttribute("value",getUrlParam("course_desc"));
     document.getElementById("total_need").setAttribute("value",getUrlParam("total"));
     document.getElementById("have").setAttribute("value",getUrlParam("have"));
@@ -143,7 +136,14 @@ $(function(){
     document.getElementById("course_name").setAttribute("value",getUrlParam("course_name"));
     document.getElementById("classes").value= getUrlParam("to_class");
     document.getElementById("grade").value= getUrlParam("grade");
-    document.getElementById("classes").value= getUrlParam("term");
+    document.getElementById("term").value= getUrlParam("term");
+}
+
+$(function(){
+
+
+    gradeAndClasses();
+
 
     $("#form-course-add").validate({
         rules:{

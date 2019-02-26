@@ -6,12 +6,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import pojo.*;
-import service.CoursePicService;
-import service.CourseService;
-import service.PerClassCourseService;
+import service.*;
 import utils.ConnectDB;
 import utils.EncodingUtils;
 import utils.JsonUtils;
+import utils.PropertiesUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Connection;
@@ -31,6 +30,12 @@ public class PerClassCourseController {
 
     @Autowired
     CoursePicService coursePicService;
+
+    @Autowired
+    WxStudentService wxStudentService;
+
+    @Autowired
+    StudentService studentService;
 
     public static List<Integer> courseIdList;
 
@@ -216,5 +221,49 @@ public class PerClassCourseController {
         System.out.println(JsonUtils.objectToJson(data));
         return JsonUtils.objectToJson(data);
 
+    }
+
+
+    /**
+     * 微信端加载学生可选课信息
+     * @param request
+     * @return
+     */
+    @RequestMapping("/wx-loadSelectedCourse")
+    @ResponseBody
+    public String sentToWxStudentSelectedCourse(HttpServletRequest request){
+//        获取openi确认学生年级班级
+
+        String openId = request.getParameter("openId");
+        WxStudent wxStudent = wxStudentService.selectByOpenId(openId);
+        if (wxStudent==null)
+            return "{isSuccessful:false}";
+
+        Student student=studentService.selectById(wxStudent.getStuId());
+        String term= PropertiesUtils.getPropertiesValue("config.properties","term");
+        String clases= String.valueOf(student.getClass());
+        String grade=student.getGrade();
+
+        List<WxCourse> list=new ArrayList<WxCourse>();
+
+        List<PerClassCourse> perClassCourseList=perClassCourseService.selectByTermAndGradeAndClass(Integer.valueOf(term),Integer.valueOf(grade),Integer.valueOf(clases));
+        for (PerClassCourse perClassCourse :perClassCourseList) {
+            List<CoursePic> coursePics = coursePicService.selectCoursePic(perClassCourse.getCourseId());
+            List<String> picList =new ArrayList<String>();
+            for (int i=0;i<coursePics.size();i++)
+                picList.add(coursePics.get(i).getPic());
+
+            list.add(new WxCourse(courseService.selectById(perClassCourse.getCourseId()),perClassCourse,picList));
+        }
+
+        return JsonUtils.objectToJson(list);
+    }
+
+    @RequestMapping("/wx-getOpenId")
+    @ResponseBody
+    public String getOpenId(HttpServletRequest request){
+        String openId = request.getParameter("openId");
+        System.out.println(openId);
+        return openId;
     }
 }

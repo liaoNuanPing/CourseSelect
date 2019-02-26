@@ -20,17 +20,7 @@
 CREATE DATABASE courses_selection;
 USE courses_selection;
 
-DROP TABLE IF EXISTS `teacher`;
-# CREATE TABLE teacher(
-#   id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
-#   teacher_card VARCHAR(20) COMMENT '教师工号',
-#   name VARCHAR(20) NOT NULL  COMMENT '姓名',
-#   sex int COMMENT '0未知 1男 2女',
-#   birthday DATE COMMENT '出生年月日',
-#   phone VARCHAR(11) COMMENT '出生年月日',
-#   email VARCHAR(50) COMMENT '邮箱',
-#   photo VARCHAR(50) COMMENT '头像地址'
-# )engine=InnoDB default charset 'utf8' comment '教师表';
+
 
 DROP TABLE IF EXISTS admin_info;
 CREATE TABLE admin_info(
@@ -54,6 +44,16 @@ CREATE TABLE student(
   parent_phone VARCHAR(11) COMMENT '家长手机',
   head_img  VARCHAR(100) COMMENT '合照'
 )engine=InnoDB default charset 'utf8' comment '学生表';
+
+
+DROP TABLE IF EXISTS wx_student;
+CREATE TABLE wx_student(
+  id int primary key auto_increment,
+  openid int NOT NULL  COMMENT '微信id',
+  stu_id int NOT NULL  COMMENT '学生id-外键',
+  create_time timestamp default now() comment '注册时间',
+  FOREIGN KEY (stu_id) REFERENCES student(id)
+)engine=InnoDB default charset 'utf8' comment '微信对应学生表';
 
 DROP TABLE IF EXISTS identity_auditing;
 CREATE TABLE identity_auditing(

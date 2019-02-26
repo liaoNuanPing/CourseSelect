@@ -10,7 +10,19 @@
     <result column="parent_phone" jdbcType="VARCHAR" property="parentPhone" />
     <result column="head_img" jdbcType="VARCHAR" property="headImg" />
   </resultMap>
-  
+
+  <update id="updateAllStudentGradeUp" parameterType="java.lang.Integer">
+    UPDATE student
+    SET grade=#{0}+grade
+      WHERE grade  <![CDATA[ <= ]]> #{1}
+  </update>
+
+  <update id="updateAllStudentGradeDown" parameterType="java.lang.Integer">
+    UPDATE student
+    SET grade=#{0}+grade
+    WHERE grade  <![CDATA[ > ]]> 1
+  </update>
+
   <select id="selectWithoutId" resultMap="BaseResultMap">
       SELECT *
       FROM student

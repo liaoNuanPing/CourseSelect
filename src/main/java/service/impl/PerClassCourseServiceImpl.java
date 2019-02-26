@@ -56,4 +56,8 @@ public class PerClassCourseServiceImpl implements PerClassCourseService{
         criteria.andIdEqualTo(id);
         return perClassCourseMapper.deleteByExample(example);
     }
+
+    public List<PerClassCourse> selectByTermAndGradeAndClass(Integer term,Integer grade,Integer classes){
+        return perClassCourseMapper.selectByTermAndGradeAndClass(term,grade,classes);
+    }
 }

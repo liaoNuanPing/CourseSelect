@@ -11,8 +11,16 @@
     <result column="have_stu_amount" jdbcType="INTEGER" property="haveStuAmount" />
   </resultMap>
 
+  <select id="selectByTermAndGradeAndClass" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    SELECT *
+    FROM per_class_course
+    where term=0 or term=#{term,jdbcType=INTEGER}
+    and grade =0 or grade=#{grade,jdbcType=INTEGER}
+    and to_class=0 or to_class=#{classes,jdbcType=INTEGER};
 
-  <select id="countAll" resultType="java.lang.Integer">
+  </select>
+
+  <select id="countAll" resultType="java.lang.Integer" >
     SELECT count(id) FROM per_class_course
   </select>
 

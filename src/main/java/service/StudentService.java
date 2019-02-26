@@ -29,4 +29,13 @@ public interface StudentService {
      */
     void updateByDel(Integer id,Student student);
 
+    /**
+     * 学生年级加减
+     * @param num 加减数
+     * @param grade 最高年级数
+     * @return 受影响行数
+     */
+    int updateAllStudentGradeUp(Integer num,Integer grade);
+    int updateAllStudentGradeDown(Integer num);
+
 }

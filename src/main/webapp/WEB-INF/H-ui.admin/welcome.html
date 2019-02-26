@@ -19,7 +19,8 @@
 <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
 <script>DD_belatedPNG.fix('*');</script>
 <![endif]-->
-<title>我的桌面</title>
+
+    <title>我的桌面</title>
 </head>
 <body>
 <div class="page-container">
@@ -33,20 +34,36 @@
 		<tbody>
 			<tr>
 				<th width="30%">服务器计算机名</th>
-				<td><span id="lbServerName">http://127.0.0.1/</span></td>
+				<td><span id="lbServerName"></span></td>
 			</tr>
 			<tr>
 				<td>服务器IP地址</td>
-				<td>192.168.1.1</td>
+				<td id="ip"></td>
 			</tr>
 			<tr>
 				<td>服务器域名</td>
-				<td>www.h-ui.net</td>
+				<td id="project_name"></td>
 			</tr>
 			<tr>
 				<td>服务器端口 </td>
-				<td>80</td>
+				<td id="port"></td>
 			</tr>
+			<tr>
+				<td>当前学期 </td>
+				<td id="term"> <a style="text-decoration:none" onClick="modifyTerm()" href="javascript:;" title="学期+">➕</a></td>
+			</tr>
+			<tr>
+				<td>学生当前年级加减1 </td>
+				<td id="grade_up"> <a style="text-decoration:none" onClick="modifyStudentGrade('A')" href="javascript:;" title="年级-1">➖</a> <a style="text-decoration:none" onClick="modifyStudentGrade('B')" href="javascript:;" title="年级+1">➕</a></td>
+			</tr>
+            <tr>
+                <td>班级数 </td>
+                <td ><input type="text" id="classes" name="classes"  maxlength="1"> <a style="text-decoration:none" onClick="modifyClasses()" href="javascript:;" title="确认修改"><i class="Hui-iconfont">&#xe6e1;</i></a></td>
+            </tr>
+            <tr>
+                <td>年级数 </td>
+                <td ><input type="text" id="grade" name="grade" maxlength="1" > <a style="text-decoration:none" onClick="modifyGrade()" href="javascript:;" title="确认修改"><i class="Hui-iconfont">&#xe6e1;</i></a></td>
+            </tr>
 		</tbody>
 	</table>
 </div>
@@ -61,13 +78,107 @@
 <script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script> 
 <!--此乃百度统计代码，请自行删除-->
 <script>
-var _hmt = _hmt || [];
+    var term=1;
+    var t="&nbsp;&nbsp;<a style=\"text-decoration:none\" onClick=\"modifyTerm()\" href=\"javascript:;\" title=\"学期+\">➕</a>";
+    var c="<a style=\"text-decoration:none\" onClick=\"modifyClasses()\" href=\"javascript:;\" title=\"确认修改\"><i class=\"Hui-iconfont\">&#xe6e1;</i></a>";
+    var g="<a style=\"text-decoration:none\" onClick=\"modifyGrade()\" href=\"javascript:;\" title=\"确认修改\"><i class=\"Hui-iconfont\">&#xe6e1;</i></a>";
+    var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
   hm.src = "https://hm.baidu.com/hm.js?080836300300be57b7f34f4b3e97d911";
   var s = document.getElementsByTagName("script")[0]; 
   s.parentNode.insertBefore(hm, s);
+
+    $.ajax({
+        type: 'POST',
+        url : "mapping-config-all-show",
+        success: function(data){
+            data=JSON.parse(data);
+            term=data[0];
+            document.getElementById("term").innerHTML=term+" "+t;
+
+            document.getElementById("classes").setAttribute("value",data[1])+" "+c;
+
+            document.getElementById("grade").setAttribute("value",data[2])+" "+g;
+
+            document.getElementById("lbServerName").innerHTML=data[3]+"://"+data[4];
+
+            document.getElementById("ip").innerHTML=data[4];
+            document.getElementById("port").innerHTML=data[5];
+            document.getElementById("project_name").innerHTML=data[6];
+        },
+        error:function(data) {
+            term=0;
+            document.getElementById("term").innerHTML=term+" "+t;
+
+            document.getElementById("classes").setAttribute("value","")+" "+c;
+
+            document.getElementById("grade").setAttribute("value","")+" "+g;
+            alert("error")
+        }
+    });
 })();
+
+function modifyTerm() {
+    term>=2?term=1:term=2;
+    $.ajax({
+        type: 'POST',
+        url : "mapping-config-term-update",
+        data:{"term":term},
+        success: function(data){
+            document.getElementById("term").innerHTML=term+" "+m;
+        },
+        error:function(data) {
+            term>=2?term=1:term=2;
+            alert("error")
+        }
+    });
+}
+
+function modifyClasses() {
+    var classes=$("#classes").val();
+    $.ajax({
+        type: 'POST',
+        url : "mapping-config-classes-update",
+        data:{"classes":classes},
+        success: function(data){
+            document.getElementById("classes").setAttribute("value",classes);
+        },
+        error:function(data) {
+            alert("error")
+        }
+    });
+}
+
+function modifyGrade() {
+    var grade=$("#grade").val();
+    $.ajax({
+        type: 'POST',
+        url : "mapping-config-grade-update",
+        data:{"grade":grade},
+        success: function(data){
+            document.getElementById("grade").setAttribute("value",grade);
+        },
+        error:function(data) {
+            alert("error")
+        }
+    });
+}
+
+function modifyStudentGrade(num) {
+    $.ajax({
+        type: 'POST',
+        url : "mapping-student-grade-modify",
+        data:{"num":num},
+        success: function(data){
+            alert("更改学生年级成功！一共影响"+data+"名学生");
+        },
+        error:function(data) {
+            alert("error");
+        }
+    });
+}
+
 </script>
 <!--/此乃百度统计代码，请自行删除-->
 </body>

@@ -38,4 +38,6 @@ public interface CourseService {
     List<Course> selectByCName(String name);
 
     Course selectByPrimaryId(Integer id);
+
+    Course selectById(Integer id);
 }

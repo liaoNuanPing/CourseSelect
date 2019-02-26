@@ -45,5 +45,15 @@ public interface PerClassCourseService {
     PerClassCourse selectByPrimaryId(Integer id);
 
 
+    /**
+     * 根据学期，年级，班级选出课程
+     * @param term 学期
+     * @param grade 年级
+     * @param classes 班级
+     * @return List PerClassCourse结果集
+     */
+    List<PerClassCourse> selectByTermAndGradeAndClass(Integer term,Integer grade,Integer classes);
+
+
 
 }

@@ -29,4 +29,7 @@ public interface StudentMapper {
 
     int updateByPrimaryKey(Student record);
     Student selectWithoutId(@Param("stuName") String stuName,@Param("grade") String grade,@Param("classNow") String classNow,@Param("parentName") String parentName);
+
+    int updateAllStudentGradeUp(Integer num,Integer grade);
+    int updateAllStudentGradeDown(Integer num);
 }

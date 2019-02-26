@@ -41,7 +41,12 @@ public class StudentServiceImpl implements StudentService {
         studentMapper.insert(student);
     }
 
-
+    public int updateAllStudentGradeUp(Integer num,Integer grade){
+        return studentMapper.updateAllStudentGradeUp(num,grade);
+    }
+    public int updateAllStudentGradeDown(Integer num){
+        return studentMapper.updateAllStudentGradeDown(num);
+    }
 
 
 
