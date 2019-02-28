@@ -25,16 +25,6 @@ public class PropertiesUtils {
             props.store(fos, "Update value");
             fos.close();
 
-            profilepath=profilepath.substring(0,profilepath.lastIndexOf("out"));
-            profilepath+="src/main/resources/properties/"+fileName;
-            props.load(new FileInputStream(profilepath));
-            fos = new FileOutputStream(profilepath);
-            props.setProperty(key, value);
-            props.store(fos, "Update value");
-
-            fos.close();
-
-
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("属性文件更新错误");

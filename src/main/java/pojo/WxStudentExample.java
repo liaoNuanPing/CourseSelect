@@ -295,6 +295,66 @@ public class WxStudentExample {
             return (Criteria) this;
         }
 
+        public Criteria andAuditingIdIsNull() {
+            addCriterion("auditing_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditingIdIsNotNull() {
+            addCriterion("auditing_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditingIdEqualTo(Integer value) {
+            addCriterion("auditing_id =", value, "auditingId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditingIdNotEqualTo(Integer value) {
+            addCriterion("auditing_id <>", value, "auditingId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditingIdGreaterThan(Integer value) {
+            addCriterion("auditing_id >", value, "auditingId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditingIdGreaterThanOrEqualTo(Integer value) {
+            addCriterion("auditing_id >=", value, "auditingId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditingIdLessThan(Integer value) {
+            addCriterion("auditing_id <", value, "auditingId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditingIdLessThanOrEqualTo(Integer value) {
+            addCriterion("auditing_id <=", value, "auditingId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditingIdIn(List<Integer> values) {
+            addCriterion("auditing_id in", values, "auditingId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditingIdNotIn(List<Integer> values) {
+            addCriterion("auditing_id not in", values, "auditingId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditingIdBetween(Integer value1, Integer value2) {
+            addCriterion("auditing_id between", value1, value2, "auditingId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditingIdNotBetween(Integer value1, Integer value2) {
+            addCriterion("auditing_id not between", value1, value2, "auditingId");
+            return (Criteria) this;
+        }
+
         public Criteria andCreateTimeIsNull() {
             addCriterion("create_time is null");
             return (Criteria) this;

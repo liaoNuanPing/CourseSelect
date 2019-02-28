@@ -5,6 +5,7 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="openid" property="openid" jdbcType="VARCHAR" />
     <result column="stu_id" property="stuId" jdbcType="INTEGER" />
+    <result column="auditing_id" property="auditingId" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
@@ -66,7 +67,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, openid, stu_id, create_time
+    id, openid, stu_id, auditing_id, create_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="pojo.WxStudentExample" >
     select
@@ -100,9 +101,9 @@
   </delete>
   <insert id="insert" parameterType="pojo.WxStudent" >
     insert into wx_student (id, openid, stu_id, 
-      create_time)
+      auditing_id, create_time)
     values (#{id,jdbcType=INTEGER}, #{openid,jdbcType=VARCHAR}, #{stuId,jdbcType=INTEGER}, 
-      #{createTime,jdbcType=TIMESTAMP})
+      #{auditingId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="pojo.WxStudent" >
     insert into wx_student
@@ -115,6 +116,9 @@
       </if>
       <if test="stuId != null" >
         stu_id,
+      </if>
+      <if test="auditingId != null" >
+        auditing_id,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -129,6 +133,9 @@
       </if>
       <if test="stuId != null" >
         #{stuId,jdbcType=INTEGER},
+      </if>
+      <if test="auditingId != null" >
+        #{auditingId,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -153,6 +160,9 @@
       <if test="record.stuId != null" >
         stu_id = #{record.stuId,jdbcType=INTEGER},
       </if>
+      <if test="record.auditingId != null" >
+        auditing_id = #{record.auditingId,jdbcType=INTEGER},
+      </if>
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
@@ -166,6 +176,7 @@
     set id = #{record.id,jdbcType=INTEGER},
       openid = #{record.openid,jdbcType=VARCHAR},
       stu_id = #{record.stuId,jdbcType=INTEGER},
+      auditing_id = #{record.auditingId,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -180,6 +191,9 @@
       <if test="stuId != null" >
         stu_id = #{stuId,jdbcType=INTEGER},
       </if>
+      <if test="auditingId != null" >
+        auditing_id = #{auditingId,jdbcType=INTEGER},
+      </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -190,6 +204,7 @@
     update wx_student
     set openid = #{openid,jdbcType=VARCHAR},
       stu_id = #{stuId,jdbcType=INTEGER},
+      auditing_id = #{auditingId,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>

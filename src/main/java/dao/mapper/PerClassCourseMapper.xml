@@ -11,12 +11,12 @@
     <result column="have_stu_amount" jdbcType="INTEGER" property="haveStuAmount" />
   </resultMap>
 
-  <select id="selectByTermAndGradeAndClass" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="selectByTermAndGradeAndClass" resultMap="BaseResultMap">
     SELECT *
     FROM per_class_course
-    where term=0 or term=#{term,jdbcType=INTEGER}
-    and grade =0 or grade=#{grade,jdbcType=INTEGER}
-    and to_class=0 or to_class=#{classes,jdbcType=INTEGER};
+    where (term=0 or term=#{0})
+    and (grade =0 or grade=#{1})
+    and (to_class=0 or to_class=#{2});
 
   </select>
 

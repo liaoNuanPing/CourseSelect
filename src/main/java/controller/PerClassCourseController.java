@@ -1,5 +1,6 @@
 package controller;
 
+import consts.Path;
 import enums.CourseShowEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,9 +11,9 @@ import service.*;
 import utils.ConnectDB;
 import utils.EncodingUtils;
 import utils.JsonUtils;
-import utils.PropertiesUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -37,9 +38,8 @@ public class PerClassCourseController {
     @Autowired
     StudentService studentService;
 
-    public static List<Integer> courseIdList;
 
-    private String iSsubmitSucessful = "";
+    private String isSubmitSuccessful = "";
 
     /**
      * 添加课程
@@ -50,7 +50,7 @@ public class PerClassCourseController {
     @RequestMapping("mapping-course-add")
     @ResponseBody
     public String perclassCourseAdd(HttpServletRequest request) throws Exception {
-        iSsubmitSucessful = "";
+        isSubmitSuccessful = "";
         String courseName = request.getParameter("course_name");
         String grade = request.getParameter("grade");
         String term = request.getParameter("term");
@@ -80,16 +80,25 @@ public class PerClassCourseController {
         //插入CoursePic
         if (FileuploadController.fileNmaeList.size() > 0) {
             for (int i = 0; i < FileuploadController.fileNmaeList.size(); i++) {
-                CoursePic coursePic = new CoursePic(null, course.getId(), "static/images/" + FileuploadController.fileNmaeList.get(i));
-                if (coursePicService.insert(coursePic) != 1)
-                    throw new Exception();
+                String img="";
+                String newHeadImg=String.valueOf(System.currentTimeMillis())+"["+ courseName+(i+1)+"]";
+
+                if ("".equals(FileuploadController.fileNmaeList.get(i))){
+                    img="";
+                }else{
+                    if(new File(Path.getTempPath()+"/"+img).renameTo(new File(Path.getImagesPath()+"/"+newHeadImg)))
+                        throw new Exception("移动图片从temp到images不成功");
+                    CoursePic coursePic = new CoursePic(null, course.getId(), "static/images/" +newHeadImg);
+                    if (coursePicService.insert(coursePic) != 1)
+                        throw new Exception("课程图片插入失败");
+                }
             }
 //            清除，只用一次
             FileuploadController.fileNmaeList=new ArrayList<String>();
         }
 
-        iSsubmitSucessful = "success";
-        return iSsubmitSucessful;
+        isSubmitSuccessful = "success";
+        return isSubmitSuccessful;
     }
 
     @RequestMapping("/mapping-course-update")
@@ -147,7 +156,7 @@ public class PerClassCourseController {
     @RequestMapping("/mapper-check-submit")
     @ResponseBody
     public String perClassCourseList() {
-        return iSsubmitSucessful;
+        return isSubmitSuccessful;
     }
 
 
@@ -155,7 +164,7 @@ public class PerClassCourseController {
      * datatable加载数据
      *
      * @param request 前端请求
-     * @return
+     * @return 分页数据
      */
     @RequestMapping("/loadClass")
     @ResponseBody
@@ -224,46 +233,5 @@ public class PerClassCourseController {
     }
 
 
-    /**
-     * 微信端加载学生可选课信息
-     * @param request
-     * @return
-     */
-    @RequestMapping("/wx-loadSelectedCourse")
-    @ResponseBody
-    public String sentToWxStudentSelectedCourse(HttpServletRequest request){
-//        获取openi确认学生年级班级
 
-        String openId = request.getParameter("openId");
-        WxStudent wxStudent = wxStudentService.selectByOpenId(openId);
-        if (wxStudent==null)
-            return "{isSuccessful:false}";
-
-        Student student=studentService.selectById(wxStudent.getStuId());
-        String term= PropertiesUtils.getPropertiesValue("config.properties","term");
-        String clases= String.valueOf(student.getClass());
-        String grade=student.getGrade();
-
-        List<WxCourse> list=new ArrayList<WxCourse>();
-
-        List<PerClassCourse> perClassCourseList=perClassCourseService.selectByTermAndGradeAndClass(Integer.valueOf(term),Integer.valueOf(grade),Integer.valueOf(clases));
-        for (PerClassCourse perClassCourse :perClassCourseList) {
-            List<CoursePic> coursePics = coursePicService.selectCoursePic(perClassCourse.getCourseId());
-            List<String> picList =new ArrayList<String>();
-            for (int i=0;i<coursePics.size();i++)
-                picList.add(coursePics.get(i).getPic());
-
-            list.add(new WxCourse(courseService.selectById(perClassCourse.getCourseId()),perClassCourse,picList));
-        }
-
-        return JsonUtils.objectToJson(list);
-    }
-
-    @RequestMapping("/wx-getOpenId")
-    @ResponseBody
-    public String getOpenId(HttpServletRequest request){
-        String openId = request.getParameter("openId");
-        System.out.println(openId);
-        return openId;
-    }
 }

@@ -914,6 +914,76 @@ public class StuSelectExample {
             addCriterion("select_time not between", value1, value2, "selectTime");
             return (Criteria) this;
         }
+
+        public Criteria andTermIsNull() {
+            addCriterion("term is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTermIsNotNull() {
+            addCriterion("term is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTermEqualTo(String value) {
+            addCriterion("term =", value, "term");
+            return (Criteria) this;
+        }
+
+        public Criteria andTermNotEqualTo(String value) {
+            addCriterion("term <>", value, "term");
+            return (Criteria) this;
+        }
+
+        public Criteria andTermGreaterThan(String value) {
+            addCriterion("term >", value, "term");
+            return (Criteria) this;
+        }
+
+        public Criteria andTermGreaterThanOrEqualTo(String value) {
+            addCriterion("term >=", value, "term");
+            return (Criteria) this;
+        }
+
+        public Criteria andTermLessThan(String value) {
+            addCriterion("term <", value, "term");
+            return (Criteria) this;
+        }
+
+        public Criteria andTermLessThanOrEqualTo(String value) {
+            addCriterion("term <=", value, "term");
+            return (Criteria) this;
+        }
+
+        public Criteria andTermLike(String value) {
+            addCriterion("term like", value, "term");
+            return (Criteria) this;
+        }
+
+        public Criteria andTermNotLike(String value) {
+            addCriterion("term not like", value, "term");
+            return (Criteria) this;
+        }
+
+        public Criteria andTermIn(List<String> values) {
+            addCriterion("term in", values, "term");
+            return (Criteria) this;
+        }
+
+        public Criteria andTermNotIn(List<String> values) {
+            addCriterion("term not in", values, "term");
+            return (Criteria) this;
+        }
+
+        public Criteria andTermBetween(String value1, String value2) {
+            addCriterion("term between", value1, value2, "term");
+            return (Criteria) this;
+        }
+
+        public Criteria andTermNotBetween(String value1, String value2) {
+            addCriterion("term not between", value1, value2, "term");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

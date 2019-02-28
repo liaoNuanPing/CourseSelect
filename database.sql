@@ -46,14 +46,6 @@ CREATE TABLE student(
 )engine=InnoDB default charset 'utf8' comment '学生表';
 
 
-DROP TABLE IF EXISTS wx_student;
-CREATE TABLE wx_student(
-  id int primary key auto_increment,
-  openid int NOT NULL  COMMENT '微信id',
-  stu_id int NOT NULL  COMMENT '学生id-外键',
-  create_time timestamp default now() comment '注册时间',
-  FOREIGN KEY (stu_id) REFERENCES student(id)
-)engine=InnoDB default charset 'utf8' comment '微信对应学生表';
 
 DROP TABLE IF EXISTS identity_auditing;
 CREATE TABLE identity_auditing(
@@ -67,6 +59,18 @@ CREATE TABLE identity_auditing(
   register_time timestamp default now() comment '注册时间',
   auditing_status CHAR DEFAULT '0' COMMENT '审核状态，0待审核、1通过、2不通过'
 )engine=InnoDB default charset 'utf8' comment '学生身份审核表';
+
+
+DROP TABLE IF EXISTS wx_student;
+CREATE TABLE wx_student(
+  id int primary key auto_increment,
+  openid varchar(100) NOT NULL  COMMENT '微信id',
+  stu_id int NULL  COMMENT '学生id-外键',
+  auditing_id int NOT NULL  COMMENT '审核id-外键',
+  create_time timestamp default now() comment '注册时间',
+  FOREIGN KEY (stu_id) REFERENCES student(id),
+  FOREIGN KEY (auditing_id) REFERENCES identity_auditing(id)
+)engine=InnoDB default charset 'utf8' comment '微信对应学生表'
 
 
 DROP TABLE IF EXISTS stu_select;

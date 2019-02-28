@@ -123,7 +123,7 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert"  parameterType="pojo.Student">
+  <insert id="insert"  parameterType="pojo.Student" useGeneratedKeys="true" keyProperty="id">
     insert into student (id, stu_name, grade, 
       class_now, parent_name, parent_phone, 
       head_img)

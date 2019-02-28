@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import pojo.DatatablePage;
 import pojo.IdentityAuditing;
 import pojo.Student;
+import pojo.WxStudent;
 import service.IdentityAuditingService;
+import service.WxStudentService;
 import utils.ConnectDB;
 import utils.EncodingUtils;
 import utils.JsonUtils;
@@ -27,6 +29,9 @@ public class IdentityAuditingController {
 
     @Autowired
     IdentityAuditingService identityAuditingService;
+
+    @Autowired
+    WxStudentService wxStudentService;
 
     @RequestMapping(value = {"/loadIdentityAudit"},produces = "text/plain;charset=utf-8")
     @ResponseBody
@@ -113,7 +118,13 @@ public class IdentityAuditingController {
     }
 
 
-
+    /**
+     * 管理员通过审核或淘汰
+     * @param idea 操作状态
+     * @param id
+     * @return
+     * @throws Exception
+     */
     @RequestMapping("/mapping-audit-handle")
     @ResponseBody
     public String passOrNot(String idea,String id) throws Exception{
@@ -122,6 +133,7 @@ public class IdentityAuditingController {
         if ("2".equals(idea))
             identityAuditingService.update(auditing);
         else {
+//            通过
             Student student = new Student(null,
                     auditing.getStuName(),
                     auditing.getGrade(),
@@ -130,81 +142,21 @@ public class IdentityAuditingController {
                     auditing.getParentPhone(),
                     auditing.getHeadImg()
             );
+//            更新identityAuditing并插入Student记录
             identityAuditingService.updateSelfAndInsertStudent(auditing, student);
+//            更新wxStudent
+            WxStudent wxStudent = wxStudentService.selectByAuditingId(Integer.valueOf(id));
+            wxStudent.setStuId(student.getId());
+            wxStudentService.update(wxStudent);
+
+
+//            TODO 更新
         }
         return "success";
     }
 
 
 
-    /**
-     * 微信提交：
-     * 身份审核提交
-     * */
-    @RequestMapping(value="/wx-Audit-submit")
-    @ResponseBody
-    public String identityAudit(HttpServletRequest request) {
-        Map<String, String> map=new HashMap<String, String>();
-        try {
-//        TODO 数据名称校验
-            String stuId = request.getParameter("student_id");
-            String stuName = request.getParameter("student_name");
-            String parentName = request.getParameter("parent_name");
-            String mobile = request.getParameter("mobile");
-            String grade = request.getParameter("grade");
-            String classNow = request.getParameter("class_now");
 
-            IdentityAuditing identityAuditing = new IdentityAuditing(
-                    null,
-                    stuName,
-                    parentName,
-                    mobile, grade,
-                    classNow,
-                    FileuploadController.studentHeadImg,
-                    null,
-                    null);
-
-            FileuploadController.studentHeadImg = "";
-            identityAuditingService.insert(identityAuditing);
-
-            map.put("isSuccessful", "1");
-            map.put("message", "");
-        } catch (Exception e) {
-            map.put("isSuccessful", "0");
-            map.put("message", "");
-        }
-        return JsonUtils.objectToJson(map);
-    }
-
-    /**
-     *  微信提交：
-     *  审核状态查询
-     * @return
-     */
-    @RequestMapping(value="/wx-Audit")
-    @ResponseBody
-    public String AuditStatus(){
-        //        TODO 身份认证方式
-        Map<String, String> map=new HashMap<String, String>();
-        String id="根据身份认证方式找到id";
-        String status;
-        String result="正在审核中";
-        try {
-            IdentityAuditing identityAuditing = identityAuditingService.selectById(Integer.valueOf(id));
-            status = identityAuditing.getAuditingStatus();
-        }catch (Exception e){
-            status="0";
-        }
-
-        if ("0".equals(status))
-            result="正在审核中";
-        else if ("1".equals(status))
-            result="审核通过";
-        else if ("2".equals(status))
-            result="审核不通过";
-
-        map.put("status",result);
-        return JsonUtils.objectToJson(map);
-    }
 
 }

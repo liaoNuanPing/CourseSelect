@@ -109,7 +109,7 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="pojo.IdentityAuditing" >
+  <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="pojo.IdentityAuditing" >
     insert into identity_auditing (id, stu_name, grade, 
       class_now, parent_name, parent_phone, 
       head_img, register_time, auditing_status

@@ -9,7 +9,20 @@ public class WxStudent {
 
     private Integer stuId;
 
+    private Integer auditingId;
+
     private Date createTime;
+
+    public WxStudent() {
+    }
+
+    public WxStudent(Integer id, String openid, Integer stuId, Integer auditingId, Date createTime) {
+        this.id = id;
+        this.openid = openid;
+        this.stuId = stuId;
+        this.auditingId = auditingId;
+        this.createTime = createTime;
+    }
 
     public Integer getId() {
         return id;
@@ -33,6 +46,14 @@ public class WxStudent {
 
     public void setStuId(Integer stuId) {
         this.stuId = stuId;
+    }
+
+    public Integer getAuditingId() {
+        return auditingId;
+    }
+
+    public void setAuditingId(Integer auditingId) {
+        this.auditingId = auditingId;
     }
 
     public Date getCreateTime() {

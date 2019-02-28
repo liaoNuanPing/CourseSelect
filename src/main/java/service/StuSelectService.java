@@ -2,6 +2,8 @@ package service;
 
 import pojo.StuSelect;
 
+import java.util.List;
+
 public interface StuSelectService {
     int countAll();
 
@@ -12,4 +14,8 @@ public interface StuSelectService {
     int delById(Integer id);
 
     int update(StuSelect stuSelect);
+
+    List<StuSelect> selectByStudentId(Integer stu_id);
+
+    List<StuSelect> selectByStudentIdAndTerm(Integer stu_id,String term);
 }

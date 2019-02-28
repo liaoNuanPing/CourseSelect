@@ -7,27 +7,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 
 @Controller
-@RequestMapping("/mvc")
 public class Test {
 
-    @RequestMapping("/hello")
-    public String hello(){
-        System.out.println("2233333");
-        return "hello";
-    }
-    @RequestMapping("/String")
-    @ResponseBody
-    public String getString(){
-        System.out.println("ResponseBody String");
-        String value="this is 'ResponseBody value' responsed ";
-        return value;
-    }
+    @org.junit.Test
+    public void t() throws Exception{
+        throw new Exception("移动图片从temp到images不成功");
 
-    @RequestMapping("/List")
-    @ResponseBody
-    public ObjectMapper getList(){
-        System.out.println("ResponseBody ObjectMapper");
-
-        return new ObjectMapper();
     }
 }

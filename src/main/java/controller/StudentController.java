@@ -1,5 +1,6 @@
 package controller;
 
+import consts.Path;
 import enums.StudentEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,7 @@ import utils.JsonUtils;
 import utils.PropertiesUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -108,19 +110,30 @@ public class StudentController {
     }
 
 
-    @RequestMapping("/mapping-student-add")
+    @RequestMapping("/mapping-student-hand-add")
     @ResponseBody
     public String handMakeAdd(HttpServletRequest request) throws Exception{
         String stuId = request.getParameter("student_id");
-        String stuName = request.getParameter("student_name");
-        String parentName = request.getParameter("parent_name");
+        String stuName = request.getParameter("student_name")==null?"":request.getParameter("student_name");
+        String parentName = request.getParameter("parent_name")==null?"":request.getParameter("parent_name");
         String mobile = request.getParameter("mobile");
         String grade = request.getParameter("grade");
         String classNow = request.getParameter("class_now");
-        String img="".equals(FileuploadController.studentHeadImg)?"":"static/images/"+FileuploadController.studentHeadImg;
-        Student student=new Student("".equals(stuId)?null:Integer.valueOf(stuId),stuName,grade,classNow,parentName,mobile,img);
+        String newImgName=String.valueOf(System.currentTimeMillis())+"["+stuName+"And"+parentName+"]";
+        String img;
+        if ("".equals(FileuploadController.studentHeadImg)){
+            img="";
+        }else{
+            img=FileuploadController.studentHeadImg;
+//            从temp移动到image并换名
+            if(new File(Path.getTempPath()+"/"+img).renameTo(new File(Path.getImagesPath()+"/"+newImgName)))
+                throw new Exception("移动图片从temp到images不成功");
+        }
+
+        Student student=new Student("".equals(stuId)?null:Integer.valueOf(stuId),stuName,grade,classNow,parentName,mobile,"static/images/"+newImgName);
 //        上传图片的链接只做一次，用完重制
         FileuploadController.studentHeadImg="";
+
         studentService.insert(student);
         return "success";
     }

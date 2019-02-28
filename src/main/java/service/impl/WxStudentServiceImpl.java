@@ -20,4 +20,21 @@ public class WxStudentServiceImpl implements WxStudentService {
         return wxStudentMapper.selectByExample(example).size()>0?wxStudentMapper.selectByExample(example).get(0):null;
     }
 
+    public WxStudent selectByAuditingId(Integer auditId){
+        WxStudentExample example=new WxStudentExample();
+        WxStudentExample.Criteria criteria = example.createCriteria();
+        criteria.andAuditingIdEqualTo(auditId);
+        return wxStudentMapper.selectByExample(example).size()>0?wxStudentMapper.selectByExample(example).get(0):null;
+    }
+
+    public int insert(WxStudent wxStudent){
+        return wxStudentMapper.insert(wxStudent);
+    }
+
+    public int update(WxStudent wxStudent){
+        return wxStudentMapper.updateByPrimaryKey(wxStudent);
+    }
+
+
+
 }

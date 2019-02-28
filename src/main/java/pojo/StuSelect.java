@@ -1,5 +1,8 @@
 package pojo;
 
+import consts.Path;
+import utils.PropertiesUtils;
+
 import java.util.Date;
 
 public class StuSelect {
@@ -27,6 +30,9 @@ public class StuSelect {
 
     private Date selectTime;
 
+    private String term;
+
+
     public StuSelect() {
     }
 
@@ -43,6 +49,8 @@ public class StuSelect {
         this.cName = cName;
         this.cDesc = cDesc;
         this.selectTime = selectTime;
+        this.term= PropertiesUtils.getPropertiesValue("config.properties","term");
+
     }
 
     public StuSelect(Student student, Course course) {
@@ -58,6 +66,7 @@ public class StuSelect {
         this.cName = course.getcName();
         this.cDesc = course.getcDesc();
         this.selectTime = null;
+        this.term= PropertiesUtils.getPropertiesValue("config.properties","term");
     }
 
     public Integer getId() {
@@ -154,5 +163,13 @@ public class StuSelect {
 
     public void setSelectTime(Date selectTime) {
         this.selectTime = selectTime;
+    }
+
+    public String getTerm() {
+        return term;
+    }
+
+    public void setTerm(String term) {
+        this.term = term;
     }
 }

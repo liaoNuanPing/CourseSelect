@@ -52,7 +52,17 @@ public interface PerClassCourseService {
      * @param classes 班级
      * @return List PerClassCourse结果集
      */
-    List<PerClassCourse> selectByTermAndGradeAndClass(Integer term,Integer grade,Integer classes);
+    List<PerClassCourse> selectByTermAndGradeAndClass(String term,String grade,String classes);
+
+    /**
+     * 根据课程id，学期，年级，班级选出课程
+     * @param CourseId 课程id
+     * @param term 学期
+     * @param grade 年级
+     * @param classes 班级
+     * @return List PerClassCourse结果集
+     */
+    List<PerClassCourse> selectByCourseIdAndTermAndGradeAndClass(Integer CourseId,String term,String grade,String classes);
 
 
 

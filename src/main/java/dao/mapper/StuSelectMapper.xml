@@ -14,11 +14,13 @@
     <result column="c_name" property="cName" jdbcType="VARCHAR" />
     <result column="c_desc" property="cDesc" jdbcType="VARCHAR" />
     <result column="select_time" property="selectTime" jdbcType="TIMESTAMP" />
+    <result column="term" property="term" jdbcType="VARCHAR" />
   </resultMap>
 
   <select id="countAll" resultType="java.lang.Integer">
     SELECT count(id) FROM stu_select
   </select>
+
   <sql id="Example_Where_Clause" >
     <where >
       <foreach collection="oredCriteria" item="criteria" separator="or" >
@@ -78,8 +80,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, student_card, stu_name, grade, class_now, parent_name, parent_phone, head_img, 
-    course_id, c_name, c_desc, select_time
+    id, student_card, stu_name, grade, class_now, parent_name, parent_phone, head_img,
+    course_id, c_name, c_desc, select_time, term
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="pojo.StuSelectExample" >
     select
@@ -96,7 +98,7 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from stu_select
     where id = #{id,jdbcType=INTEGER}
@@ -111,17 +113,17 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="pojo.StuSelect" >
-    insert into stu_select (id, student_card, stu_name, 
-      grade, class_now, parent_name, 
-      parent_phone, head_img, course_id, 
-      c_name, c_desc, select_time
-      )
-    values (#{id,jdbcType=INTEGER}, #{studentCard,jdbcType=VARCHAR}, #{stuName,jdbcType=VARCHAR}, 
-      #{grade,jdbcType=VARCHAR}, #{classNow,jdbcType=VARCHAR}, #{parentName,jdbcType=VARCHAR}, 
-      #{parentPhone,jdbcType=VARCHAR}, #{headImg,jdbcType=VARCHAR}, #{courseId,jdbcType=INTEGER}, 
-      #{cName,jdbcType=VARCHAR}, #{cDesc,jdbcType=VARCHAR}, #{selectTime,jdbcType=TIMESTAMP}
-      )
+  <insert id="insert" parameterType="pojo.StuSelect" >
+    insert into stu_select (id, student_card, stu_name,
+    grade, class_now, parent_name,
+    parent_phone, head_img, course_id,
+    c_name, c_desc, select_time,
+    term)
+    values (#{id,jdbcType=INTEGER}, #{studentCard,jdbcType=VARCHAR}, #{stuName,jdbcType=VARCHAR},
+    #{grade,jdbcType=VARCHAR}, #{classNow,jdbcType=VARCHAR}, #{parentName,jdbcType=VARCHAR},
+    #{parentPhone,jdbcType=VARCHAR}, #{headImg,jdbcType=VARCHAR}, #{courseId,jdbcType=INTEGER},
+    #{cName,jdbcType=VARCHAR}, #{cDesc,jdbcType=VARCHAR}, #{selectTime,jdbcType=TIMESTAMP},
+    #{term,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="pojo.StuSelect" >
     insert into stu_select
@@ -162,6 +164,9 @@
       <if test="selectTime != null" >
         select_time,
       </if>
+      <if test="term != null" >
+        term,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -199,6 +204,9 @@
       </if>
       <if test="selectTime != null" >
         #{selectTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="term != null" >
+        #{term,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -247,6 +255,9 @@
       <if test="record.selectTime != null" >
         select_time = #{record.selectTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="record.term != null" >
+        term = #{record.term,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -255,17 +266,18 @@
   <update id="updateByExample" parameterType="map" >
     update stu_select
     set id = #{record.id,jdbcType=INTEGER},
-      student_card = #{record.studentCard,jdbcType=VARCHAR},
-      stu_name = #{record.stuName,jdbcType=VARCHAR},
-      grade = #{record.grade,jdbcType=VARCHAR},
-      class_now = #{record.classNow,jdbcType=VARCHAR},
-      parent_name = #{record.parentName,jdbcType=VARCHAR},
-      parent_phone = #{record.parentPhone,jdbcType=VARCHAR},
-      head_img = #{record.headImg,jdbcType=VARCHAR},
-      course_id = #{record.courseId,jdbcType=INTEGER},
-      c_name = #{record.cName,jdbcType=VARCHAR},
-      c_desc = #{record.cDesc,jdbcType=VARCHAR},
-      select_time = #{record.selectTime,jdbcType=TIMESTAMP}
+    student_card = #{record.studentCard,jdbcType=VARCHAR},
+    stu_name = #{record.stuName,jdbcType=VARCHAR},
+    grade = #{record.grade,jdbcType=VARCHAR},
+    class_now = #{record.classNow,jdbcType=VARCHAR},
+    parent_name = #{record.parentName,jdbcType=VARCHAR},
+    parent_phone = #{record.parentPhone,jdbcType=VARCHAR},
+    head_img = #{record.headImg,jdbcType=VARCHAR},
+    course_id = #{record.courseId,jdbcType=INTEGER},
+    c_name = #{record.cName,jdbcType=VARCHAR},
+    c_desc = #{record.cDesc,jdbcType=VARCHAR},
+    select_time = #{record.selectTime,jdbcType=TIMESTAMP},
+    term = #{record.term,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -306,6 +318,9 @@
       <if test="selectTime != null" >
         select_time = #{selectTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="term != null" >
+        term = #{term,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -321,7 +336,8 @@
       course_id = #{courseId,jdbcType=INTEGER},
       c_name = #{cName,jdbcType=VARCHAR},
       c_desc = #{cDesc,jdbcType=VARCHAR},
-      select_time = #{selectTime,jdbcType=TIMESTAMP}
+      select_time = #{selectTime,jdbcType=TIMESTAMP},
+      term = #{term,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>
