@@ -104,6 +104,8 @@ public class IdentityAuditingController {
     @RequestMapping("/mapping-audit-del")
     @ResponseBody
     public String del(String perId, String[] ids) throws Exception{
+//        TODO 图片删除
+
         int result = 0;
         if (perId != null)
             result += identityAuditingService.delById(Integer.valueOf(perId));
@@ -148,7 +150,6 @@ public class IdentityAuditingController {
             WxStudent wxStudent = wxStudentService.selectByAuditingId(Integer.valueOf(id));
             wxStudent.setStuId(student.getId());
             wxStudentService.update(wxStudent);
-
 
 //            TODO 更新
         }

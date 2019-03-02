@@ -10,13 +10,13 @@ import service.CoursePicService;
 import java.util.List;
 
 @Service
-public class CoursePicServiceImpl implements CoursePicService {
+public class CoursePicServiceImpl  {
 
     @Autowired
     CoursePicMapper coursePicMapper;
 
 
-    public List<CoursePic> selectCoursePic(Integer id){
+    public List<CoursePic> selectCoursePicByCourseId(Integer id){
         CoursePicExample example=new CoursePicExample();
         CoursePicExample.Criteria criteria = example.createCriteria();
         criteria.andCourseIdEqualTo(id);

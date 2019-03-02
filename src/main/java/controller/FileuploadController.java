@@ -36,7 +36,7 @@ public class FileuploadController {
             fileNmaeList = new ArrayList<String>();
         }
 
-        String realPath = Path.getImagesPath();
+        String realPath = Path.getTempPath();
 
 //      不对错误try catch，以便抛出异常停止上传
         MultipartHttpServletRequest req = (MultipartHttpServletRequest) request;
@@ -51,7 +51,7 @@ public class FileuploadController {
         String format = multipartFile.getOriginalFilename().substring(Oname.lastIndexOf('.')+1, Oname.length());
         if (!format.equals("jpg")&&!format.equals("jpeg")&&!format.equals("png"))
             throw new Exception();
-        String fname = String.valueOf(System.currentTimeMillis()) +"[course]."+ format;
+        String fname = String.valueOf(System.currentTimeMillis()) +"course."+ format;
         File file = new File(realPath, fname);
         multipartFile.transferTo(file);
         fileNmaeList.add(fname);
@@ -73,7 +73,7 @@ public class FileuploadController {
         System.out.println("uploadStudentImage");
         studentHeadImg="";
 
-        String realPath = Path.getImagesPath();
+        String realPath = Path.getTempPath();
 
 //      不对错误try catch，以便抛出异常停止上传
         MultipartHttpServletRequest req = (MultipartHttpServletRequest) request;
@@ -89,7 +89,7 @@ public class FileuploadController {
         String format = multipartFile.getOriginalFilename().substring(Oname.lastIndexOf('.')+1, Oname.length());
         if (!format.equals("jpg")&&!format.equals("jpeg")&&!format.equals("png"))
             throw new Exception();
-        String fname = String.valueOf(System.currentTimeMillis()) +"[stu]HandMake."+format;
+        String fname = String.valueOf(System.currentTimeMillis()) +"stuHandMake."+format;
         File file = new File(realPath, fname);
         multipartFile.transferTo(file);
         studentHeadImg=fname;
@@ -110,7 +110,7 @@ public class FileuploadController {
     public String uploadStudentImageByWx(HttpServletRequest request) throws Exception {
         System.out.println("uploadStudentImageByWx");
 
-        String realPath = Path.getImagesPath();
+        String realPath = Path.getTempPath();
 
 //      不对错误try catch，以便抛出异常停止上传
         MultipartHttpServletRequest req = (MultipartHttpServletRequest) request;
@@ -126,7 +126,7 @@ public class FileuploadController {
         String format = multipartFile.getOriginalFilename().substring(Oname.lastIndexOf('.')+1, Oname.length());
         if (!format.equals("jpg")&&!format.equals("jpeg")&&!format.equals("png"))
             throw new Exception();
-        String fname = String.valueOf(System.currentTimeMillis()) +"[stu]"+request.getParameter("openId")+"."+format;
+        String fname = String.valueOf(System.currentTimeMillis()) +"stu"+request.getParameter("openId")+"."+format;
         File file = new File(realPath, fname);
         multipartFile.transferTo(file);
 

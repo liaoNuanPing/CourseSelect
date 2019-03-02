@@ -36,55 +36,15 @@
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">学号：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" value="" placeholder="" id="student_id" name="student_id">
+				<input type="text" class="input-text" value="" placeholder="添加已有学号自动填信息" id="student_id" name="student_id">
 			</div>
 		</div>
 
 		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>姓名：</label>
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>课程列表id：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" value="" placeholder="" id="student_name" name="student_name">
+				<input type="text" class="input-text" value="" placeholder="" id="per_course_id" name="per_course_id">
 			</div>
-		</div>
-
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>家长姓名：</label>
-			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" value="" placeholder="" id="parent_name" name="parent_name">
-			</div>
-		</div>
-
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>家长手机：</label>
-			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" value="" placeholder="" id="mobile" name="mobile">
-			</div>
-		</div>
-
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>课程：</label>
-			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" value="" placeholder="" id="course" name="course">
-			</div>
-		</div>
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>年级：</label>
-			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-				<select class="select" size="1" name="grade" id="grade">
-					<option value="" selected>请选择该课可选的年级</option>
-					<option value="0">全部</option>
-				</select>
-				</span> </div>
-		</div>
-
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>班级：</label>
-			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-				<select class="select" size="1" name="classes" id="classes">
-					<option value="" selected>请选择该课对应年级可选的班级</option>
-					<option value="0">全部</option>
-				</select>
-				</span> </div>
 		</div>
 
 		<div class="row cl">
@@ -114,36 +74,21 @@ function article_save(){
 	window.parent.location.reload();
 }
 
-$(function(){
 
+
+$(function(){
     gradeAndClasses();
 
     $("#form-course-add").validate({
         rules:{
-            student_name:{
+            student_id:{
                 required:true,
-                minlength:2,
-                maxlength:16
+                digits:true
             },
-            parent_name:{
+            per_course_id:{
                 required:true,
-                minlength:2,
-                maxlength:16
-            },
-            mobile:{
-                required:true,
-                isMobile:true
-            },
-            course:{
-                required:true
-            },
-            grade:{
-                required:true
-            },
-            classes:{
-                required:true
+                digits:true
             }
-
         },
         onkeyup:false,
         focusCleanup:true,
@@ -155,14 +100,15 @@ $(function(){
                 async:false,
                 success: function(data){
                     layer.msg('添加成功!',{icon:1,time:1000});
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.$('.btn-refresh').click();
+                    parent.layer.close(index);
                 },
                 error: function(XmlHttpRequest, textStatus, errorThrown){
-                    layer.msg('error!',{icon:1,time:1000});
+                    layer.msg('error!请检查输入',{icon:2,time:1000});
                 }
             });
-        var index = parent.layer.getFrameIndex(window.name);
-        parent.$('.btn-refresh').click();
-        parent.layer.close(index);
+
     }
 
 });

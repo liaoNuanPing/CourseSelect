@@ -10,10 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import pojo.DatatablePage;
 import pojo.Student;
 import service.StudentService;
-import utils.ConnectDB;
-import utils.EncodingUtils;
-import utils.JsonUtils;
-import utils.PropertiesUtils;
+import utils.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -119,16 +116,9 @@ public class StudentController {
         String mobile = request.getParameter("mobile");
         String grade = request.getParameter("grade");
         String classNow = request.getParameter("class_now");
-        String newImgName=String.valueOf(System.currentTimeMillis())+"["+stuName+"And"+parentName+"]";
-        String img;
-        if ("".equals(FileuploadController.studentHeadImg)){
-            img="";
-        }else{
-            img=FileuploadController.studentHeadImg;
-//            从temp移动到image并换名
-            if(new File(Path.getTempPath()+"/"+img).renameTo(new File(Path.getImagesPath()+"/"+newImgName)))
-                throw new Exception("移动图片从temp到images不成功");
-        }
+
+        String newImgName= PicUtils.getNewCourseImageName(FileuploadController.studentHeadImg);
+        PicUtils.rename(FileuploadController.studentHeadImg,newImgName);
 
         Student student=new Student("".equals(stuId)?null:Integer.valueOf(stuId),stuName,grade,classNow,parentName,mobile,"static/images/"+newImgName);
 //        上传图片的链接只做一次，用完重制
@@ -150,8 +140,18 @@ public class StudentController {
         String classNow = request.getParameter("class_now");
 
         Student oStudent = studentService.selectById(Integer.valueOf(oldId));
-        Student nStudent=new Student(Integer.valueOf(newId),stuName,grade,classNow,parentName,mobile,"".equals(FileuploadController.studentHeadImg)?oStudent.getHeadImg():FileuploadController.studentHeadImg);
+        Student nStudent;
 
+
+        if ("".equals(FileuploadController.studentHeadImg)){
+             nStudent=new Student(Integer.valueOf(newId),stuName,grade,classNow,parentName,mobile,oStudent.getHeadImg());
+        }else {
+            String newImgName= PicUtils.getNewCourseImageName(FileuploadController.studentHeadImg);
+            PicUtils.rename(FileuploadController.studentHeadImg,newImgName);
+            nStudent=new Student(Integer.valueOf(newId),stuName,grade,classNow,parentName,mobile,newImgName);
+        }
+
+//       TODO 原子操作
         studentService.updateByDel(Integer.valueOf(oldId),nStudent);
         return "success";
 

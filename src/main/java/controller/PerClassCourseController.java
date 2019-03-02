@@ -11,6 +11,7 @@ import service.*;
 import utils.ConnectDB;
 import utils.EncodingUtils;
 import utils.JsonUtils;
+import utils.PicUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -80,21 +81,15 @@ public class PerClassCourseController {
         //插入CoursePic
         if (FileuploadController.fileNmaeList.size() > 0) {
             for (int i = 0; i < FileuploadController.fileNmaeList.size(); i++) {
-                String img="";
-                String newHeadImg=String.valueOf(System.currentTimeMillis())+"["+ courseName+(i+1)+"]";
-
-                if ("".equals(FileuploadController.fileNmaeList.get(i))){
-                    img="";
-                }else{
-                    if(new File(Path.getTempPath()+"/"+img).renameTo(new File(Path.getImagesPath()+"/"+newHeadImg)))
-                        throw new Exception("移动图片从temp到images不成功");
-                    CoursePic coursePic = new CoursePic(null, course.getId(), "static/images/" +newHeadImg);
+                String originalName = FileuploadController.fileNmaeList.get(i);
+                String newImgName = PicUtils.getNewCourseImageName(originalName);
+                    PicUtils.rename(originalName,newImgName);
+                CoursePic coursePic = new CoursePic(null, course.getId(), "static/images/" + newImgName);
                     if (coursePicService.insert(coursePic) != 1)
                         throw new Exception("课程图片插入失败");
-                }
             }
 //            清除，只用一次
-            FileuploadController.fileNmaeList=new ArrayList<String>();
+            FileuploadController.fileNmaeList = new ArrayList<String>();
         }
 
         isSubmitSuccessful = "success";

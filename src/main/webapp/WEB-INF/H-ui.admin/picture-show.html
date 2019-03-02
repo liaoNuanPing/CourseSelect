@@ -63,10 +63,11 @@ $(function(){
             var arr=toArr(data);
             var li="";
             for(i=0;i<arr.length;i++){
+
                 li+="<li class=\"item\">\n" +
                     "<div class=\"portfoliobox\">\n" +
                     "<input class=\"checkbox\" name=\"dels\" type=\"checkbox\" value="+arr[i][0]+">\n" +
-                    "<div class=\"picbox\"><a href="+arr[i][2]+" data-lightbox=\"gallery\" data-title=\"\"><img src="+arr[i][2]+"></a></div>\n" +
+                    "<div class=\"picbox\"><a href="+(arr[i][2])+" data-lightbox=\"gallery\" data-title=\"\"><img src="+((arr[i][2]))+"></a></div>\n" +
                     "<div class=\"textbox\">客厅 </div>\n" +
                     "</div>\n" +
                     "</li>";

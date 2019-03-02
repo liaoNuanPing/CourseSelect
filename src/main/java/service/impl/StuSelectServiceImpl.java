@@ -7,6 +7,8 @@ import pojo.StuSelect;
 import pojo.StuSelectExample;
 import service.StuSelectService;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -30,6 +32,18 @@ public class StuSelectServiceImpl implements StuSelectService{
     public int delById(Integer id){
         return stuSelectMapper.deleteByPrimaryKey(id);
     }
+    public int delByPerCourseIdAndStudentIdAndYear(Integer courseId, String stu_id){
+        StuSelectExample example=new StuSelectExample();
+        StuSelectExample.Criteria criteria = example.createCriteria();
+        criteria.andStudentCardEqualTo(stu_id);
+        criteria.andCourseIdEqualTo(courseId);
+//        TODO 年份的限制
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.MONTH,-6);
+        criteria.andSelectTimeGreaterThan(cal.getTime());
+        return stuSelectMapper.deleteByExample(example);
+    }
 
     public int update(StuSelect stuSelect){
         return stuSelectMapper.updateByPrimaryKey(stuSelect);
@@ -47,7 +61,15 @@ public class StuSelectServiceImpl implements StuSelectService{
         StuSelectExample.Criteria criteria = example.createCriteria();
         criteria.andStudentCardEqualTo(String.valueOf(stu_id));
         criteria.andTermEqualTo(term);
+//        TODO 年份的限制
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.MONTH,-6);
+        criteria.andSelectTimeGreaterThan(cal.getTime());
         return stuSelectMapper.selectByExample(example);
     }
+
+
+
 
 }

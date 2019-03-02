@@ -1,6 +1,7 @@
 package controller;
 
 import consts.Path;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,14 +11,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import pojo.*;
 import service.*;
 import utils.JsonUtils;
+import utils.LoggerUtlis;
 import utils.PropertiesUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.util.*;
 
 @Controller
 @Transactional(rollbackFor = { Exception.class })
@@ -84,7 +84,7 @@ public class WxController {
 
 
             String headImg="";
-            String newHeadImg=String.valueOf(System.currentTimeMillis())+"["+ stuName+"And"+parentName+"]";
+            String newHeadImg=String.valueOf(System.currentTimeMillis())+"["+ stuName+"And"+parentName+"]."+FileuploadController.studentHeadImg.substring(FileuploadController.studentHeadImg.lastIndexOf("."),FileuploadController.studentHeadImg.length());
             File dir = new File(Path.getTempPath()+"/");
 
             if (!dir.exists())
@@ -108,7 +108,7 @@ public class WxController {
             if ("".equals(headImg)){
                 newHeadImg=null;
             }else
-                if(new File(Path.getTempPath()+"/"+headImg).renameTo(new File(Path.getImagesPath()+"/"+newHeadImg)))
+                if(!new File(Path.getTempPath()+"/"+headImg).renameTo(new File(Path.getImagesPath()+"/"+newHeadImg)))
                     throw new Exception("移动图片从temp到images不成功");
 
             IdentityAuditing identityAuditing = new IdentityAuditing(
@@ -153,6 +153,7 @@ public class WxController {
             IdentityAuditing identityAuditing = identityAuditingService.selectById(id);
             status = identityAuditing.getAuditingStatus();
         }catch (Exception e){
+            e.printStackTrace();
             status="3";
         }
 
@@ -164,7 +165,8 @@ public class WxController {
             result="审核不通过";
         else if ("3".equals(status))
             result="未提交审核";
-
+        else
+            result="未知错误";
 
         map.put("msg",result);
         map.put("status",status);
@@ -197,7 +199,7 @@ public class WxController {
 
         List<PerClassCourse> perClassCourseList=perClassCourseService.selectByTermAndGradeAndClass(term,grade,clases);
         for (PerClassCourse perClassCourse :perClassCourseList) {
-            List<CoursePic> coursePics = coursePicService.selectCoursePic(perClassCourse.getCourseId());
+            List<CoursePic> coursePics = coursePicService.selectCoursePicByCourseId(perClassCourse.getCourseId());
             List<String> picList =new ArrayList<String>();
             for (int i=0;i<coursePics.size();i++)
                 picList.add("http://47.107.128.33:8080/CourseSelect/"+coursePics.get(i).getPic());
@@ -217,10 +219,16 @@ public class WxController {
      */
     @RequestMapping(value = {"/wx-upload-selection"},produces = "text/plain;charset=utf-8")
     @ResponseBody
-    public String uploadStudentSelection(HttpServletRequest request) {
+    public String uploadStudentSelection(HttpServletRequest request) throws IOException {
 //        TODO 考虑做成多线程，课程有余就返回选课成功
+        Student student=null;
+        PerClassCourse perClassCourse=null;
+        Course course=null;
+        WxStudent wxStudent=null;
+        int a=-1,b=-1;
         try {
-            
+
+
         String openId = request.getParameter("openId");
         String perCourseId = request.getParameter("id");
 
@@ -231,39 +239,46 @@ public class WxController {
             return JsonUtils.objectToJson(new WxResultJson(0, "没有上传选课的ID"));
         }
 
-        WxStudent wxStudent = wxStudentService.selectByOpenId(openId);
+         wxStudent = wxStudentService.selectByOpenId(openId);
         if (wxStudent == null)
             return JsonUtils.objectToJson(new WxResultJson(0, "此openId不存在"));
 
-        Student student = studentService.selectById(wxStudent.getStuId());
+         student = studentService.selectById(wxStudent.getStuId());
+         if (student==null)
+             return JsonUtils.objectToJson(new WxResultJson(0, "此学生不存在"));
 
-
-        PerClassCourse perClassCourse = perClassCourseService.selectByPrimaryId(Integer.valueOf(perCourseId));
+         perClassCourse = perClassCourseService.selectByPrimaryId(Integer.valueOf(perCourseId));
 
         if (perClassCourse == null)
             return JsonUtils.objectToJson(new WxResultJson(0, "选课id无效"));
 
-        Course course = courseService.selectById(perClassCourse.getCourseId());
+         course = courseService.selectById(perClassCourse.getCourseId());
         if (course == null)
             return JsonUtils.objectToJson(new WxResultJson(0, "课程不存在"));
             
-        List<String> failClassName = new ArrayList<String>();
 
 //            如果课程已满
         if (perClassCourse.getTotalNeedStuAmount() <= perClassCourse.getHaveStuAmount()) {
             return JsonUtils.objectToJson(new WxResultJson(0, "选课失败，课程已满"));
         }
-        
-        if (stuSelectService.insert(new StuSelect(student, course)) == 0)
-            return JsonUtils.objectToJson(new WxResultJson(0, "选课失败，请联系管理员"));
+
+
+        a=stuSelectService.insert(new StuSelect(student, course));
+        if (a == 0)
+            return JsonUtils.objectToJson(new WxResultJson(0, "选课失败，请联系管理员,stuSelectService"));
 
         perClassCourse.setHaveStuAmount(perClassCourse.getHaveStuAmount() + 1);
-        if (perClassCourseService.update(perClassCourse) == 0)
-            return JsonUtils.objectToJson(new WxResultJson(0, "选课失败，请联系管理员"));
+        b=perClassCourseService.update(perClassCourse);
+        if ( b== 0)
+            return JsonUtils.objectToJson(new WxResultJson(0, "选课失败，请联系管理员,perClassCourseService"));
         }catch (Exception e){
-//            事务回滚
+
+            Logger logger = LoggerUtlis.getWxControllerLogger(WxController.class);
+            logger.error(e.getMessage());
+
+            e.printStackTrace();
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return JsonUtils.objectToJson(new WxResultJson(0, "选课失败，请联系管理员"));
+            return JsonUtils.objectToJson(new WxResultJson(0, "选课失败,回滚"));
 
         }
 
@@ -276,30 +291,142 @@ public class WxController {
      * @param request
      * @return
      */
-    @RequestMapping("wx-get-selection")
+    @RequestMapping(value={"wx-get-selection"},produces = "text/plain;charset=utf-8")
     @ResponseBody
     public String showStudentCourseAlreadySelectedSuccessful(HttpServletRequest request){
 
-//        TODO 只用学期返回不行，要结合时间
 //        没有查询到这个人报错
         String openId = request.getParameter("openId");
         WxStudent wxStudent = wxStudentService.selectByOpenId(openId);
-        if (wxStudent==null)
-            return JsonUtils.objectToJson(new WxResultJson());
+        if (wxStudent == null)
+            return JsonUtils.objectToJson(new WxResultJson(0, "此openId不存在"));
 
-        List<StuSelect> stuSelects = stuSelectService.selectByStudentIdAndTerm(wxStudent.getStuId(),PropertiesUtils.getPropertiesValue("config.properties","term"));
+        Student student = studentService.selectById(wxStudent.getStuId());
+        if (student==null)
+            return JsonUtils.objectToJson(new WxResultJson(0, "此学生不存在"));
+
+
+
+        List<StuSelect> stuSelects = stuSelectService.selectByStudentIdAndTerm(student.getId(),PropertiesUtils.getPropertiesValue("config.properties","term"));
         if (stuSelects==null||stuSelects.size()==0)
-            return JsonUtils.objectToJson(new WxResultJson(1,"未选课"));
-        ArrayList<String> courseList=new ArrayList<String>();
+            return JsonUtils.objectToJson(new WxResultJson(0,"未选课"));
+
+        ArrayList<Object> courseList=new ArrayList<Object>();
+
         for (StuSelect s: stuSelects){
+            List<PerClassCourse> perClassCourseList = perClassCourseService.selectByCourseIdAndTermAndGradeAndClass(s.getCourseId(), s.getTerm(), s.getGrade(), s.getClassNow());
+
+            if (perClassCourseList==null||perClassCourseList.size()==0)
+                return JsonUtils.objectToJson(new WxResultJson(0,"课程不存在了"));
+            courseList.add(perClassCourseList.get(0).getId());
             courseList.add(s.getcName());
             courseList.add(s.getSelectTime().toString());
+            courseList.add(s.getcDesc());
+
+                List<CoursePic> coursePicList = coursePicService.selectCoursePicByCourseId(s.getCourseId());
+            for (CoursePic coursePic:coursePicList)
+                courseList.add(coursePic.getPic());
+
         }
         Map<String, Object> map=new HashMap<String, Object>();
         map.put("isSuccessful", "1");
         map.put("msg", "");
         map.put("courses",courseList);
         return JsonUtils.objectToJson(map);
+    }
+
+    /**
+     * 撤销选课
+     * @param request
+     * @return
+     */
+    @RequestMapping(value={"wx-cancel-selection"},produces = "text/plain;charset=utf-8")
+    @ResponseBody
+    public String cancelSelect(HttpServletRequest request){
+        try {
+            String openId = request.getParameter("openId");
+            String perCourseId = request.getParameter("id");
+            if (openId == null || "".equals(openId)) {
+                return JsonUtils.objectToJson(new WxResultJson(0, "没有上传openId"));
+            }
+
+            WxStudent wxStudent = wxStudentService.selectByOpenId(openId);
+            if (wxStudent == null)
+                return JsonUtils.objectToJson(new WxResultJson(0, "此openId不存在"));
+
+            Student student = studentService.selectById(wxStudent.getStuId());
+            if (student == null)
+                return JsonUtils.objectToJson(new WxResultJson(0, "此学生不存在"));
+
+            PerClassCourse perClassCourse = perClassCourseService.selectByPrimaryId(Integer.valueOf(perCourseId));
+
+            if (perClassCourse == null)
+                return JsonUtils.objectToJson(new WxResultJson(0, "选课id无效"));
+
+            Course course = courseService.selectById(perClassCourse.getCourseId());
+            if (course == null)
+                return JsonUtils.objectToJson(new WxResultJson(0, "课程不存在"));
+
+//            如果没选过
+            if (0 == perClassCourse.getHaveStuAmount()) {
+                return JsonUtils.objectToJson(new WxResultJson(0, "撤销选课失败，你未曾选过该课程"));
+            }
+
+            perClassCourse.setHaveStuAmount(perClassCourse.getHaveStuAmount() - 1);
+            if (perClassCourseService.update(perClassCourse) == 0)
+                return JsonUtils.objectToJson(new WxResultJson(0, "撤销选课失败，请联系管理员"));
+
+            stuSelectService.delByPerCourseIdAndStudentIdAndYear(course.getId(), String.valueOf(student.getId()));
+            return JsonUtils.objectToJson(new WxResultJson(1, "撤销成功"));
+        }catch (Exception e){
+
+            Logger logger = LoggerUtlis.getWxControllerLogger(WxController.class);
+            logger.error(e.getMessage());
+
+            e.printStackTrace();
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return JsonUtils.objectToJson(new WxResultJson(0, "撤销失败，事务回滚"));
+
+        }
+
+    }
+
+    /**
+     * 选课状态，是否已选
+     * @param request
+     * @return
+     */
+    @RequestMapping(value={"wx-is-selected-status"},produces = "text/plain;charset=utf-8")
+    @ResponseBody
+    public String isHasSelectedStatus(HttpServletRequest request){
+        try {
+
+            String openId = request.getParameter("openId");
+            String perCourseId = request.getParameter("id");
+            if (openId == null || "".equals(openId)) {
+                return JsonUtils.objectToJson(new WxResultJson(0, "没有上传openId"));
+            }
+            WxStudent wxStudent = wxStudentService.selectByOpenId(openId);
+            if (wxStudent == null)
+                return JsonUtils.objectToJson(new WxResultJson(0, "此openId不存在"));
+
+            Student student = studentService.selectById(wxStudent.getStuId());
+            if (student == null)
+                return JsonUtils.objectToJson(new WxResultJson(0, "此学生不存在"));
+
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(new Date());
+            cal.add(Calendar.MONTH, -6);
+            List<StuSelect> stuSelectList = stuSelectService.selectByStudentIdAndTerm(student.getId(), PropertiesUtils.getPropertiesValue("config.properties", "term"));
+            if (stuSelectList.size() > 0)
+                return JsonUtils.objectToJson(new WxResultJson(1, String.valueOf(stuSelectList.size())));
+        }catch (Exception e){
+            Logger logger = LoggerUtlis.getWxControllerLogger(WxController.class);
+            logger.error(e.getMessage());
+            e.printStackTrace();
+        }
+        return JsonUtils.objectToJson(new WxResultJson(2, "本学期未选过课"));
+
     }
 
     /**
@@ -317,6 +444,7 @@ public class WxController {
         Student student = studentService.selectById(wxStudent.getStuId());
         if(student==null)
             return JsonUtils.objectToJson(new WxResultJson(0,"未找到该学生"));
+//        TODO 相对路径
         student.setHeadImg("http://47.107.128.33:8080/CourseSelect/"+ student.getHeadImg());
         return JsonUtils.objectToJson(student);
 

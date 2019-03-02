@@ -18,4 +18,6 @@ public interface StuSelectService {
     List<StuSelect> selectByStudentId(Integer stu_id);
 
     List<StuSelect> selectByStudentIdAndTerm(Integer stu_id,String term);
+
+    int delByPerCourseIdAndStudentIdAndYear(Integer courseId, String stu_id);
 }

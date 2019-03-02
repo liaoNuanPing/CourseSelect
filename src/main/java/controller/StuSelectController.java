@@ -5,11 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import pojo.Course;
-import pojo.DatatablePage;
-import pojo.StuSelect;
-import pojo.Student;
+import pojo.*;
 import service.CourseService;
+import service.PerClassCourseService;
 import service.StuSelectService;
 import service.StudentService;
 import utils.ConnectDB;
@@ -37,6 +35,9 @@ public class StuSelectController {
     @Autowired
     CourseService courseService;
 
+    @Autowired
+    PerClassCourseService perClassCourseService;
+
     /**
      * 目前暂时只是针对手动添加
      * @param request
@@ -46,44 +47,56 @@ public class StuSelectController {
     @RequestMapping("/mapping-select-add")
     @ResponseBody
     public String stuSelectAdd(HttpServletRequest request) throws Exception {
+        try {
+
+//            TODO 重复选课，管理员的问题，看要不要改
+
         iSsubmitSucessful = "";
-        String StuId = request.getParameter("student_id");
-        String stuName = request.getParameter("student_name");
-        String parentName = request.getParameter("parent_name");
-        String mobile = request.getParameter("mobile");
-        String grade = request.getParameter("grade");
-        String classNow = request.getParameter("class_now");
-        String courseName = request.getParameter("course");
+        String stuId = request.getParameter("student_id");
+        String perCourseId = request.getParameter("per_course_id");
 
-//       未指定学生id，查找年级、班级、父母名称一样的，有就证明为同一个人，使用该Student；若对不上新建学生并插入
-        Student student = studentService.selectWithoutId(stuName,grade,classNow,parentName);
-        List<Course> courseList = courseService.selectByCName(courseName);
-//            找得到学生，找得到对应课程，信息填上
-        if (courseList.size()>0&&student!=null){
-            StuSelect stuSelect=new StuSelect(student,courseList.get(0));
-            //           插入数据库
-            stuSelectService.insert(stuSelect);
-        }else if (courseList.size()==0&&student!=null){
-//                找得到学生，找不到课程，课程相应信息按前端传来的填
-            StuSelect stuSelect=new StuSelect(student,new Course(null,courseName,null));
-            //           插入数据库
-            stuSelectService.insert(stuSelect);
-        }else if (courseList.size()>0&&student==null){
-//                找不到学生，找得到课程，新建学生并插入数据库
-            Student newStudent = new Student(Integer.valueOf(StuId), stuName, grade, classNow, parentName, mobile, FileuploadController.studentHeadImg);
-            StuSelect stuSelect=new StuSelect(newStudent,courseList.get(0));
-            //           插入数据库
-            studentService.insert(newStudent);
-            stuSelectService.insert(stuSelect);
-        }else if (courseList.size()==0&&student==null){
-//                找不到学生，得不到课程，新建学生并插入数据库,课程相应信息按前端传来的填
-            Student newStudent = new Student(null, stuName, grade, classNow, parentName, mobile, FileuploadController.studentHeadImg);
-            StuSelect stuSelect=new StuSelect(newStudent,new Course(null,courseName,null));
-            //           插入数据库
-            studentService.insert(newStudent);
-            stuSelectService.insert(stuSelect);
+        PerClassCourse perClassCourse = perClassCourseService.selectByPrimaryId(Integer.valueOf(perCourseId));
+        Course course = courseService.selectById(perClassCourse.getCourseId());
+        Student student = studentService.selectById(Integer.valueOf(stuId));
+        stuSelectService.insert(new StuSelect(student,course));
+
+//        String parentName = request.getParameter("parent_name");
+//        String mobile = request.getParameter("mobile");
+//        String grade = request.getParameter("grade");
+//        String classNow = request.getParameter("class_now");
+//        String courseName = request.getParameter("course");
+
+////       未指定学生id，查找年级、班级、父母名称一样的，有就证明为同一个人，使用该Student；若对不上新建学生并插入
+//        Student student = studentService.selectWithoutId(stuName,grade,classNow,parentName);
+//        List<Course> courseList = courseService.selectByCName(courseName);
+////            找得到学生，找得到对应课程，信息填上
+//        if (courseList.size()>0&&student!=null){
+//            StuSelect stuSelect=new StuSelect(student,courseList.get(0));
+//            //           插入数据库
+//            stuSelectService.insert(stuSelect);
+//        }else if (courseList.size()==0&&student!=null){
+////                找得到学生，找不到课程，课程相应信息按前端传来的填
+//            StuSelect stuSelect=new StuSelect(student,new Course(null,courseName,null));
+//            //           插入数据库
+//            stuSelectService.insert(stuSelect);
+//        }else if (courseList.size()>0&&student==null){
+////                找不到学生，找得到课程，新建学生并插入数据库
+//            Student newStudent = new Student(Integer.valueOf(StuId), stuName, grade, classNow, parentName, mobile, FileuploadController.studentHeadImg);
+//            StuSelect stuSelect=new StuSelect(newStudent,courseList.get(0));
+//            //           插入数据库
+//            studentService.insert(newStudent);
+//            stuSelectService.insert(stuSelect);
+//        }else if (courseList.size()==0&&student==null){
+////                找不到学生，得不到课程，新建学生并插入数据库,课程相应信息按前端传来的填
+//            Student newStudent = new Student(null, stuName, grade, classNow, parentName, mobile, FileuploadController.studentHeadImg);
+//            StuSelect stuSelect=new StuSelect(newStudent,new Course(null,courseName,null));
+//            //           插入数据库
+//            studentService.insert(newStudent);
+//            stuSelectService.insert(stuSelect);
+//        }
+        }catch (Exception e){
+            throw new Exception("StudentController stuSelectAdd: 输入的学号或者课程列表的ID不对");
         }
-
         iSsubmitSucessful = "success";
         return iSsubmitSucessful;
     }

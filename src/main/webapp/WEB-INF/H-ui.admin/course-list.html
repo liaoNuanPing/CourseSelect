@@ -31,6 +31,7 @@
 			<tr class="text-c">
 				<th width="25"><input type="checkbox" name="" value=""></th>
 				<th width="40">ID</th>
+				<th width="40">课程编号</th>
 				<th width="50">课程名</th>
 				<th width="100">课程描述</th>
 				<th width="50">图片</th>
@@ -79,6 +80,7 @@ $(function(){
                     return '<input type="checkbox" name="dels" value='+data+'>';
                 }
             },
+            {"data": "id"},
             {"data": "courseId"},
             {"data": "course_name"},
             {"data": "course_desc"},

@@ -16,7 +16,7 @@ public class CoursePicServiceImpl implements CoursePicService {
     CoursePicMapper coursePicMapper;
 
 
-    public List<CoursePic> selectCoursePic(Integer id){
+    public List<CoursePic> selectCoursePicByCourseId(Integer id){
         CoursePicExample example=new CoursePicExample();
         CoursePicExample.Criteria criteria = example.createCriteria();
         criteria.andCourseIdEqualTo(id);

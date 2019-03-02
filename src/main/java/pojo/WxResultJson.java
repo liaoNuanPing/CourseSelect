@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public class WxResultJson implements Serializable {
-//    0失败，1成功，2成功一半
+//    0失败，1成功
     int isSuccessful;
     String msg;
 

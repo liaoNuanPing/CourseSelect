@@ -10,7 +10,7 @@ public interface CoursePicService {
      * @param id Integer 课程id
      * @return List List<CoursePic>
      */
-    List<CoursePic> selectCoursePic(Integer id);
+    List<CoursePic> selectCoursePicByCourseId(Integer id);
 
     int insert(CoursePic coursePic);
 

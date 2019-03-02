@@ -1,7 +1,5 @@
 package consts;
 
-import controller.FileuploadController;
-
 public class Path {
     private static String imagesPath=null;
     private static String tempPath=null;
@@ -24,6 +22,7 @@ public class Path {
             if (tempPath == null) {
                 String classesPath = Path.class.getClassLoader().getResource("/").getPath();
                 String[] rootPath = classesPath.split("WEB-INF");
+//                tempPath = rootPath[0] + "out/artifacts/CourseSelect_war_exploded/static/temp";
                 tempPath = rootPath[0] + "static/temp";
             }
         } catch (NullPointerException e) {
