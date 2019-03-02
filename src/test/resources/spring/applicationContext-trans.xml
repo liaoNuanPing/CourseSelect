@@ -21,13 +21,16 @@
 			<tx:method name="insert*" propagation="REQUIRED" />
 			<tx:method name="del*" propagation="REQUIRED" />
 			<tx:method name="update*" propagation="REQUIRED" />
-			<tx:method name="select*" propagation="SUPPORTS" read-only="true" />
+            <tx:method name="*WithTrans" propagation="REQUIRED"  />
+            <tx:method name="select*" propagation="SUPPORTS" read-only="true" />
 		</tx:attributes>
 	</tx:advice>
 	<!-- 切面 -->
 	<aop:config>
+		<!--<aop:advisor advice-ref="txAdvice"-->
+			<!--pointcut="execution(* service.*.*(..))" />-->
 		<aop:advisor advice-ref="txAdvice"
-			pointcut="execution(* service.*.*(..))" />
+			pointcut="execution(* controller.*.*(..))" />
 	</aop:config>
 	
 </beans>

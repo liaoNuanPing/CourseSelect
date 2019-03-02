@@ -1,23 +1,21 @@
 package pojo;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class WxResultJson {
+public class WxResultJson implements Serializable {
 //    0失败，1成功，2成功一半
     int isSuccessful;
     String msg;
-    List<String> courseNameList;
 
     public WxResultJson() {
-        isSuccessful=0;
-        msg=null;
-        courseNameList=null;
+        this.isSuccessful=0;
+        this.msg=null;
     }
 
-    public WxResultJson(int isSuccessful, String msg,List<String> list) {
+    public WxResultJson(int isSuccessful, String msg ) {
         this.isSuccessful = isSuccessful;
         this.msg = msg;
-        courseNameList=list;
     }
 
     public int getIsSuccessful() {
@@ -35,4 +33,5 @@ public class WxResultJson {
     public void setMsg(String msg) {
         this.msg = msg;
     }
+
 }

@@ -1,5 +1,6 @@
 package service;
 
+import pojo.IdentityAuditing;
 import pojo.WxStudent;
 
 public interface WxStudentService {
@@ -10,4 +11,6 @@ public interface WxStudentService {
     int insert(WxStudent wxStudent);
 
     int update(WxStudent wxStudent);
+
+
 }

@@ -1,8 +1,10 @@
 package service.impl;
 
+import dao.mapper.IdentityAuditingMapper;
 import dao.mapper.WxStudentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pojo.IdentityAuditing;
 import pojo.WxStudent;
 import pojo.WxStudentExample;
 import service.WxStudentService;
@@ -12,6 +14,9 @@ public class WxStudentServiceImpl implements WxStudentService {
 
     @Autowired
     WxStudentMapper wxStudentMapper;
+
+    @Autowired
+    IdentityAuditingMapper identityAuditingMapper;
 
     public WxStudent selectByOpenId(String openId){
         WxStudentExample example=new WxStudentExample();
