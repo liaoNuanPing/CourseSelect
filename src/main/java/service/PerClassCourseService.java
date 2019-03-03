@@ -62,8 +62,7 @@ public interface PerClassCourseService {
      * @param classes 班级
      * @return List PerClassCourse结果集
      */
-    List<PerClassCourse> selectByCourseIdAndTermAndGradeAndClass(Integer CourseId,String term,String grade,String classes);
-
+    List<PerClassCourse> selectByCourseIdAndTermAndGradeAndClass(String CourseId,String term,String grade,String classes);
 
 
 }

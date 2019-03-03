@@ -20,6 +20,17 @@
 
   </select>
 
+<select id="selectByCourseIdAndTermAndGradeAndClass" resultMap="BaseResultMap">
+    SELECT *
+    FROM per_class_course
+    where course_id=#{0}
+    and (term=0 or term=#{1})
+    and (grade =0 or grade=#{2})
+    and (to_class=0 or to_class=#{3});
+
+
+  </select>
+
   <select id="countAll" resultType="java.lang.Integer" >
     SELECT count(id) FROM per_class_course
   </select>

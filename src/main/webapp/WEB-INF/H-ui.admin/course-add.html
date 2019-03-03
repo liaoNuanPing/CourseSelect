@@ -166,14 +166,19 @@ $(function(){
                 async:false,
                 success: function(data){
                     layer.msg('添加成功!',{icon:1,time:1000});
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.$('.btn-refresh').click();
+                    parent.layer.close(index);
                 },
-                error: function(XmlHttpRequest, textStatus, errorThrown){
-                    layer.msg('error!',{icon:1,time:1000});
+                error: function(data){
+                    alert(data);
+                    var data=JSON.parse(data);
+                    alert(data["msg"]);
+                    layer.msg('error!ID号'+data["msg"]+'已经有和此新添课程相同的效果的选课',{icon:1,time:1000});
+
                 }
             });
-        var index = parent.layer.getFrameIndex(window.name);
-        parent.$('.btn-refresh').click();
-        parent.layer.close(index);
+
     }
 
 });

@@ -10,7 +10,7 @@ public class LoggerUtlis {
 
     static Logger wxLogger=null;
 
-    public static Logger getWxControllerLogger(Class cl){
+    public static Logger getWxControllerLogger(){
         if (wxLogger==null) {
             wxLogger = Logger.getLogger(WxController.class);
             String[] p = Path.getTempPath().split("static");

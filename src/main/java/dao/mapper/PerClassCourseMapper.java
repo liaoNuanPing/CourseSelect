@@ -39,6 +39,8 @@ public interface PerClassCourseMapper {
 
     List<PerClassCourse> selectByTermAndGradeAndClass(String term,String grade,String classes);
 
+    List<PerClassCourse> selectByCourseIdAndTermAndGradeAndClass(String courseId,String term,String grade,String classes);
+
 
 
 

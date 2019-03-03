@@ -61,14 +61,8 @@ public class PerClassCourseServiceImpl implements PerClassCourseService{
         return perClassCourseMapper.selectByTermAndGradeAndClass(term,grade,classes);
     }
 
-    public List<PerClassCourse> selectByCourseIdAndTermAndGradeAndClass(Integer CourseId,String term,String grade,String classes){
-        PerClassCourseExample example=new PerClassCourseExample();
-        PerClassCourseExample.Criteria criteria = example.createCriteria();
-        criteria.andCourseIdEqualTo(CourseId);
-        criteria.andTermEqualTo(term);
-        criteria.andGradeEqualTo(grade);
-        criteria.andToClassEqualTo(classes);
-        return perClassCourseMapper.selectByExample(example);
+    public List<PerClassCourse> selectByCourseIdAndTermAndGradeAndClass(String CourseId, String term, String grade, String classes) {
+        return perClassCourseMapper.selectByCourseIdAndTermAndGradeAndClass(CourseId,term,grade,classes);
     }
 
 

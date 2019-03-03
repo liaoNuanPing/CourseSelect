@@ -59,8 +59,9 @@ public class PerClassCourseController {
         String total = request.getParameter("total_need");
         int totalNeed = "".equals(total) ? 9999 : Integer.valueOf(request.getParameter("total_need"));
         String course_desc = request.getParameter("course_desc");
-        int courseId = -1;
         Course course;
+//        if (perClassCourseService.se)
+
 //      课程列表已有的
         List<Course> courseNameList = courseService.selectByCName(courseName);
 //        如果Course已经有这个课程，就不继续插入，直接利用,没有则创新的
@@ -69,9 +70,18 @@ public class PerClassCourseController {
             course = new Course(null, courseName, course_desc);
             if (courseService.insert(course) != 1)
                 throw new Exception();
-        } else
+        } else {
 //            直接利用
             course = courseNameList.get(0);
+//          查看是不是已经有相同效果的per_class_course,不能出现效果重叠
+            List<PerClassCourse> perClassCourseList = perClassCourseService.selectByCourseIdAndTermAndGradeAndClass(String.valueOf(course.getId()), term, grade, classes);
+            if (perClassCourseList!=null&&perClassCourseList.size()>0)
+                throw new Exception(JsonUtils.objectToJson( new WxResultJson(0,String.valueOf(perClassCourseList.get(0).getId()))));
+//            if()
+//                throw new Exception(JsonUtils.objectToJson( new WxResultJson(0,String.valueOf(perClassCourseList.get(0).getId()))));
+
+
+        }
 
         //插入PerClassCourse
         PerClassCourse perClassCourse = new PerClassCourse(null, course.getId(), grade, term, classes, totalNeed, 0);
@@ -92,8 +102,8 @@ public class PerClassCourseController {
             FileuploadController.fileNmaeList = new ArrayList<String>();
         }
 
-        isSubmitSuccessful = "success";
-        return isSubmitSuccessful;
+        return JsonUtils.objectToJson(new WxResultJson(1,""));
+
     }
 
     @RequestMapping("/mapping-course-update")
