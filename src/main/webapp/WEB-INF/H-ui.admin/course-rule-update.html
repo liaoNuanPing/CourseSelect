@@ -1,0 +1,210 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5shiv.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.8/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+<!--[if IE 6]>
+<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<title>新增图片</title>
+<link href="lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css" />
+</head>
+<body onload="addSelected()">
+<div class="page-container">
+	<form method="post" action="/mapping-course-add" class="form form-horizontal" id="form-course-add" name="forma">
+
+        <!--<div class="row cl">-->
+			<!--<label class="form-label col-xs-4 col-sm-3">课程ID：</label>-->
+			<!--<div class="formControls col-xs-8 col-sm-9">-->
+				<!--<input type="text" class="input-text" value="" placeholder="" id="course_id" name="course_id">-->
+			<!--</div>-->
+		<!--</div>-->
+
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>课程名：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="" id="course_name" name="course_name">
+			</div>
+		</div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-3">可选数：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="默认9999" name="total_need" id="total_need">
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-3">已选数：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="默认0" name="have" id="have">
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>学期：</label>
+            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+				<select class="select" size="1" name="term" id="term">
+					<option value="" selected>请选择该课的学期</option>
+					<option value="0">全部</option>
+					<option value="1">上学期</option>
+					<option value="2">下学期</option>
+				</select>
+				</span></div>
+        </div>
+
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>可选年级：</label>
+			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+				<select class="select" size="1" name="grade" id="grade">
+					<option value="" selected>请选择该课可选的年级</option>
+					<option value="0">全部</option>
+				</select>
+				</span> </div>
+		</div>
+
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>可选班级：</label>
+			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+				<select class="select" size="1" name="classes" id="classes">
+					<option value="" selected>请选择该课对应年级可选的班级</option>
+					<option value="0">全部</option>
+				</select>
+				</span> </div>
+		</div>
+
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">课程描述：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="" id="course_desc" name="course_desc">
+			</div>
+		</div>
+
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+				<!--<input class="btn btn-primary radius" type="button"  value="&nbsp;&nbsp;提交&nbsp;&nbsp;" onclick=sub()>-->
+				<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+				<button onClick="layer_close();" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+            </div>
+		</div>
+	</form>
+</div>
+
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script> 
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer /作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.js"></script> 
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script> 
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.js"></script> 
+<script type="text/javascript" src="lib/webuploader/0.1.5/webuploader.js"></script>
+<script type="text/javascript" src="lib/ajax.js"></script>
+<script type="text/javascript">
+function article_save(){
+	alert("刷新父级的时候会自动关闭弹层。")
+	window.parent.location.reload();
+}
+
+//获取url中的参数
+function getUrlParam(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+//    var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+    var r = decodeURI(decodeURI(window.location.search.substr(1))).match(reg);  //匹配目标参数
+    if (r != null) return unescape(r[2]); return null; //返回参数值
+}
+function addSelected() {
+    document.getElementById("course_desc").setAttribute("value",getUrlParam("course_desc"));
+    document.getElementById("total_need").setAttribute("value",getUrlParam("total"));
+    document.getElementById("have").setAttribute("value",getUrlParam("have"));
+    document.getElementById("term").setAttribute("value",getUrlParam("term"));
+    document.getElementById("course_name").setAttribute("value",getUrlParam("course_name"));
+    document.getElementById("classes").value= getUrlParam("to_class");
+    document.getElementById("grade").value= getUrlParam("grade");
+    document.getElementById("term").value= getUrlParam("term");
+}
+
+$(function(){
+
+
+    gradeAndClasses();
+
+
+    $("#form-course-add").validate({
+        rules:{
+            course_name:{
+                required:true,
+                minlength:2,
+                maxlength:16
+            },
+            grade:{
+                required:true,
+            },
+            classes:{
+                required:true,
+            },
+            term:{
+                required:true
+            },
+            total_need:{
+                required:true,
+                digits:true
+            },
+            have:{
+                required:true,
+                digits:true
+            }
+        },
+        onkeyup:false,
+        focusCleanup:true,
+        success:"valid",
+        submitHandler:function(form){
+            $(form).ajaxSubmit({
+                type: 'post',
+                url: "mapping-course-update" ,
+                async:false,
+                data:{
+                    "id":getUrlParam("id"),
+                    "courseId":getUrlParam("courseId")
+                },
+                success: function(data){
+//                    @todo 未显示成功提示
+                    layer.msg('添加成功!',{icon:1,time:2500});
+
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.$('.btn-refresh').click();
+                    parent.layer.close(index);
+                },
+                error: function(XmlHttpRequest, textStatus, errorThrown){
+                    //@todo 日志
+                    layer.msg('error!请重试或联系管理员',{icon:2,time:3500});
+                }
+            });
+//        var index = parent.layer.getFrameIndex(window.name);
+//        parent.$('.btn-refresh').click();
+//        parent.layer.close(index);
+    }
+
+});
+});
+
+
+
+</script>
+</body>
+</html>
