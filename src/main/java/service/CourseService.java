@@ -40,4 +40,6 @@ public interface CourseService {
     Course selectByPrimaryId(Integer id);
 
     Course selectById(Integer id);
+
+    int countAll();
 }

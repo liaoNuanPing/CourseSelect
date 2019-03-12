@@ -14,8 +14,8 @@ public class IdentityAuditingServiceImpl implements IdentityAuditingService {
     @Autowired
     IdentityAuditingMapper identityAuditingMapper;
 
-    @Autowired
-    StudentService studentService;
+//    @Autowired
+//    StudentService studentService;
 
     public int countAll(){
         return identityAuditingMapper.countAll();
@@ -33,10 +33,6 @@ public class IdentityAuditingServiceImpl implements IdentityAuditingService {
         return identityAuditingMapper.updateByPrimaryKey(identityAuditing);
     }
 
-    public void updateSelfAndInsertStudent(IdentityAuditing identityAuditing, Student student){
-        identityAuditingMapper.updateByPrimaryKey(identityAuditing);
-        studentService.insert(student);
-    }
 
     public int insert(IdentityAuditing identityAuditing){
         return identityAuditingMapper.insert(identityAuditing);

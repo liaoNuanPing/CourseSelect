@@ -1,5 +1,6 @@
 package controller;
 
+import consts.Url;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -62,15 +63,26 @@ public class ConfigController {
         list.add(PropertiesUtils.getPropertiesValue ("config.properties","classes"));
         list.add(PropertiesUtils.getPropertiesValue ("config.properties","grade"));
 
-        list.add(String.valueOf(request.getScheme()));
-        list.add(String.valueOf(request.getServerName()));
-        list.add(String.valueOf(request.getServerPort()));
-        list.add(String.valueOf(request.getContextPath()));
+        list.add(String.valueOf(Url.getScheme(request)));
+        list.add(String.valueOf(Url.getServerName(request)));
+        list.add(String.valueOf(Url.getPort(request)));
+        list.add(String.valueOf(Url.getContextPath(request)));
+        list.add(String.valueOf(Url.getUrl(request)));
 
-        System.out.println(JsonUtils.objectToJson(list));
+        list.add(PropertiesUtils.getPropertiesValue ("config.properties","min_date"));
+        list.add(PropertiesUtils.getPropertiesValue ("config.properties","max_date"));
+
         return JsonUtils.objectToJson(list);
     }
 
+    @RequestMapping("/mapping-config-date-modify")
+    @ResponseBody
+    public String selectDateUpdate(String minDate,String maxDate){
+        PropertiesUtils.modifyProperties("config.properties","min_date",minDate);
+        PropertiesUtils.modifyProperties("config.properties","max_date",maxDate);
+
+        return "success";
+    }
 
 }
 

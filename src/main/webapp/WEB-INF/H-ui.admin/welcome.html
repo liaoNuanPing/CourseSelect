@@ -33,19 +33,19 @@
 		</thead>
 		<tbody>
 			<tr>
-				<th width="30%">服务器计算机名</th>
+				<th width="30%">项目完整路径</th>
 				<td><span id="lbServerName"></span></td>
 			</tr>
 			<tr>
-				<td>服务器IP地址</td>
+				<td>项目IP地址</td>
 				<td id="ip"></td>
 			</tr>
 			<tr>
-				<td>服务器域名</td>
+				<td>项目名</td>
 				<td id="project_name"></td>
 			</tr>
 			<tr>
-				<td>服务器端口 </td>
+				<td>项目端口 </td>
 				<td id="port"></td>
 			</tr>
 			<tr>
@@ -64,6 +64,17 @@
                 <td>年级数 </td>
                 <td ><input type="text" id="grade" name="grade" maxlength="1" > <a style="text-decoration:none" onClick="modifyGrade()" href="javascript:;" title="确认修改"><i class="Hui-iconfont">&#xe6e1;</i></a></td>
             </tr>
+            <tr>
+                <td>选课日期范围</td>
+                <td ><input type="text" class="Wdate" id="minDate" onfocus="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2018-03-08 11:30:00',maxDate:'2099-03-10 20:59:30'})"/>
+
+                -
+                    <input type="text" class="Wdate" id="maxDate" onfocus="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2018-03-08 11:30:00',maxDate:'2099-03-10 20:59:30'})"/>
+
+                    <a style="text-decoration:none" onClick="modifyDate()" href="javascript:;" title="确认修改"><i class="Hui-iconfont">&#xe6e1;</i></a>
+                </td>
+            </tr>
+
 		</tbody>
 	</table>
 </div>
@@ -75,7 +86,8 @@
 	</div>
 </footer>
 <script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script> 
-<script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script> 
+<script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="lib/My97DatePicker/4.8/WdatePicker.js"></script>
 <!--此乃百度统计代码，请自行删除-->
 <script>
     var term=1;
@@ -101,11 +113,15 @@
 
             document.getElementById("grade").setAttribute("value",data[2])+" "+g;
 
-            document.getElementById("lbServerName").innerHTML=data[3]+"://"+data[4];
+            document.getElementById("lbServerName").innerHTML=data[7];
 
             document.getElementById("ip").innerHTML=data[4];
             document.getElementById("port").innerHTML=data[5];
             document.getElementById("project_name").innerHTML=data[6];
+
+            document.getElementById("minDate").setAttribute("value",data[8]);
+            document.getElementById("maxDate").setAttribute("value",data[9]);
+
         },
         error:function(data) {
             term=0;
@@ -172,6 +188,23 @@ function modifyStudentGrade(num) {
         data:{"num":num},
         success: function(data){
             alert("更改学生年级成功！一共影响"+data+"名学生");
+        },
+        error:function(data) {
+            alert("error");
+        }
+    });
+}
+
+function modifyDate() {
+    $.ajax({
+        type: 'POST',
+        url : "mapping-config-date-modify",
+        data:{
+            "minDate":$("#minDate").val(),
+            "maxDate":$("#maxDate").val()
+        },
+        success: function(data){
+            alert("更改选课时间成功");
         },
         error:function(data) {
             alert("error");

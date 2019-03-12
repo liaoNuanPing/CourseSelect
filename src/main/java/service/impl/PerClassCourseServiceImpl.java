@@ -6,7 +6,11 @@ import org.springframework.stereotype.Service;
 import pojo.PerClassCourse;
 import pojo.PerClassCourseExample;
 import service.PerClassCourseService;
+import utils.ConnectDB;
 
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -50,6 +54,7 @@ public class PerClassCourseServiceImpl implements PerClassCourseService{
         return perClassCourseMapper.selectByExample(example);
     }
 
+
     public int delById(Integer id){
         PerClassCourseExample example=new PerClassCourseExample();
         PerClassCourseExample.Criteria criteria = example.createCriteria();
@@ -61,9 +66,41 @@ public class PerClassCourseServiceImpl implements PerClassCourseService{
         return perClassCourseMapper.selectByTermAndGradeAndClass(term,grade,classes);
     }
 
-    public List<PerClassCourse> selectByCourseIdAndTermAndGradeAndClass(String CourseId, String term, String grade, String classes) {
-        return perClassCourseMapper.selectByCourseIdAndTermAndGradeAndClass(CourseId,term,grade,classes);
+    public List<PerClassCourse> selectByCourseIdAndTermAndGradeAndClass(String courseId, String term, String grade, String classes) throws Exception {
+
+        String c = "";
+        if (!"0".equals(grade))
+            c += "and (grade=0 or grade=" + grade + ")";
+        if (!"0".equals(term))
+            c += "and (term=0 or term=" + term + ")";
+        if (!"0".equals(classes))
+            c += "and (to_class=0 or to_class=" + classes + ")";
+        String sql = "SELECT * " +
+                "FROM per_class_course " +
+                "where course_id=" + courseId + " " +
+                c;
+//              查找数据库
+        Statement ptsm = ConnectDB.getConnection().createStatement();
+        ResultSet rs = ptsm.executeQuery(sql);
+        List<PerClassCourse> perClassCourseList = new ArrayList<PerClassCourse>();
+        while (rs.next()) {
+            PerClassCourse perClass = new PerClassCourse(
+                    rs.getInt("id"),
+                    rs.getInt("course_id"),
+                    rs.getString("grade"),
+                    rs.getString("term"),
+                    rs.getString("to_class"),
+                    rs.getInt("total_need_stu_amount"),
+                    rs.getInt("have_stu_amount")
+            );//end CourseShow
+            perClassCourseList.add(perClass);
+        }
+        return perClassCourseList;
+
     }
 
+    public int updateHaveStuAmountAddOne(Integer id){
+        return perClassCourseMapper.updateHaveStuAmountAddOne(id);
+    }
 
 }

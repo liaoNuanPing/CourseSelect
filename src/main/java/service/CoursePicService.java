@@ -15,4 +15,6 @@ public interface CoursePicService {
     int insert(CoursePic coursePic);
 
     int delById(Integer id);
+
+    CoursePic selectById(Integer id);
 }

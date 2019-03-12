@@ -1,64 +1,49 @@
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import javax.servlet.http.HttpSessionAttributeListener;
-import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
-import javax.servlet.http.HttpSessionBindingEvent;
+package listener;
 
-public class DeleteTempListener implements ServletContextListener,
-        HttpSessionListener, HttpSessionAttributeListener {
+import consts.Path;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.stereotype.Component;
+import utils.PropertiesUtils;
+import java.io.File;
 
-    // Public constructor is required by servlet spec
-    public DeleteTempListener() {
-    }
+/**
+ * 清理临时图片文件夹的线程，不会停止
+ */
+@Component
+public class DeleteTempListener implements InitializingBean {
+    //    5分钟执行一次
+    private final long sleepTime=300000;
 
-    // -------------------------------------------------------
-    // ServletContextListener implementation
-    // -------------------------------------------------------
-    public void contextInitialized(ServletContextEvent sce) {
-      /* This method is called when the servlet context is
-         initialized(when the Web application is deployed). 
-         You can initialize servlet context related data here.
-      */
-    }
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        new Thread(()->{{
+            String tempPath = Path.getTempPath();
+            File dir = new File(tempPath);
 
-    public void contextDestroyed(ServletContextEvent sce) {
-      /* This method is invoked when the Servlet Context 
-         (the Web application) is undeployed or 
-         Application Server shuts down.
-      */
-    }
+            while (true) {
+                try {
+//                temp文件夹路径
+//                遍历temp，时间大于规定时间就删除
+                    if (dir.exists() && dir.isDirectory()) {
+                        File[] files = dir.listFiles();
+                        for (File file : files) {
+                            String createTime =file.getName().substring(0,13);
+                            if (System.currentTimeMillis() - Long.valueOf(createTime) > Long.valueOf(PropertiesUtils.getPropertiesValue("config.properties", "del_time"))) {
+                                file.delete();
+                            }
+                        }
+                    }
+                    Thread.sleep(sleepTime);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    if (dir.exists() && dir.isDirectory()) {
+                        File[] files = dir.listFiles();
+                        for (File file : files)
+                            file.delete();
 
-    // -------------------------------------------------------
-    // HttpSessionListener implementation
-    // -------------------------------------------------------
-    public void sessionCreated(HttpSessionEvent se) {
-      /* Session is created. */
-    }
-
-    public void sessionDestroyed(HttpSessionEvent se) {
-      /* Session is destroyed. */
-    }
-
-    // -------------------------------------------------------
-    // HttpSessionAttributeListener implementation
-    // -------------------------------------------------------
-
-    public void attributeAdded(HttpSessionBindingEvent sbe) {
-      /* This method is called when an attribute 
-         is added to a session.
-      */
-    }
-
-    public void attributeRemoved(HttpSessionBindingEvent sbe) {
-      /* This method is called when an attribute
-         is removed from a session.
-      */
-    }
-
-    public void attributeReplaced(HttpSessionBindingEvent sbe) {
-      /* This method is invoked when an attibute
-         is replaced in a session.
-      */
+                    }
+                }
+            }
+        }});
     }
 }

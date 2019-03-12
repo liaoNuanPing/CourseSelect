@@ -1,11 +1,13 @@
 package dao.mapper;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 import pojo.Course;
 import pojo.CourseExample;
 
 import java.util.List;
 
+@Repository
 public interface CourseMapper {
     int countByExample(CourseExample example);
 
@@ -33,5 +35,6 @@ public interface CourseMapper {
 
     List<Course> selectBySql(@Param("sql") String sql);
 
+    int countAll();
 
 }

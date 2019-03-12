@@ -4,11 +4,13 @@ import consts.Path;
 import enums.StudentEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import pojo.DatatablePage;
 import pojo.Student;
+import pojo.WxResultJson;
 import service.StudentService;
 import utils.*;
 
@@ -21,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
+@Transactional(rollbackFor = { Exception.class })
 public class StudentController {
 
     @Autowired
@@ -34,9 +37,12 @@ public class StudentController {
     @RequestMapping(value = {"/mapping-student-page-show"},produces = "text/plain;charset=utf-8")
     @ResponseBody
     public String shudentPageShow(String id) {
-        String json= JsonUtils.objectToJson( studentService.selectById(Integer.valueOf(id)));
-        System.out.println(json);
-        return json;
+        try {
+            String json= JsonUtils.objectToJson( studentService.selectById(Integer.valueOf(id)));
+            return json;
+        }catch (Exception e){
+            return "";
+        }
     }
 
     @RequestMapping(value = {"/loadStudent"},produces = "text/plain;charset=utf-8")
@@ -86,7 +92,6 @@ public class StudentController {
 //                    查有
                 studentList.add(stuSelect);
             }//end while
-            System.out.println(sql3);
 
 //            过滤后的总记录数
             data.setRecordsFiltered(studentService.countAll());
@@ -101,82 +106,109 @@ public class StudentController {
 
 //        data: 具体的数据对象数组
         data.setData(studentList);
-        System.out.println(JsonUtils.objectToJson(data));
         return JsonUtils.objectToJson(data);
 
     }
 
 
-    @RequestMapping("/mapping-student-hand-add")
+    @RequestMapping(value = {"/mapping-student-hand-add"},produces = "text/plain;charset=utf-8")
     @ResponseBody
-    public String handMakeAdd(HttpServletRequest request) throws Exception{
-        String stuId = request.getParameter("student_id");
-        String stuName = request.getParameter("student_name")==null?"":request.getParameter("student_name");
-        String parentName = request.getParameter("parent_name")==null?"":request.getParameter("parent_name");
-        String mobile = request.getParameter("mobile");
-        String grade = request.getParameter("grade");
-        String classNow = request.getParameter("class_now");
+    public String handMakeAdd(HttpServletRequest request) throws Exception {
+        try {
+            String stuId = request.getParameter("student_id");
+            String stuName = request.getParameter("student_name") == null ? "" : request.getParameter("student_name");
+            String parentName = request.getParameter("parent_name") == null ? "" : request.getParameter("parent_name");
+            String mobile = request.getParameter("mobile");
+            String grade = request.getParameter("grade");
+            String classNow = request.getParameter("class_now");
 
-        String newImgName= PicUtils.getNewCourseImageName(FileuploadController.studentHeadImg);
-        PicUtils.rename(FileuploadController.studentHeadImg,newImgName);
+            String newImgName = PicUtils.getNewCourseImageName(FileuploadController.studentHeadImg);
+            PicUtils.rename(FileuploadController.studentHeadImg, newImgName);
 
-        Student student=new Student("".equals(stuId)?null:Integer.valueOf(stuId),stuName,grade,classNow,parentName,mobile,"static/images/"+newImgName);
+            Student student = new Student("".equals(stuId) ? null : Integer.valueOf(stuId), stuName, grade, classNow, parentName, mobile, "static/images/" + newImgName);
 //        上传图片的链接只做一次，用完重制
-        FileuploadController.studentHeadImg="";
-
-        studentService.insert(student);
-        return "success";
+            FileuploadController.studentHeadImg = "";
+            studentService.insert(student);
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            LoggerUtlis.getLogger(this.getClass()).error("------mapping-student-hand-add-" + e.getMessage());
+            return JsonUtils.objectToJson(new WxResultJson(0, "添加错误"));
+        }
+        return JsonUtils.objectToJson(new WxResultJson(1, ""));
     }
 
-    @RequestMapping("/mapping-student-update")
+    @RequestMapping(value = {"/mapping-student-update"},produces = "text/plain;charset=utf-8")
     @ResponseBody
-    public String update(HttpServletRequest request) throws Exception{
-        String oldId = request.getParameter("id");
-        String newId = request.getParameter("student_id");
-        String stuName = request.getParameter("student_name");
-        String parentName = request.getParameter("parent_name");
-        String mobile = request.getParameter("mobile");
-        String grade = request.getParameter("grade");
-        String classNow = request.getParameter("class_now");
+    public String update(HttpServletRequest request) throws Exception {
+        try {
+            String oldId = request.getParameter("id");
+            String newId = request.getParameter("student_id");
+            String stuName = request.getParameter("student_name");
+            String parentName = request.getParameter("parent_name");
+            String mobile = request.getParameter("mobile");
+            String grade = request.getParameter("grade");
+            String classNow = request.getParameter("classes");
 
-        Student oStudent = studentService.selectById(Integer.valueOf(oldId));
-        Student nStudent;
+            Student oStudent = studentService.selectById(Integer.valueOf(oldId));
+            Student nStudent;
 
+            if ("".equals(FileuploadController.studentHeadImg)) {
+                nStudent = new Student(Integer.valueOf(newId), stuName, grade, classNow, parentName, mobile, oStudent.getHeadImg());
+            } else {
+                String newImgName = PicUtils.getNewCourseImageName(FileuploadController.studentHeadImg);
+                PicUtils.rename(FileuploadController.studentHeadImg, newImgName);
+                FileuploadController.studentHeadImg="";
+                nStudent = new Student(Integer.valueOf(newId), stuName, grade, classNow, parentName, mobile, "static/images/"+newImgName);
+            }
 
-        if ("".equals(FileuploadController.studentHeadImg)){
-             nStudent=new Student(Integer.valueOf(newId),stuName,grade,classNow,parentName,mobile,oStudent.getHeadImg());
-        }else {
-            String newImgName= PicUtils.getNewCourseImageName(FileuploadController.studentHeadImg);
-            PicUtils.rename(FileuploadController.studentHeadImg,newImgName);
-            nStudent=new Student(Integer.valueOf(newId),stuName,grade,classNow,parentName,mobile,newImgName);
+            studentService.delById(Integer.valueOf(oldId));
+            studentService.insert(nStudent);
+
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            LoggerUtlis.getLogger(this.getClass()).error("------mapping-student-update-" + e.getMessage());
+            return JsonUtils.objectToJson(new WxResultJson(0, "更新错误"));
         }
-
-//       TODO 原子操作
-        studentService.updateByDel(Integer.valueOf(oldId),nStudent);
-        return "success";
-
+        return JsonUtils.objectToJson(new WxResultJson(1, ""));
     }
 
     @RequestMapping("/mapping-student-del")
     @ResponseBody
-    public String del(String perId, String[] ids) throws Exception{
-        int result = 0;
-        if (perId != null)
-            result += studentService.delById(Integer.valueOf(perId));
-        else
-            for (int i = 0; i < ids.length; i++)
-                result += studentService.delById(Integer.valueOf(ids[i]));
+    public String del(String perId, String[] ids) throws Exception {
+        try {
+            int result = 0;
+            if (perId != null) {
+                Student student = studentService.selectById(Integer.valueOf(perId));
+                result += studentService.delById(Integer.valueOf(perId));
+                File file=new File(Path.getImagesPath()+"/"+student.getHeadImg());
+                if (file.exists()&&file.isFile())
+                    file.delete();
+            }
+            else
+                for (int i = 0; i < ids.length; i++) {
+                    Student student = studentService.selectById(Integer.valueOf(ids[i]));
+                    result += studentService.delById(Integer.valueOf(ids[i]));
+                    File file=new File(Path.getImagesPath()+"/"+student.getHeadImg());
+                    if (file.exists()&&file.isFile())
+                        file.delete();
+                }
 
-        if (result == 1 || ids==null|| result == ids.length)
-            return "success";
-        else
-            return "failure";
+            if (result == 1 || ids == null || result == ids.length)
+                return JsonUtils.objectToJson(new WxResultJson(1, ""));
+            else
+                return JsonUtils.objectToJson(new WxResultJson(0, "删除错误"));
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            LoggerUtlis.getLogger(this.getClass()).error("------mapping-student-hand-add-" + e.getMessage());
+            return JsonUtils.objectToJson(new WxResultJson(0, "删除错误"));
+        }
     }
 
 
     @RequestMapping("/mapping-student-grade-modify")
     @ResponseBody
     public String modifyStudentGrade(String num){
+//        TODO 返回值
         if ("A".equals(num))
             return String.valueOf( studentService.updateAllStudentGradeDown(-1));
         else if ("B".equals(num))

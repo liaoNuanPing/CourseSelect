@@ -1,11 +1,13 @@
 package dao.mapper;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 import pojo.PerClassCourse;
 import pojo.PerClassCourseExample;
 
 import java.util.List;
 
+@Repository
 public interface PerClassCourseMapper {
     int countByExample(PerClassCourseExample example);
 
@@ -41,6 +43,7 @@ public interface PerClassCourseMapper {
 
     List<PerClassCourse> selectByCourseIdAndTermAndGradeAndClass(String courseId,String term,String grade,String classes);
 
+    int updateHaveStuAmountAddOne(Integer id);
 
 
 

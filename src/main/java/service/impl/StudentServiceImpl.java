@@ -13,9 +13,9 @@ public class StudentServiceImpl implements StudentService {
     @Autowired
     StudentMapper studentMapper;
 
-    public Student selectWithoutId(String stuName,String grade,String classNow,String parentName){
-        return studentMapper.selectWithoutId(stuName,grade,classNow,parentName);
-    }
+//    public Student selectWithoutId(String stuName,String grade,String classNow,String parentName){
+//        return studentMapper.selectWithoutId(stuName,grade,classNow,parentName);
+//    }
 
     public int insert(Student student){
         return studentMapper.insert(student);
@@ -36,10 +36,6 @@ public class StudentServiceImpl implements StudentService {
         return studentMapper.countByExample(examplp);
     }
 
-    public void updateByDel(Integer id,Student student){
-        studentMapper.deleteByPrimaryKey(id);
-        studentMapper.insert(student);
-    }
 
     public int updateAllStudentGradeUp(Integer num,Integer grade){
         return studentMapper.updateAllStudentGradeUp(num,grade);

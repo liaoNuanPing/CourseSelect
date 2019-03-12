@@ -1,5 +1,7 @@
 package pojo;
 
+import org.springframework.stereotype.Repository;
+
 public class Course {
     private Integer id;
 

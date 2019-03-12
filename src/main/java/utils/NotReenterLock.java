@@ -1,6 +1,6 @@
 package utils;
 
-public class Lock{
+public class NotReenterLock {
     private boolean isLocked = false;
     public synchronized void lock() throws InterruptedException{
         while(isLocked){

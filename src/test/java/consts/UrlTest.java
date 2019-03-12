@@ -1,6 +1,8 @@
 package consts;
 
-public class Url {
+import org.junit.Test;
+
+public class UrlTest {
     static String Scheme;
     static String ServerName;
     static String Port;
@@ -24,7 +26,8 @@ public class Url {
         return ContextPath;
     }
 
-    public static String getUrl() {
+    @Test
+    public String testGetUrl() {
         if (url==null){
             url=getScheme()+"://"+getServerName()+":"+getPort()+"/";
         }
@@ -48,6 +51,6 @@ public class Url {
     }
 
     public static void setUrl(String url) {
-        Url.url = url;
+        UrlTest.url = url;
     }
 }

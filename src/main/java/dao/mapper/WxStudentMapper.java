@@ -1,11 +1,13 @@
 package dao.mapper;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 import pojo.WxStudent;
 import pojo.WxStudentExample;
 
 import java.util.List;
 
+@Repository
 public interface WxStudentMapper {
     int countByExample(WxStudentExample example);
 

@@ -13,7 +13,8 @@ import java.util.List;
 @Service
 public class CourseServiceImpl implements CourseService {
 
-    @Autowired CourseMapper courseMapper;
+    @Autowired
+    CourseMapper courseMapper;
 
     public List<Course> getCourseList(int page,int rows){
         return courseMapper.selectLimit((page-1)*rows, rows);
@@ -60,6 +61,10 @@ public class CourseServiceImpl implements CourseService {
 
     public Course selectById(Integer id){
         return courseMapper.selectByPrimaryKey(id);
+    }
+
+    public int countAll(){
+        return courseMapper.countAll();
     }
 
 }

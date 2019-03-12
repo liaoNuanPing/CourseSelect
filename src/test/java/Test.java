@@ -6,17 +6,29 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={"classpath:spring/applicationContext-dao.xml"})
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
+
 public class Test {
 
-    @Autowired
-    AdminInfoMapper adminInfoMapper;
 
     @org.junit.Test
     public void testCRUD(){
-        ApplicationContext ioc = new ClassPathXmlApplicationContext("applicationContext-dao.xml");
-        System.out.println(adminInfoMapper);
+
+        System.out.println(System.currentTimeMillis());
+    }
+    @org.junit.Test
+    public void tt() throws ParseException {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = simpleDateFormat.parse("2019-03-05 17:34:20");
+        long ts = date.getTime();
+        System.out.println(ts);
+        System.out.println(System.currentTimeMillis());
+
     }
 
 }

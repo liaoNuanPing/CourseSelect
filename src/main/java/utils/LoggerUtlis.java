@@ -16,8 +16,17 @@ public class LoggerUtlis {
             String[] p = Path.getTempPath().split("static");
             String rp = p[0] + "WEB-INF/classes/properties/log4j.properties";
             PropertyConfigurator.configure(rp);
-            wxLogger.setLevel(Level.WARN);
+            wxLogger.setLevel(Level.ERROR);
         }
         return wxLogger;
+    }
+
+    public static Logger getLogger(Class classes){
+        Logger logger = Logger.getLogger(classes);
+            String[] p = Path.getTempPath().split("static");
+            String rp = p[0] + "WEB-INF/classes/properties/log4j.properties";
+            PropertyConfigurator.configure(rp);
+        logger.setLevel(Level.ERROR);
+        return logger;
     }
 }

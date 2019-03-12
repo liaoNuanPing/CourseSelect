@@ -62,7 +62,13 @@ public interface PerClassCourseService {
      * @param classes 班级
      * @return List PerClassCourse结果集
      */
-    List<PerClassCourse> selectByCourseIdAndTermAndGradeAndClass(String CourseId,String term,String grade,String classes);
+    List<PerClassCourse> selectByCourseIdAndTermAndGradeAndClass(String CourseId,String term,String grade,String classes) throws Exception;
 
+    /**
+     * 根据id更新 HaveStuAmount+1
+     * @param id per_class_course id
+     * @return 影响行数
+     */
+    int updateHaveStuAmountAddOne(Integer id);
 
 }

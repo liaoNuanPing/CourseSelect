@@ -1,11 +1,13 @@
 package dao.mapper;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 import pojo.StuSelect;
 import pojo.StuSelectExample;
 
 import java.util.List;
 
+@Repository
 public interface StuSelectMapper {
     int countByExample(StuSelectExample example);
 

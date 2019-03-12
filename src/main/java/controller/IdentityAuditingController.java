@@ -1,21 +1,25 @@
 package controller;
 
+import consts.Path;
 import enums.StudentEnum;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import pojo.DatatablePage;
-import pojo.IdentityAuditing;
-import pojo.Student;
-import pojo.WxStudent;
+import pojo.*;
 import service.IdentityAuditingService;
+import service.StudentService;
 import service.WxStudentService;
 import utils.ConnectDB;
 import utils.EncodingUtils;
 import utils.JsonUtils;
+import utils.LoggerUtlis;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -25,13 +29,18 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
+@Transactional(rollbackFor = { Exception.class })
 public class IdentityAuditingController {
+    Logger logger=LoggerUtlis.getLogger(IdentityAuditingController.class);
 
     @Autowired
     IdentityAuditingService identityAuditingService;
 
     @Autowired
     WxStudentService wxStudentService;
+
+    @Autowired
+    StudentService studentService;
 
     @RequestMapping(value = {"/loadIdentityAudit"},produces = "text/plain;charset=utf-8")
     @ResponseBody
@@ -82,7 +91,6 @@ public class IdentityAuditingController {
 //                    查有
                 studentList.add(stuSelect);
             }//end while
-            System.out.println(sql3);
 
 //            过滤后的总记录数
             data.setRecordsFiltered(identityAuditingService.countAll());
@@ -97,26 +105,39 @@ public class IdentityAuditingController {
 
 //        data: 具体的数据对象数组
         data.setData(studentList);
-        System.out.println(JsonUtils.objectToJson(data));
         return JsonUtils.objectToJson(data);
     }
 
-    @RequestMapping("/mapping-audit-del")
+    @RequestMapping(value = {"/mapping-audit-del"},produces = "text/plain;charset=utf-8")
     @ResponseBody
-    public String del(String perId, String[] ids) throws Exception{
-//        TODO 图片删除
+    public String del(String perId, String[] ids) throws Exception {
+        try {
+            int result = 0;
+            if (perId != null) {
+                IdentityAuditing identityAuditing = identityAuditingService.selectById(Integer.valueOf(perId));
+                result += identityAuditingService.delById(Integer.valueOf(perId));
+                File file = new File(Path.getImagesPath() + "/" + identityAuditing.getHeadImg());
+                if (file.exists()&&file.isFile())
+                    file.delete();
+            } else
+                for (int i = 0; i < ids.length; i++) {
+                    IdentityAuditing identityAuditing = identityAuditingService.selectById(Integer.valueOf(ids[i]));
+                    result += identityAuditingService.delById(Integer.valueOf(ids[i]));
+                    result += identityAuditingService.delById(Integer.valueOf(perId));
+                    File file = new File(Path.getImagesPath() + "/" + identityAuditing.getHeadImg());
+                    if (file.exists()&&file.isFile())
+                        file.delete();
+                }
 
-        int result = 0;
-        if (perId != null)
-            result += identityAuditingService.delById(Integer.valueOf(perId));
-        else
-            for (int i = 0; i < ids.length; i++)
-                result += identityAuditingService.delById(Integer.valueOf(ids[i]));
-
-        if (result == 1 || ids==null|| result == ids.length)
-            return "success";
-        else
-            return "failure";
+            if (result == 1 || ids == null || result == ids.length)
+                return JsonUtils.objectToJson(new WxResultJson(1,""));
+            else
+                return JsonUtils.objectToJson(new WxResultJson(0,"图片删除失败"));
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            logger.error("------mapping-audit-del-"+e.getMessage());
+            return JsonUtils.objectToJson(new WxResultJson(0,""));
+        }
     }
 
 
@@ -127,33 +148,42 @@ public class IdentityAuditingController {
      * @return
      * @throws Exception
      */
-    @RequestMapping("/mapping-audit-handle")
+    @RequestMapping(value = {"/mapping-audit-handle"},produces = "text/plain;charset=utf-8")
     @ResponseBody
-    public String passOrNot(String idea,String id) throws Exception{
-        IdentityAuditing auditing = identityAuditingService.selectById(Integer.valueOf(id));
-        auditing.setAuditingStatus(idea);
-        if ("2".equals(idea))
-            identityAuditingService.update(auditing);
-        else {
+    public String passOrNot(String idea,String id) throws Exception {
+        try {
+            IdentityAuditing auditing = identityAuditingService.selectById(Integer.valueOf(id));
+            auditing.setAuditingStatus(idea);
+            if ("2".equals(idea))
+                identityAuditingService.update(auditing);
+            else {
 //            通过
-            Student student = new Student(null,
-                    auditing.getStuName(),
-                    auditing.getGrade(),
-                    auditing.getClassNow(),
-                    auditing.getParentName(),
-                    auditing.getParentPhone(),
-                    auditing.getHeadImg()
-            );
+                Student student = new Student(null,
+                        auditing.getStuName(),
+                        auditing.getGrade(),
+                        auditing.getClassNow(),
+                        auditing.getParentName(),
+                        auditing.getParentPhone(),
+                        auditing.getHeadImg()
+                );
 //            更新identityAuditing并插入Student记录
-            identityAuditingService.updateSelfAndInsertStudent(auditing, student);
-//            更新wxStudent
-            WxStudent wxStudent = wxStudentService.selectByAuditingId(Integer.valueOf(id));
-            wxStudent.setStuId(student.getId());
-            wxStudentService.update(wxStudent);
+                if( identityAuditingService.update(auditing)==0)
+                    return JsonUtils.objectToJson(new WxResultJson(0, "审核更新失败"));
 
-//            TODO 更新
+                if( studentService.insert(student)==0)
+                    return JsonUtils.objectToJson(new WxResultJson(0, "更新到学生列表失败"));
+
+//            更新wxStudent
+                WxStudent wxStudent = wxStudentService.selectByAuditingId(Integer.valueOf(id));
+                wxStudent.setStuId(student.getId());
+                wxStudentService.update(wxStudent);
+            }
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            logger.error("------mapping-audit-handle-" + e.getMessage());
+            return JsonUtils.objectToJson(new WxResultJson(0, "操作失败"));
         }
-        return "success";
+        return JsonUtils.objectToJson(new WxResultJson(1, ""));
     }
 
 

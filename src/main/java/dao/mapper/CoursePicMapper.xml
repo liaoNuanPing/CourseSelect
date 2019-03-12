@@ -6,6 +6,8 @@
     <result column="course_id" property="courseId" jdbcType="INTEGER" />
     <result column="pic" property="pic" jdbcType="VARCHAR" />
   </resultMap>
+
+
   <sql id="Example_Where_Clause" >
     <where >
       <foreach collection="oredCriteria" item="criteria" separator="or" >

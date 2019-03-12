@@ -16,7 +16,6 @@ public class PropertiesUtils {
      */
     public static void modifyProperties(String fileName,String key,String value){
         String profilepath = PropertiesUtils.class.getResource("/").getPath()+"properties/"+fileName;//我的配置文件在src根目录下
-        System.out.println(profilepath);
         try {
             Properties props=new Properties();
             props.load(new FileInputStream(profilepath));

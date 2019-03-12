@@ -41,7 +41,7 @@
 		</div>
 
 		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>课程列表id：</label>
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>选课规则id：</label>
 			<div class="formControls col-xs-8 col-sm-9">
 				<input type="text" class="input-text" value="" placeholder="" id="per_course_id" name="per_course_id">
 			</div>
@@ -99,10 +99,18 @@ $(function(){
                 url: "mapping-select-add" ,
                 async:false,
                 success: function(data){
-                    layer.msg('添加成功!',{icon:1,time:1000});
-                    var index = parent.layer.getFrameIndex(window.name);
-                    parent.$('.btn-refresh').click();
-                    parent.layer.close(index);
+                    data=JSON.parse(data);
+                    if(data["isSuccessful"]=="1") {
+                        layer.msg('添加成功!', {icon: 1, time: 2000});
+                        setTimeout( function(){
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.$('.table-sort').DataTable().draw( false );
+                            parent.layer.close(index);
+                        }, 1.5 * 1000 );//延迟1500毫米
+
+                    }else {
+                        layer.msg('添加失败!'+data["msg"],{icon:2,time:3500});
+                    }
                 },
                 error: function(XmlHttpRequest, textStatus, errorThrown){
                     layer.msg('error!请检查输入',{icon:2,time:1000});

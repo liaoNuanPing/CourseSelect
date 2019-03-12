@@ -40,44 +40,9 @@
 			</div>
 		</div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-3">可选数：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="默认9999" name="total_need">
-            </div>
-        </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>学期：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-				<select class="select" size="1" name="term" id="term">
-					<option value="" selected>请选择该课的学期</option>
-					<option value="0">全部</option>
-					<option value="1">上学期</option>
-					<option value="2">下学期</option>
-				</select>
-				</span></div>
-        </div>
 
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>可选年级：</label>
-			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-				<select class="select" size="1" name="grade" id="grade">
-					<option value="" selected>请选择该课可选的年级</option>
-					<option value="0">全部</option>
-				</select>
-				</span> </div>
-		</div>
 
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>可选班级：</label>
-			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-				<select class="select" size="1" name="classes" id="classes">
-					<option value="" selected>请选择该课对应年级可选的班级</option>
-					<option value="0">全部</option>
-				</select>
-				</span> </div>
-		</div>
 
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">课程描述：</label>
@@ -165,16 +130,21 @@ $(function(){
                 url: "mapping-course-add" ,
                 async:false,
                 success: function(data){
-                    layer.msg('添加成功!',{icon:1,time:1000});
-                    var index = parent.layer.getFrameIndex(window.name);
-                    parent.$('.btn-refresh').click();
-                    parent.layer.close(index);
+                    data=JSON.parse(data);
+                    if(data["isSuccessful"]=="1") {
+                        layer.msg('添加成功!', {icon: 1, time: 2000});
+                        setTimeout( function(){
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.$('.table-sort').DataTable().draw( false );
+                            parent.layer.close(index);
+                        }, 1 * 1000 );//延迟1000毫米
+
+                    }else {
+                        layer.msg('添加失败!'+data["msg"],{icon:2,time:3500});
+                    }
                 },
                 error: function(data){
-                    alert(data);
-                    var data=JSON.parse(data);
-                    alert(data["msg"]);
-                    layer.msg('error!ID号'+data["msg"]+'已经有和此新添课程相同的效果的选课',{icon:1,time:1000});
+                    layer.msg('error!',{icon:2,time:3500});
 
                 }
             });

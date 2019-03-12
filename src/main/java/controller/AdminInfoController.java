@@ -10,8 +10,11 @@ import service.AdminInfoService;
 import utils.JsonUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.SimpleFormatter;
 
 @Controller
 public class AdminInfoController {
@@ -26,13 +29,15 @@ public class AdminInfoController {
         List<AdminInfo> list=new ArrayList<AdminInfo>();
         AdminInfo adminInfo = adminInfoService.select();
 //        TODO mysql时间戳转化成java时间
-        adminInfo.setLastLoginTime((adminInfo.getLastLoginTime()));
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         list.add(adminInfo);
         data.setRecordsTotal(1);
         data.setRecordsFiltered(1);
         data.setData(list);
-        System.out.println(JsonUtils.objectToJson(data));
-        return JsonUtils.objectToJson(data);
+        String result = JsonUtils.objectToJson(data);
+        String t=result.substring(result.lastIndexOf(":")+1,result.lastIndexOf("}")-2);
+        result= result.replaceAll(t,"\""+df.format(adminInfo.getLastLoginTime())+"\"");
+        return result;
     }
 
     @RequestMapping("/mapping-admin-update")

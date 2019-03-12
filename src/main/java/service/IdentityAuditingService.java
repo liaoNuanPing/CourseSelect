@@ -15,5 +15,4 @@ public interface IdentityAuditingService {
 
     int insert(IdentityAuditing identityAuditing);
 
-    void updateSelfAndInsertStudent(IdentityAuditing identityAuditing, Student student);
 }

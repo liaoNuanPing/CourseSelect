@@ -1,8 +1,11 @@
 package controller;
 
 import enums.StuSelectEnum;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import pojo.*;
@@ -13,6 +16,7 @@ import service.StudentService;
 import utils.ConnectDB;
 import utils.EncodingUtils;
 import utils.JsonUtils;
+import utils.LoggerUtlis;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Connection;
@@ -22,9 +26,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
+@Transactional(rollbackFor = { Exception.class })
 public class StuSelectController {
-
-    private String iSsubmitSucessful = "";
+    Logger logger=LoggerUtlis.getLogger(StuSelectController.class);
 
     @Autowired
     StuSelectService stuSelectService;
@@ -39,66 +43,46 @@ public class StuSelectController {
     PerClassCourseService perClassCourseService;
 
     /**
-     * 目前暂时只是针对手动添加
-     * @param request
+     * 手动添加学生选课
      * @return 成功与否
      * @throws Exception
      */
-    @RequestMapping("/mapping-select-add")
+    @RequestMapping(value = {"/mapping-select-add"},produces = "text/plain;charset=utf-8")
     @ResponseBody
     public String stuSelectAdd(HttpServletRequest request) throws Exception {
         try {
-
 //            TODO 重复选课，管理员的问题，看要不要改
 
-        iSsubmitSucessful = "";
-        String stuId = request.getParameter("student_id");
-        String perCourseId = request.getParameter("per_course_id");
+            String stuId = request.getParameter("student_id");
+            String perCourseId = request.getParameter("per_course_id");
 
-        PerClassCourse perClassCourse = perClassCourseService.selectByPrimaryId(Integer.valueOf(perCourseId));
-        Course course = courseService.selectById(perClassCourse.getCourseId());
-        Student student = studentService.selectById(Integer.valueOf(stuId));
-        stuSelectService.insert(new StuSelect(student,course));
+            Student student = studentService.selectById(Integer.valueOf(stuId));
+            if(student==null)
+                return JsonUtils.objectToJson(new WxResultJson(0,"学生ID无效"));
 
-//        String parentName = request.getParameter("parent_name");
-//        String mobile = request.getParameter("mobile");
-//        String grade = request.getParameter("grade");
-//        String classNow = request.getParameter("class_now");
-//        String courseName = request.getParameter("course");
+            PerClassCourse perClassCourse = perClassCourseService.selectByPrimaryId(Integer.valueOf(perCourseId));
+            if(perClassCourseService==null)
+                return JsonUtils.objectToJson(new WxResultJson(0,"选课ID无效"));
 
-////       未指定学生id，查找年级、班级、父母名称一样的，有就证明为同一个人，使用该Student；若对不上新建学生并插入
-//        Student student = studentService.selectWithoutId(stuName,grade,classNow,parentName);
-//        List<Course> courseList = courseService.selectByCName(courseName);
-////            找得到学生，找得到对应课程，信息填上
-//        if (courseList.size()>0&&student!=null){
-//            StuSelect stuSelect=new StuSelect(student,courseList.get(0));
-//            //           插入数据库
-//            stuSelectService.insert(stuSelect);
-//        }else if (courseList.size()==0&&student!=null){
-////                找得到学生，找不到课程，课程相应信息按前端传来的填
-//            StuSelect stuSelect=new StuSelect(student,new Course(null,courseName,null));
-//            //           插入数据库
-//            stuSelectService.insert(stuSelect);
-//        }else if (courseList.size()>0&&student==null){
-////                找不到学生，找得到课程，新建学生并插入数据库
-//            Student newStudent = new Student(Integer.valueOf(StuId), stuName, grade, classNow, parentName, mobile, FileuploadController.studentHeadImg);
-//            StuSelect stuSelect=new StuSelect(newStudent,courseList.get(0));
-//            //           插入数据库
-//            studentService.insert(newStudent);
-//            stuSelectService.insert(stuSelect);
-//        }else if (courseList.size()==0&&student==null){
-////                找不到学生，得不到课程，新建学生并插入数据库,课程相应信息按前端传来的填
-//            Student newStudent = new Student(null, stuName, grade, classNow, parentName, mobile, FileuploadController.studentHeadImg);
-//            StuSelect stuSelect=new StuSelect(newStudent,new Course(null,courseName,null));
-//            //           插入数据库
-//            studentService.insert(newStudent);
-//            stuSelectService.insert(stuSelect);
-//        }
+            //如果课程已满
+            if (perClassCourse.getTotalNeedStuAmount() <= perClassCourse.getHaveStuAmount()) {
+                return JsonUtils.objectToJson(new WxResultJson(0, "选课失败，课程已满"));
+            }
+
+            Course course = courseService.selectById(perClassCourse.getCourseId());
+            if(stuSelectService.insert(new StuSelect(student, course))==0)
+                return JsonUtils.objectToJson(new WxResultJson(0,"选课添加失败，请联系管理员"));
+
+            perClassCourse.setHaveStuAmount(perClassCourse.getHaveStuAmount() + 1);
+            if (perClassCourseService.update(perClassCourse) == 0)
+                return JsonUtils.objectToJson(new WxResultJson(0, "选课添加失败，请联系管理员"));
+
         }catch (Exception e){
-            throw new Exception("StudentController stuSelectAdd: 输入的学号或者课程列表的ID不对");
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            logger.error("------mapping-select-add-"+e.getMessage());
+            return JsonUtils.objectToJson(new WxResultJson(0,"添加错误"));
         }
-        iSsubmitSucessful = "success";
-        return iSsubmitSucessful;
+        return JsonUtils.objectToJson(new WxResultJson(1,""));
     }
 
     /**
@@ -108,32 +92,44 @@ public class StuSelectController {
      * @return
      * @throws Exception
      */
-    @RequestMapping("/mapping-select-update")
+    @RequestMapping(value = {"/mapping-select-update"},produces = "text/plain;charset=utf-8")
     @ResponseBody
     public String stuSelectUpdate(String id,String course) throws Exception {
-        StuSelect stuSelect = stuSelectService.selectByPrimaryId(Integer.valueOf(id));
-        if (stuSelect!=null) {
-            stuSelect.setcName(course);
-            stuSelectService.update(stuSelect);
-        }else
-            return "failure";
-        return "success";
+        try {
+            StuSelect stuSelect = stuSelectService.selectByPrimaryId(Integer.valueOf(id));
+            if (stuSelect != null) {
+                stuSelect.setcName(course);
+                stuSelectService.update(stuSelect);
+            } else
+                return JsonUtils.objectToJson(new WxResultJson(0,"更新错误"));
+            return JsonUtils.objectToJson(new WxResultJson(1,""));
+        }catch (Exception e){
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            logger.error("------mapping-select-update-"+e.getMessage());
+            return JsonUtils.objectToJson(new WxResultJson(0,"更新错误"));
+        }
     }
 
-    @RequestMapping("mapping-select-del")
+    @RequestMapping(value = {"/mapping-select-del"},produces = "text/plain;charset=utf-8")
     @ResponseBody
     public String del(String perId, String[] ids) {
-        int result = 0;
-        if (perId != null)
-            result += stuSelectService.delById(Integer.valueOf(perId));
-        else
-            for (int i = 0; i < ids.length; i++)
-                result += stuSelectService.delById(Integer.valueOf(ids[i]));
+        try {
+            int result = 0;
+            if (perId != null)
+                result += stuSelectService.delById(Integer.valueOf(perId));
+            else
+                for (int i = 0; i < ids.length; i++)
+                    result += stuSelectService.delById(Integer.valueOf(ids[i]));
+            if (result == 1 || ids == null || result == ids.length)
+                return JsonUtils.objectToJson(new WxResultJson(1, ""));
+            else
+                return JsonUtils.objectToJson(new WxResultJson(0, "删除错误"));
 
-        if (result == 1 || ids==null|| result == ids.length)
-            return "success";
-        else
-            return "failure";
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            logger.error("------mapping-select-del-" + e.getMessage());
+            return JsonUtils.objectToJson(new WxResultJson(0, "删除错误"));
+        }
     }
 
     /**
@@ -170,7 +166,6 @@ public class StuSelectController {
                     "LIMIT " + start + " ," + length;
 
 //                拼凑出StudentShow
-
 //              查找数据库
             Statement pstm = conn.createStatement();
             ResultSet rs = pstm.executeQuery(sql3);
@@ -188,12 +183,9 @@ public class StuSelectController {
                         rs.getString("c_name"),
                         rs.getString("c_desc"),
                         rs.getDate("select_time")
-                );//end CourseShow
-
-//                    查有
+                );
                 stuSelectArrayList.add(stuSelect);
             }//end while
-            System.out.println(sql3);
 
 //            过滤后的总记录数
             data.setRecordsFiltered(stuSelectService.countAll());
@@ -208,7 +200,6 @@ public class StuSelectController {
 
 //        data: 具体的数据对象数组
         data.setData(stuSelectArrayList);
-        System.out.println(JsonUtils.objectToJson(data));
         return JsonUtils.objectToJson(data);
 
     }

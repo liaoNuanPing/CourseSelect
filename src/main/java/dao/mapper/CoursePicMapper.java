@@ -1,11 +1,13 @@
 package dao.mapper;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 import pojo.CoursePic;
 import pojo.CoursePicExample;
 
 import java.util.List;
 
+@Repository
 public interface CoursePicMapper {
     int countByExample(CoursePicExample example);
 

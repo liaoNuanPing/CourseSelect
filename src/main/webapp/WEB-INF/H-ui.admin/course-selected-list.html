@@ -24,19 +24,19 @@
 <body>
 <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 选课管理 <span class="c-gray en">&gt;</span> 选课列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
-	<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" id="delAllButton" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a href="javascript:;" onclick="member_add('添加选课数据','course-selected-add.html','','510')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加选课</a></span> </div>
+	<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" id="delAllButton" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a href="javascript:;" onclick="member_add('添加选课数据','course-selected-add.html','410','250')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加选课</a></span> </div>
 	<div class="mt-20">
 	<table class="table table-border table-bordered table-hover table-bg table-sort" id="dt">
 		<thead>
 			<tr class="text-c">
 				<th width="25"><input type="checkbox" name="" value=""></th>
-				<th width="100">学号</th>
-				<th width="40">姓名</th>
-				<th width="90">课程</th>
-				<th width="40">年级</th>
-				<th width="40">班级</th>
-				<th width="130">选课时间</th>
-				<th width="100">操作</th>
+				<th width="50">学号</th>
+				<th width="50">姓名</th>
+				<th width="50">课程</th>
+				<th width="50">年级</th>
+				<th width="50">班级</th>
+				<th width="50">选课时间</th>
+				<th width="50">操作</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -58,7 +58,7 @@
 $(function(){
 	$('.table-sort').dataTable({
 		"aaSorting": [[ 1, "desc" ]],//默认第几个排序
-		"bStateSave": true,//状态保存
+		"bStateSave": false,//状态保存
 		"aoColumnDefs": [
 		  //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
 		  {"orderable":false,"aTargets":[0,7]}// 制定列不参与排序
@@ -84,7 +84,7 @@ $(function(){
             {"data": "selectTime"},
             { "data":  "id","bSortable": false,
                 "render": function (data, type, full, meta) {
-                    var html="<td class=\"td-manage\">  <a title=\"编辑\" href=\"javascript:;\" onclick=\"member_edit('编辑','course-selected-update.html?id="+full.studentCard+"&stu_id="+full.studentCard+"&stuName="+full.stuName+"&course="+full.cName+"','400','310')\" class=\"ml-5\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\">&#xe6df;</i></a> <a title=\"删除\" href=\"javascript:;\" onclick=\"member_del(this,"+data+")\" class=\"ml-5\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\">&#xe6e2;</i></a></td>";
+                    var html="<td class=\"td-manage\">  <a title=\"删除\" href=\"javascript:;\" onclick=\"member_del(this,"+data+")\" class=\"ml-5\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\">&#xe6e2;</i></a></td>";
                     return html;
                 }
             }
@@ -116,7 +116,12 @@ function member_del(obj, id) {
             data: {"perId": id},
             success: function (data) {
                 $(obj).parents("tr").remove();
-                layer.msg('已删除!', {icon: 1, time: 1000});
+                data=JSON.parse(data);
+                if(data["isSuccessful"]=="1") {
+                    layer.msg('已删除!', {icon: 1, time: 2000});
+                }else {
+                    layer.msg('error!'+data["msg"],{icon:2,time:3500});
+                }
             },
             error: function (data) {
                 console.log(data);
@@ -145,7 +150,12 @@ $('#delAllButton').click(function() {
             type : "post",
             traditional: true,//这里设置为true
             success : function(data) {
-                layer.msg('已删除!',{icon:1,time:1000});
+                data=JSON.parse(data);
+                if(data["isSuccessful"]=="1") {
+                    layer.msg('已删除!', {icon: 1, time: 2000});
+                }else {
+                    layer.msg('error!'+data["msg"],{icon:2,time:3500});
+                }
             },
             error:function(data) {
                 layer.msg('删除错误!',{icon:1,time:1000});

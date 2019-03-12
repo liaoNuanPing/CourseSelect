@@ -34,4 +34,10 @@ public class WxResultJson implements Serializable {
         this.msg = msg;
     }
 
+    public WxResultJson setIsSuccessfulAndMsg(int isSuccessful,String msg){
+        this.msg = msg;
+        this.isSuccessful = isSuccessful;
+        return this;
+    }
+
 }

@@ -1,20 +1,18 @@
 package controller;
 
-import consts.Path;
 import enums.CourseShowEnum;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import pojo.*;
 import service.*;
-import utils.ConnectDB;
-import utils.EncodingUtils;
-import utils.JsonUtils;
-import utils.PicUtils;
+import utils.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -22,8 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
+@Transactional(rollbackFor = { Exception.class })
 public class PerClassCourseController {
-
+    Logger logger=LoggerUtlis.getLogger(PerClassCourseController.class);
+    
     @Autowired
     PerClassCourseService perClassCourseService;
 
@@ -40,82 +40,50 @@ public class PerClassCourseController {
     StudentService studentService;
 
 
-    private String isSubmitSuccessful = "";
-
     /**
      * 添加课程
      *
      * @param request 前端传来的request
      * @return
      */
-    @RequestMapping("mapping-course-add")
+    @RequestMapping(value = {"/mapping-course-rule-add"},produces = "text/plain;charset=utf-8")
     @ResponseBody
-    public String perclassCourseAdd(HttpServletRequest request) throws Exception {
-        isSubmitSuccessful = "";
-        String courseName = request.getParameter("course_name");
-        String grade = request.getParameter("grade");
-        String term = request.getParameter("term");
-        String classes = request.getParameter("classes");
-        String total = request.getParameter("total_need");
-        int totalNeed = "".equals(total) ? 9999 : Integer.valueOf(request.getParameter("total_need"));
-        String course_desc = request.getParameter("course_desc");
-        Course course;
-//        if (perClassCourseService.se)
-
-//      课程列表已有的
-        List<Course> courseNameList = courseService.selectByCName(courseName);
-//        如果Course已经有这个课程，就不继续插入，直接利用,没有则创新的
-        if (courseNameList.size() == 0) {
-            //插入Course
-            course = new Course(null, courseName, course_desc);
-            if (courseService.insert(course) != 1)
-                throw new Exception();
-        } else {
-//            直接利用
-            course = courseNameList.get(0);
+    public String perClassCourseAdd(HttpServletRequest request) throws Exception {
+        try {
+            String courseId = request.getParameter("id");
+            String grade = request.getParameter("grade");
+            String term = request.getParameter("term");
+            String classes = request.getParameter("classes");
+            String total = request.getParameter("total_need");
+            int totalNeed = "".equals(total) ? 9999 : Integer.valueOf(request.getParameter("total_need"));
 //          查看是不是已经有相同效果的per_class_course,不能出现效果重叠
-            List<PerClassCourse> perClassCourseList = perClassCourseService.selectByCourseIdAndTermAndGradeAndClass(String.valueOf(course.getId()), term, grade, classes);
-            if (perClassCourseList!=null&&perClassCourseList.size()>0)
-                throw new Exception(JsonUtils.objectToJson( new WxResultJson(0,String.valueOf(perClassCourseList.get(0).getId()))));
-//            if()
-//                throw new Exception(JsonUtils.objectToJson( new WxResultJson(0,String.valueOf(perClassCourseList.get(0).getId()))));
 
+            if (courseService.selectByPrimaryId(Integer.valueOf(courseId))==null)
+                return JsonUtils.objectToJson(new WxResultJson(0,"课程ID 不存在"));
 
+            List<PerClassCourse> perClassCourseList=perClassCourseService.selectByCourseIdAndTermAndGradeAndClass(courseId,term,grade,classes);
+
+            if (perClassCourseList != null && perClassCourseList.size() > 0)
+                return JsonUtils.objectToJson(new WxResultJson(0,"ID "+perClassCourseList.get(0).getId()+" 已经有类似效果，请确保选课是唯一的"));
+
+            //插入PerClassCourse
+            PerClassCourse perClassCourse = new PerClassCourse(null, Integer.valueOf(courseId), grade, term, classes, totalNeed, 0);
+            if (perClassCourseService.insert(perClassCourse) != 1)
+                throw new Exception("mapping-course-rule-add-perClassCourseService插入不成功");
+        }catch (Exception e){
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            logger.error("mapping-course-rule-add : "+e.getMessage());
+            return JsonUtils.objectToJson(new WxResultJson(0,"添加失败，请注意参数是否正确或联系管理员"));
         }
-
-        //插入PerClassCourse
-        PerClassCourse perClassCourse = new PerClassCourse(null, course.getId(), grade, term, classes, totalNeed, 0);
-        if (perClassCourseService.insert(perClassCourse) != 1)
-            throw new Exception();
-
-        //插入CoursePic
-        if (FileuploadController.fileNmaeList.size() > 0) {
-            for (int i = 0; i < FileuploadController.fileNmaeList.size(); i++) {
-                String originalName = FileuploadController.fileNmaeList.get(i);
-                String newImgName = PicUtils.getNewCourseImageName(originalName);
-                    PicUtils.rename(originalName,newImgName);
-                CoursePic coursePic = new CoursePic(null, course.getId(), "static/images/" + newImgName);
-                    if (coursePicService.insert(coursePic) != 1)
-                        throw new Exception("课程图片插入失败");
-            }
-//            清除，只用一次
-            FileuploadController.fileNmaeList = new ArrayList<String>();
-        }
-
         return JsonUtils.objectToJson(new WxResultJson(1,""));
 
     }
 
-    @RequestMapping("/mapping-course-update")
+    @RequestMapping(value = {"/mapping-course-rule-update"},produces = "text/plain;charset=utf-8")
     @ResponseBody
     public String Update(HttpServletRequest request ) throws Exception {
+        try {
             PerClassCourse perClassCourse = perClassCourseService.selectByPrimaryId(Integer.valueOf(request.getParameter("id")));
-            Course course = courseService.selectByPrimaryId(Integer.valueOf(request.getParameter("courseId")));
-            if (course != null) {
-                course.setcDesc(request.getParameter("course_desc"));
-                course.setcName(request.getParameter("course_name"));
-                courseService.update(course);
-            }
             if (perClassCourse != null) {
                 perClassCourse.setTerm(request.getParameter("term"));
                 perClassCourse.setGrade(request.getParameter("grade"));
@@ -123,47 +91,42 @@ public class PerClassCourseController {
                 perClassCourse.setTotalNeedStuAmount(Integer.valueOf(request.getParameter("total_need")));
                 perClassCourse.setHaveStuAmount(Integer.valueOf(request.getParameter("have")));
                 perClassCourseService.update(perClassCourse);
-            }
-        return "success";
+            }else
+                return JsonUtils.objectToJson(new WxResultJson(0,"perClassCourse不存在，无法更新"));
+        }catch (Exception e){
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            logger.error("------mapping-course-rule-update-"+e.getMessage());
+            return JsonUtils.objectToJson(new WxResultJson(0,"更新错误"));
+        }
+        return JsonUtils.objectToJson(new WxResultJson(1,"success"));
+
     }
 
-    @RequestMapping("mapping-course-del")
+    @RequestMapping(value = {"/mapping-course-rule-del"},produces = "text/plain;charset=utf-8")
     @ResponseBody
     public String del(String perId, String[] ids) {
-
-        int result = 0;
-        if (perId != null) {
-            PerClassCourse perClassCourse = perClassCourseService.selectByPrimaryId(Integer.valueOf(perId));
-            List<PerClassCourse> perClassCourseList = perClassCourseService.selectPerClassCourseListByCourseIdList(perClassCourse.getCourseId());
-//           如果perClassCourse里的Course只剩下当前这个要删除的，一并删除Course
-
-            if (perClassCourseList.size() <= 1)
-                result += courseService.delById(perClassCourse.getCourseId());
-            else
+        try {
+            int result = 0;
+            if (perId != null) {
                 result += perClassCourseService.delById(Integer.valueOf(perId));
-        } else {
-            for (int i = 0; i < ids.length; i++) {
-                PerClassCourse perClassCourse = perClassCourseService.selectByPrimaryId(Integer.valueOf(ids[i]));
-                List<PerClassCourse> perClassCourseList = perClassCourseService.selectPerClassCourseListByCourseIdList(perClassCourse.getCourseId());
-//           如果perClassCourse里的Course只剩下当前这个要删除的，一并删除Course
-                if (perClassCourseList.size() <= 1) {
-                    result += courseService.delById(perClassCourse.getCourseId());
-                } else
+            } else {
+                for (int i = 0; i < ids.length; i++) {
                     result += perClassCourseService.delById(Integer.valueOf(ids[i]));
+                }
             }
+            if (result == 1 || ids == null || result == ids.length)
+                return JsonUtils.objectToJson(new WxResultJson(1,""));
+
+            else
+                return JsonUtils.objectToJson(new WxResultJson(0,"删除错误"));
+
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            logger.error("------mapping-course-rule-del-"+e.getMessage());
+            return JsonUtils.objectToJson(new WxResultJson(0,"删除错误"));
         }
-        if (result == 1 || result >= ids.length)
-            return "success";
-        else
-            return "failure";
-    }
 
-    @RequestMapping("/mapper-check-submit")
-    @ResponseBody
-    public String perClassCourseList() {
-        return isSubmitSuccessful;
     }
-
 
     /**
      * datatable加载数据
@@ -184,6 +147,8 @@ public class PerClassCourseController {
         String search = "";
         try {
             search= EncodingUtils.useToSearch(search,request);
+            if ("全".equals(search)||"部".equals(search)||"全部".equals(search))
+                search="0";
             Connection conn = ConnectDB.getConnection();
 
             String orderString3 = "order by " + CourseShowEnum.getNameByIndex(Integer.valueOf(orderColumn)) + " " + order + " ";
@@ -214,17 +179,23 @@ public class PerClassCourseController {
                         rs.getString("have_stu_amount")
                 );//end CourseShow
 
-//                    查有
+                if ("0".equals(courseShow.getToClass()))
+                    courseShow.setToClass("全部");
+                if ("0".equals(courseShow.getGrade()))
+                    courseShow.setGrade("全部");
+                if ("0".equals(courseShow.getTerm()))
+                    courseShow.setTerm("全部");
+
                 courseShowList.add(courseShow);
             }//end while
-            System.out.println(sql3);
 
 //            过滤后的总记录数
             data.setRecordsFiltered(perClassCourseService.countAll());
 //            总记录数
 //            data.setRecordsTotal(perClassCourseService.countAll()-1);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("------loadClass-"+e.getMessage());
+//            e.printStackTrace();
         }
 
 //        draw: 表示请求次数
@@ -232,7 +203,6 @@ public class PerClassCourseController {
 
 //        data: 具体的数据对象数组
         data.setData(courseShowList);
-        System.out.println(JsonUtils.objectToJson(data));
         return JsonUtils.objectToJson(data);
 
     }

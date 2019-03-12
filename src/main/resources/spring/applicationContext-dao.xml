@@ -15,6 +15,12 @@
     <!-- 配置包扫描器，扫描所有带@Controller注解的类 -->
     <context:component-scan base-package="controller"/>
 
+	<!-- 配置包扫描器，扫描所有带@Comp注解的类 -->
+	<context:component-scan base-package="listener"/>
+
+<!-- 配置包扫描器，扫描所有带@Repository注解的类 -->
+	<context:component-scan base-package="dao.mapper"/>
+
 
     <!-- 数据库连接池 -->
 	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"

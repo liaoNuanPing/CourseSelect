@@ -40,52 +40,6 @@
 			</div>
 		</div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-3">可选数：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="默认9999" name="total_need" id="total_need">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-3">已选数：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="默认0" name="have" id="have">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>学期：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-				<select class="select" size="1" name="term" id="term">
-					<option value="" selected>请选择该课的学期</option>
-					<option value="0">全部</option>
-					<option value="1">上学期</option>
-					<option value="2">下学期</option>
-				</select>
-				</span></div>
-        </div>
-
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>可选年级：</label>
-			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-				<select class="select" size="1" name="grade" id="grade">
-					<option value="" selected>请选择该课可选的年级</option>
-					<option value="0">全部</option>
-				</select>
-				</span> </div>
-		</div>
-
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>可选班级：</label>
-			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-				<select class="select" size="1" name="classes" id="classes">
-					<option value="" selected>请选择该课对应年级可选的班级</option>
-					<option value="0">全部</option>
-				</select>
-				</span> </div>
-		</div>
-
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">课程描述：</label>
 			<div class="formControls col-xs-8 col-sm-9">
@@ -95,7 +49,6 @@
 
 		<div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
-				<!--<input class="btn btn-primary radius" type="button"  value="&nbsp;&nbsp;提交&nbsp;&nbsp;" onclick=sub()>-->
 				<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
 				<button onClick="layer_close();" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
             </div>
@@ -115,6 +68,7 @@
 <script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.js"></script> 
 <script type="text/javascript" src="lib/webuploader/0.1.5/webuploader.js"></script>
 <script type="text/javascript" src="lib/ajax.js"></script>
+<script type="text/javascript" src="lib/ajax.js"></script>
 <script type="text/javascript">
 function article_save(){
 	alert("刷新父级的时候会自动关闭弹层。")
@@ -130,13 +84,7 @@ function getUrlParam(name) {
 }
 function addSelected() {
     document.getElementById("course_desc").setAttribute("value",getUrlParam("course_desc"));
-    document.getElementById("total_need").setAttribute("value",getUrlParam("total"));
-    document.getElementById("have").setAttribute("value",getUrlParam("have"));
-    document.getElementById("term").setAttribute("value",getUrlParam("term"));
     document.getElementById("course_name").setAttribute("value",getUrlParam("course_name"));
-    document.getElementById("classes").value= getUrlParam("to_class");
-    document.getElementById("grade").value= getUrlParam("grade");
-    document.getElementById("term").value= getUrlParam("term");
 }
 
 $(function(){
@@ -152,22 +100,9 @@ $(function(){
                 minlength:2,
                 maxlength:16
             },
-            grade:{
+            course_desc:{
                 required:true,
-            },
-            classes:{
-                required:true,
-            },
-            term:{
-                required:true
-            },
-            total_need:{
-                required:true,
-                digits:true
-            },
-            have:{
-                required:true,
-                digits:true
+                maxlength:100
             }
         },
         onkeyup:false,
@@ -180,24 +115,27 @@ $(function(){
                 async:false,
                 data:{
                     "id":getUrlParam("id"),
-                    "courseId":getUrlParam("courseId")
+                    "course_desc":$("#course_desc").val(),
+                    "course_name":$("#course_name").val()
                 },
                 success: function(data){
-//                    @todo 未显示成功提示
-                    layer.msg('添加成功!',{icon:1,time:2500});
+                    data=JSON.parse(data);
+                    if(data["isSuccessful"]=="1") {
+                        layer.msg('更新成功!', {icon: 1, time: 2000});
+                        setTimeout( function(){
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.$('.table-sort').DataTable().draw( false );
+                            parent.layer.close(index);
+                        }, 1.5 * 1000 );//延迟1500毫米
 
-                    var index = parent.layer.getFrameIndex(window.name);
-                    parent.$('.btn-refresh').click();
-                    parent.layer.close(index);
+                    }else {
+                        layer.msg('更新失败!'+data["msg"],{icon:2,time:3500});
+                    }
                 },
                 error: function(XmlHttpRequest, textStatus, errorThrown){
-                    //@todo 日志
                     layer.msg('error!请重试或联系管理员',{icon:2,time:3500});
                 }
             });
-//        var index = parent.layer.getFrameIndex(window.name);
-//        parent.$('.btn-refresh').click();
-//        parent.layer.close(index);
     }
 
 });

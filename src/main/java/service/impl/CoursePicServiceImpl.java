@@ -30,7 +30,10 @@ public class CoursePicServiceImpl implements CoursePicService {
 
     public int delById(Integer id){
         return coursePicMapper.deleteByPrimaryKey(id);
+    }
 
+    public CoursePic selectById(Integer id){
+        return coursePicMapper.selectByPrimaryKey(id);
     }
 
 }

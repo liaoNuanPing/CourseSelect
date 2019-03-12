@@ -1,11 +1,13 @@
 package dao.mapper;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 import pojo.IdentityAuditing;
 import pojo.IdentityAuditingExample;
 
 import java.util.List;
 
+@Repository
 public interface IdentityAuditingMapper {
     int countByExample(IdentityAuditingExample example);
 

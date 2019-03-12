@@ -4,24 +4,10 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
 
-    <welcome-file-list>
-        <welcome-file>/login.html</welcome-file>
-    </welcome-file-list>
+    <!--<welcome-file-list>-->
+        <!--<welcome-file>/index.html</welcome-file>-->
+    <!--</welcome-file-list>-->
 
-
-
-    <!--<servlet-mapping>-->
-        <!--<servlet-name>default</servlet-name>-->
-        <!--<url-pattern>*.jpg</url-pattern>-->
-    <!--</servlet-mapping>-->
-    <!--<servlet-mapping>-->
-        <!--<servlet-name>default</servlet-name>-->
-        <!--<url-pattern>*.js</url-pattern>-->
-    <!--</servlet-mapping>-->
-    <!--<servlet-mapping>-->
-        <!--<servlet-name>default</servlet-name>-->
-        <!--<url-pattern>*.css</url-pattern>-->
-    <!--</servlet-mapping>-->
 
 
     <servlet>
@@ -45,6 +31,7 @@
     </context-param>
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+
     </listener>
 
     <!--编码过滤器-->
@@ -62,23 +49,5 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
-<!--test-->
-    <filter>
-        <filter-name>TestJumpFilter</filter-name>
-        <filter-class>filter.TestJumpFilter</filter-class>
-    </filter>
-    <filter>
-        <filter-name>LoginFilter</filter-name>
-        <filter-class>filter.LoginFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>LoginFilter</filter-name>
-        <url-pattern>/</url-pattern>
-    </filter-mapping>
-
-    <filter-mapping>
-    <filter-name>TestJumpFilter</filter-name>
-    <url-pattern>/test.html</url-pattern>
-</filter-mapping>
 
 </web-app>

@@ -7,6 +7,9 @@
     <result column="c_desc" property="cDesc" jdbcType="VARCHAR" />
   </resultMap>
 
+  <select id="countAll" resultType="java.lang.Integer" >
+    SELECT count(id) FROM course
+  </select>
 
   <select id="selectLimit" resultMap="BaseResultMap">
     SELECT *

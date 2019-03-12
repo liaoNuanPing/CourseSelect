@@ -15,6 +15,8 @@ import java.util.List;
 @Controller
 public class FileuploadController {
 
+
+
     public static List<String> fileNmaeList=new ArrayList<String>();
     public static String studentHeadImg="";
     private static String uid="";
@@ -29,7 +31,6 @@ public class FileuploadController {
     @RequestMapping(value = "/uploadImage")
     @ResponseBody
     public String uploadImage(HttpServletRequest request) throws Exception {
-        System.out.println("uploadImage");
 //       重制uid
         if (!uid.equals(request.getParameter("uid"))) {
             uid = request.getParameter("uid");
@@ -70,7 +71,6 @@ public class FileuploadController {
     @RequestMapping(value = "/uploadStudentImage")
     @ResponseBody
     public String uploadStudentImageByHand(HttpServletRequest request) throws Exception {
-        System.out.println("uploadStudentImage");
         studentHeadImg="";
 
         String realPath = Path.getTempPath();
@@ -95,20 +95,18 @@ public class FileuploadController {
         studentHeadImg=fname;
 
 //      throw new Exception();
-        return "500";
+        return "200";
 
     }
 
     /**
      * 学生合照微信上传
      * @param request
-     * @return //TODO 返回值
      * @throws Exception
      */
     @RequestMapping(value = "/wx-uploadStuHeadImage")
     @ResponseBody
     public String uploadStudentImageByWx(HttpServletRequest request) throws Exception {
-        System.out.println("uploadStudentImageByWx");
 
         String realPath = Path.getTempPath();
 
@@ -131,7 +129,7 @@ public class FileuploadController {
         multipartFile.transferTo(file);
 
 //      throw new Exception();
-        return "500";
+        return "200";
 
     }
 }
