@@ -2,3 +2,6 @@ out/
 target/
 *.sql
 /.idea/*
+.idea/workspace.xml
+.idea
+.idea/
