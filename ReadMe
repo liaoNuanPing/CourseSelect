@@ -1,1 +1,4 @@
+选课系统
+controller -》 service接口 -》 serviceImpl实现 -》 mapper接口 -》mapper.xml实现
 
+云服务器数据库帐号密码都是root
