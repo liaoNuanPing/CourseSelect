@@ -12,7 +12,8 @@ public class LoginFilter implements Filter {
         HttpServletRequest request= (HttpServletRequest) req;
         String uri= request.getRequestURI();
         System.out.println(uri);
-        if (uri.contains("js")||uri.contains("css")||uri .contains("jpg")||uri.contains("png")||uri.contains("ttf")||uri.contains("ico")||uri.contains("Login"))
+        if (uri.contains("js")||uri.contains("css")||uri .contains("jpg")||uri.contains("png")||uri.contains("ttf")||uri.contains("ico")||uri.contains("Login")
+                ||uri.contains("wx"))
             chain.doFilter(request, resp);
         else{
             if (request.getSession().getAttribute("isLogin")==null)
