@@ -33,12 +33,12 @@
     <mvc:resources location="/lib/" mapping="lib/**"/>
     <mvc:resources location="/temp/" mapping="temp/**"/>
 
-    <mvc:interceptors>
-    <mvc:interceptor>
-        <mvc:mapping path="/**"/>
-        <bean class="handler.LoginHandler"></bean>
-    </mvc:interceptor>
-    </mvc:interceptors>
+    <!--<mvc:interceptors>-->
+    <!--<mvc:interceptor>-->
+        <!--<mvc:mapping path="/**"/>-->
+        <!--<bean class="handler.LoginHandler"></bean>-->
+    <!--</mvc:interceptor>-->
+    <!--</mvc:interceptors>-->
 
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/H-ui.admin/"/>

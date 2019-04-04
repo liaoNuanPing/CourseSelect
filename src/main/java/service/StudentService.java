@@ -30,6 +30,7 @@ public interface StudentService {
      * @return 受影响行数
      */
     int updateAllStudentGradeUp(Integer num,Integer grade);
+
     int updateAllStudentGradeDown(Integer num);
 
 }
