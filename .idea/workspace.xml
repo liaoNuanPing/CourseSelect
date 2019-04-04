@@ -298,7 +298,7 @@
     <servers />
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="-9" />
     <option name="y" value="-9" />
     <option name="width" value="1938" />
@@ -725,7 +725,7 @@
       <workItem from="1553614732669" duration="1217000" />
       <workItem from="1553669924864" duration="6298000" />
       <workItem from="1554299882867" duration="1753000" />
-      <workItem from="1554350928867" duration="5391000" />
+      <workItem from="1554350928867" duration="5450000" />
     </task>
     <task id="LOCAL-00001" summary="做了&#10;1.增加管理员表admin_info&#10;2.update页面去除--&#10;3首页去除图片管理&#10;还差&#10;1.管理员登陆&#10;2.删除实际图片文件&#10;3.交接逻辑&#10;4.添加按钮把学生的年级上升&#10;5.首页配置学期&#10;6.添加东西，面板的下拉菜单要可选&#10;7.数据导出&#10;8.提醒新审核数量">
       <created>1551022558846</created>
@@ -770,7 +770,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="769359000" />
+    <option name="totallyTimeSpent" value="769418000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -782,7 +782,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
