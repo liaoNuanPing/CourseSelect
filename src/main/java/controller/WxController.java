@@ -518,5 +518,6 @@ public class WxController {
         return JsonUtils.objectToJson(wxResultJson.setIsSuccessfulAndMsg(0, "未在选课时间"));
     }
 
+
 }
 

@@ -21,6 +21,8 @@ public class LoginFilter implements Filter {
             else if ("true".equals(request.getSession().getAttribute("isLogin")))
                 chain.doFilter(request, resp);
         }
+//        chain.doFilter(request, resp);
+
     }
 
     public void init(FilterConfig config) throws ServletException {
