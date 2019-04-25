@@ -36,7 +36,7 @@ public class StudentController {
      */
     @RequestMapping(value = {"/mapping-student-page-show"},produces = "text/plain;charset=utf-8")
     @ResponseBody
-    public String shudentPageShow(String id) {
+    public String studentPageShow(String id) {
         try {
             String json= JsonUtils.objectToJson( studentService.selectById(Integer.valueOf(id)));
             return json;
@@ -61,7 +61,7 @@ public class StudentController {
 
             Connection conn = ConnectDB.getConnection();
             String orderString3 = "order by " + StudentEnum.getNameByIndex(Integer.valueOf(orderColumn)) + " " + order + " ";
-            String where = "where CONCAT(id,stu_name, grade,class_now,parent_name,parent_phone) LIKE '%" + search + "%'";
+            String where = "where CONCAT(id,stu_name, grade,class_now,parent_name,parent_phone,parent_code) LIKE '%" + search + "%'";
 
             if ("".equals(search))
                 where="";
@@ -86,6 +86,7 @@ public class StudentController {
                         rs.getString("class_now"),
                         rs.getString("parent_name"),
                         rs.getString("parent_phone"),
+                        rs.getString("parent_code"),
                         rs.getString("head_img")
                 );//end CourseShow
 
@@ -119,13 +120,13 @@ public class StudentController {
             String stuName = request.getParameter("student_name") == null ? "" : request.getParameter("student_name");
             String parentName = request.getParameter("parent_name") == null ? "" : request.getParameter("parent_name");
             String mobile = request.getParameter("mobile");
+            String parentCode = request.getParameter("parent_code");
             String grade = request.getParameter("grade");
             String classNow = request.getParameter("class_now");
-
             String newImgName = PicUtils.getNewCourseImageName(FileuploadController.studentHeadImg);
             PicUtils.rename(FileuploadController.studentHeadImg, newImgName);
 
-            Student student = new Student("".equals(stuId) ? null : Integer.valueOf(stuId), stuName, grade, classNow, parentName, mobile, "static/images/" + newImgName);
+            Student student = new Student("".equals(stuId) ? null : Integer.valueOf(stuId), stuName, grade, classNow, parentName, mobile,parentCode, "static/images/" + newImgName);
 //        上传图片的链接只做一次，用完重制
             FileuploadController.studentHeadImg = "";
             studentService.insert(student);
@@ -146,6 +147,7 @@ public class StudentController {
             String stuName = request.getParameter("student_name");
             String parentName = request.getParameter("parent_name");
             String mobile = request.getParameter("mobile");
+            String parentCode = request.getParameter("parent_code");
             String grade = request.getParameter("grade");
             String classNow = request.getParameter("classes");
 
@@ -153,12 +155,12 @@ public class StudentController {
             Student nStudent;
 
             if ("".equals(FileuploadController.studentHeadImg)) {
-                nStudent = new Student(Integer.valueOf(newId), stuName, grade, classNow, parentName, mobile, oStudent.getHeadImg());
+                nStudent = new Student(Integer.valueOf(newId), stuName, grade, classNow, parentName, mobile,parentCode, oStudent.getHeadImg());
             } else {
                 String newImgName = PicUtils.getNewCourseImageName(FileuploadController.studentHeadImg);
                 PicUtils.rename(FileuploadController.studentHeadImg, newImgName);
                 FileuploadController.studentHeadImg="";
-                nStudent = new Student(Integer.valueOf(newId), stuName, grade, classNow, parentName, mobile, "static/images/"+newImgName);
+                nStudent = new Student(Integer.valueOf(newId), stuName, grade, classNow, parentName, mobile,parentCode, "static/images/"+newImgName);
             }
 
             studentService.delById(Integer.valueOf(oldId));

@@ -7,14 +7,15 @@ import pojo.Student;
 public interface StudentService {
 
 //    /**
-//     *  根据学生名、年级、班级、父母名字确定是否有该学生
+//     *  根据学生名、年级、班级、父母名字，父母身份证确定是否有该学生
 //     * @param stuName 学生名
 //     * @param grade 年级
 //     * @param classNow 班级
 //     * @param parentName 父母名字
+//     * @param parentCode 父母身份证
 //     * @return Student实体
 //     */
-//    Student selectWithoutId(String stuName, String grade, String classNow, String parentName);
+//    Student selectWithoutId(String stuName, String grade, String classNow, String parentName,String parentCode);
 
     int insert(Student student);
     int delById(Integer id);

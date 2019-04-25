@@ -153,7 +153,7 @@ public class StuSelectController {
 
             Connection conn = ConnectDB.getConnection();
             String orderString3 = "order by " + StuSelectEnum.getNameByIndex(Integer.valueOf(orderColumn)) + " " + order + " ";
-            String where = "where CONCAT(student_card,stu_name, grade,class_now,parent_name,parent_phone,c_name,select_time) LIKE '%" + search + "%'";
+            String where = "where CONCAT(student_card,stu_name, grade,class_now,parent_name,parent_phone,parent_code,c_name,select_time) LIKE '%" + search + "%'";
 
             if ("".equals(search))
                 where="";
@@ -178,6 +178,7 @@ public class StuSelectController {
                         rs.getString("class_now"),
                         rs.getString("parent_name"),
                         rs.getString("parent_phone"),
+                        rs.getString("parent_code"),
                         rs.getString("head_img"),
                         rs.getInt("course_id"),
                         rs.getString("c_name"),

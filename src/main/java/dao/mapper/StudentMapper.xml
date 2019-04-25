@@ -8,6 +8,7 @@
     <result column="class_now" jdbcType="VARCHAR" property="classNow" />
     <result column="parent_name" jdbcType="VARCHAR" property="parentName" />
     <result column="parent_phone" jdbcType="VARCHAR" property="parentPhone" />
+    <result column="parent_code" jdbcType="VARCHAR" property="parentCode" />
     <result column="head_img" jdbcType="VARCHAR" property="headImg" />
   </resultMap>
 
@@ -29,8 +30,8 @@
       WHERE stu_name=#{stuName}
       AND grade=#{grade}
       AND class_now=#{classNow}
-      AND parent_name=#{parentName}
-  </select>
+      AND parent_code=#{parentCode}
+</select>
     
   <sql id="Example_Where_Clause">
     <where>
@@ -92,7 +93,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, stu_name, grade, class_now, parent_name, parent_phone, head_img
+    id, stu_name, grade, class_now, parent_name, parent_phone,parent_code,head_img
   </sql>
   <select id="selectByExample" parameterType="pojo.StudentExample" resultMap="BaseResultMap">
     select
@@ -126,10 +127,10 @@
   </delete>
   <insert id="insert"  parameterType="pojo.Student" useGeneratedKeys="true" keyProperty="id">
     insert into student (id, stu_name, grade, 
-      class_now, parent_name, parent_phone, 
+      class_now, parent_name, parent_phone, parent_code,
       head_img)
     values (#{id,jdbcType=INTEGER}, #{stuName,jdbcType=VARCHAR}, #{grade,jdbcType=VARCHAR}, 
-      #{classNow,jdbcType=VARCHAR}, #{parentName,jdbcType=VARCHAR}, #{parentPhone,jdbcType=VARCHAR}, 
+      #{classNow,jdbcType=VARCHAR}, #{parentName,jdbcType=VARCHAR}, #{parentPhone,jdbcType=VARCHAR}, #{parentCode,jdbcType=VARCHAR},
       #{headImg,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="pojo.Student">
@@ -153,6 +154,9 @@
       <if test="parentPhone != null">
         parent_phone,
       </if>
+      <if test="parentCode != null">
+        parent_code,
+      </if>
       <if test="headImg != null">
         head_img,
       </if>
@@ -175,6 +179,9 @@
       </if>
       <if test="parentPhone != null">
         #{parentPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="parentCode != null">
+        #{parentCode,jdbcType=VARCHAR},
       </if>
       <if test="headImg != null">
         #{headImg,jdbcType=VARCHAR},
@@ -208,6 +215,9 @@
       <if test="record.parentPhone != null">
         parent_phone = #{record.parentPhone,jdbcType=VARCHAR},
       </if>
+      <if test="record.parentCode != null">
+        parent_code = #{record.parentCode,jdbcType=VARCHAR},
+      </if>
       <if test="record.headImg != null">
         head_img = #{record.headImg,jdbcType=VARCHAR},
       </if>
@@ -224,6 +234,7 @@
       class_now = #{record.classNow,jdbcType=VARCHAR},
       parent_name = #{record.parentName,jdbcType=VARCHAR},
       parent_phone = #{record.parentPhone,jdbcType=VARCHAR},
+      parent_code = #{record.parentCode,jdbcType=VARCHAR},
       head_img = #{record.headImg,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -247,6 +258,9 @@
       <if test="parentPhone != null">
         parent_phone = #{parentPhone,jdbcType=VARCHAR},
       </if>
+      <if test="parentCode != null">
+        parent_code = #{parentCode,jdbcType=VARCHAR},
+      </if>
       <if test="headImg != null">
         head_img = #{headImg,jdbcType=VARCHAR},
       </if>
@@ -260,6 +274,7 @@
       class_now = #{classNow,jdbcType=VARCHAR},
       parent_name = #{parentName,jdbcType=VARCHAR},
       parent_phone = #{parentPhone,jdbcType=VARCHAR},
+      parent_code = #{parentCode,jdbcType=VARCHAR},
       head_img = #{headImg,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>

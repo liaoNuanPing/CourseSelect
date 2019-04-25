@@ -15,6 +15,8 @@ public class IdentityAuditing {
 
     private String parentPhone;
 
+    private String parentCode;
+
     private String headImg;
 
     private Date registerTime;
@@ -69,6 +71,14 @@ public class IdentityAuditing {
         this.parentPhone = parentPhone == null ? null : parentPhone.trim();
     }
 
+    public String getParentCode() {
+        return parentCode;
+    }
+
+    public void setParentCode(String parentCode) {
+        this.parentCode = parentCode == null ? null : parentCode.trim();
+    }
+
     public String getHeadImg() {
         return headImg;
     }
@@ -93,16 +103,14 @@ public class IdentityAuditing {
         this.auditingStatus = auditingStatus == null ? null : auditingStatus.trim();
     }
 
-    public IdentityAuditing() {
-    }
-
-    public IdentityAuditing(Integer id, String stuName, String grade, String classNow, String parentName, String parentPhone, String headImg, Date registerTime, String auditingStatus) {
+    public IdentityAuditing(Integer id, String stuName, String grade, String classNow, String parentName, String parentPhone,String parentCode, String headImg, Date registerTime, String auditingStatus) {
         this.id = id;
         this.stuName = stuName;
         this.grade = grade;
         this.classNow = classNow;
         this.parentName = parentName;
         this.parentPhone = parentPhone;
+        this.parentCode = parentCode;
         this.headImg = headImg;
         this.registerTime = registerTime;
         this.auditingStatus = auditingStatus;

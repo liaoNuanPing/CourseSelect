@@ -20,6 +20,8 @@ public class StuSelect {
 
     private String parentPhone;
 
+    private String parentCode;
+
     private String headImg;
 
     private Integer courseId;
@@ -36,7 +38,7 @@ public class StuSelect {
     public StuSelect() {
     }
 
-    public StuSelect(Integer id, String studentCard, String stuName, String grade, String classNow, String parentName, String parentPhone, String headImg, Integer courseId, String cName, String cDesc, Date selectTime) {
+    public StuSelect(Integer id, String studentCard, String stuName, String grade, String classNow, String parentName, String parentPhone, String parentCode, String headImg, Integer courseId, String cName, String cDesc, Date selectTime) {
         this.id = id;
         this.studentCard = studentCard;
         this.stuName = stuName;
@@ -44,6 +46,7 @@ public class StuSelect {
         this.classNow = classNow;
         this.parentName = parentName;
         this.parentPhone = parentPhone;
+        this.parentCode = parentCode;
         this.headImg = headImg;
         this.courseId = courseId;
         this.cName = cName;
@@ -61,6 +64,7 @@ public class StuSelect {
         this.classNow = student.getClassNow();
         this.parentName = student.getParentName();
         this.parentPhone = student.getParentPhone();
+        this.parentCode = student.getParentCode();
         this.headImg = student.getHeadImg();
         this.courseId = course.getId();
         this.cName = course.getcName();
@@ -123,6 +127,14 @@ public class StuSelect {
 
     public void setParentPhone(String parentPhone) {
         this.parentPhone = parentPhone == null ? null : parentPhone.trim();
+    }
+
+    public String getParentCode() {
+        return parentCode;
+    }
+
+    public void setParentCode(String parentCode) {
+        this.parentCode = parentCode == null ? null : parentCode.trim();
     }
 
     public String getHeadImg() {

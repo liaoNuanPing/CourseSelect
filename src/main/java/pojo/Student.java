@@ -15,6 +15,8 @@ public class Student implements Serializable{
 
     private String parentPhone;
 
+    private String parentCode;
+
     private String headImg;
 
     public Integer getId() {
@@ -65,6 +67,12 @@ public class Student implements Serializable{
         this.parentPhone = parentPhone == null ? null : parentPhone.trim();
     }
 
+    public String getParentCode() { return parentCode; }
+
+    public void setParentCode(String parentCode) {
+        this.parentCode = parentCode == null ? null : parentCode.trim();
+    }
+
     public String getHeadImg() {
         return headImg;
     }
@@ -76,13 +84,14 @@ public class Student implements Serializable{
     public Student() {
     }
 
-    public Student(Integer id, String stuName, String grade, String classNow, String parentName, String parentPhone, String headImg) {
+    public Student(Integer id, String stuName, String grade, String classNow, String parentName, String parentPhone,String parentCode, String headImg) {
         this.id = id;
         this.stuName = stuName;
         this.grade = grade;
         this.classNow = classNow;
         this.parentName = parentName;
         this.parentPhone = parentPhone;
+        this.parentCode = parentCode;
         this.headImg = headImg;
     }
 }

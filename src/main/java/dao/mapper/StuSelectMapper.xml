@@ -9,6 +9,7 @@
     <result column="class_now" property="classNow" jdbcType="VARCHAR" />
     <result column="parent_name" property="parentName" jdbcType="VARCHAR" />
     <result column="parent_phone" property="parentPhone" jdbcType="VARCHAR" />
+    <result column="parent_code" property="parentCode" jdbcType="VARCHAR" />
     <result column="head_img" property="headImg" jdbcType="VARCHAR" />
     <result column="course_id" property="courseId" jdbcType="INTEGER" />
     <result column="c_name" property="cName" jdbcType="VARCHAR" />
@@ -80,7 +81,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, student_card, stu_name, grade, class_now, parent_name, parent_phone, head_img,
+    id, student_card, stu_name, grade, class_now, parent_name, parent_phone, parent_code, head_img,
     course_id, c_name, c_desc, select_time, term
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="pojo.StuSelectExample" >
@@ -116,12 +117,12 @@
   <insert id="insert" parameterType="pojo.StuSelect" >
     insert into stu_select (id, student_card, stu_name,
     grade, class_now, parent_name,
-    parent_phone, head_img, course_id,
+    parent_phone, parent_code, head_img, course_id,
     c_name, c_desc, select_time,
     term)
     values (#{id,jdbcType=INTEGER}, #{studentCard,jdbcType=VARCHAR}, #{stuName,jdbcType=VARCHAR},
     #{grade,jdbcType=VARCHAR}, #{classNow,jdbcType=VARCHAR}, #{parentName,jdbcType=VARCHAR},
-    #{parentPhone,jdbcType=VARCHAR}, #{headImg,jdbcType=VARCHAR}, #{courseId,jdbcType=INTEGER},
+    #{parentPhone,jdbcType=VARCHAR}, #{parentCode,jdbcType=VARCHAR}, #{headImg,jdbcType=VARCHAR}, #{courseId,jdbcType=INTEGER},
     #{cName,jdbcType=VARCHAR}, #{cDesc,jdbcType=VARCHAR}, #{selectTime,jdbcType=TIMESTAMP},
     #{term,jdbcType=VARCHAR})
   </insert>
@@ -148,6 +149,9 @@
       </if>
       <if test="parentPhone != null" >
         parent_phone,
+      </if>
+      <if test="parentCode != null" >
+        parent_code,
       </if>
       <if test="headImg != null" >
         head_img,
@@ -189,6 +193,9 @@
       </if>
       <if test="parentPhone != null" >
         #{parentPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="parentCode != null" >
+        #{parentCode,jdbcType=VARCHAR},
       </if>
       <if test="headImg != null" >
         #{headImg,jdbcType=VARCHAR},
@@ -240,6 +247,9 @@
       <if test="record.parentPhone != null" >
         parent_phone = #{record.parentPhone,jdbcType=VARCHAR},
       </if>
+      <if test="record.parentCode != null" >
+        parent_code = #{record.parentCode,jdbcType=VARCHAR},
+      </if>
       <if test="record.headImg != null" >
         head_img = #{record.headImg,jdbcType=VARCHAR},
       </if>
@@ -272,6 +282,7 @@
     class_now = #{record.classNow,jdbcType=VARCHAR},
     parent_name = #{record.parentName,jdbcType=VARCHAR},
     parent_phone = #{record.parentPhone,jdbcType=VARCHAR},
+    parent_code = #{record.parentCode,jdbcType=VARCHAR},
     head_img = #{record.headImg,jdbcType=VARCHAR},
     course_id = #{record.courseId,jdbcType=INTEGER},
     c_name = #{record.cName,jdbcType=VARCHAR},
@@ -303,6 +314,9 @@
       <if test="parentPhone != null" >
         parent_phone = #{parentPhone,jdbcType=VARCHAR},
       </if>
+      <if test="parentCode != null" >
+        parent_code = #{parentCode,jdbcType=VARCHAR},
+      </if>
       <if test="headImg != null" >
         head_img = #{headImg,jdbcType=VARCHAR},
       </if>
@@ -332,6 +346,7 @@
       class_now = #{classNow,jdbcType=VARCHAR},
       parent_name = #{parentName,jdbcType=VARCHAR},
       parent_phone = #{parentPhone,jdbcType=VARCHAR},
+      parent_code = #{parentCode,jdbcType=VARCHAR},
       head_img = #{headImg,jdbcType=VARCHAR},
       course_id = #{courseId,jdbcType=INTEGER},
       c_name = #{cName,jdbcType=VARCHAR},

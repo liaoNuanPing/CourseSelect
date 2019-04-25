@@ -77,13 +77,14 @@ public class WxController {
             String sn = request.getParameter("student_name").equals("underfined") ? null : request.getParameter("student_name");
             String parentName = request.getParameter("parent_name").equals("underfined") ? null : request.getParameter("parent_name");
             String mobile = request.getParameter("mobile").equals("underfined") ? null : request.getParameter("mobile");
+            String parentCode = request.getParameter("parent_code").equals("underfined") ? null : request.getParameter("parent_code");
             String grade = request.getParameter("grade").equals("underfined") ? null : request.getParameter("grade");
             String classNow = request.getParameter("class_now").equals("underfined") ? null : request.getParameter("class_now");
 
             String stuName=new String(sn.getBytes(),"UTF-8");
 
-            if (openId == null || stuName == null || parentName == null || mobile == null || grade == null || classNow == null ||
-                    "".equals(openId) || "".equals(stuName) || "".equals(parentName) || "".equals(mobile) || "".equals(grade) || "".equals(classNow)) {
+            if (openId == null || stuName == null || parentName == null || mobile == null ||parentCode=null|| grade == null || classNow == null ||
+                    "".equals(openId) || "".equals(stuName) || "".equals(parentName) || "".equals(mobile) ||  "".equals(parentCode)||"".equals(grade) || "".equals(classNow)) {
                 map.put("isSuccessful", "0");
                 map.put("msg", "学生信息不能有空");
                 return JsonUtils.objectToJson(map);
@@ -141,9 +142,11 @@ public class WxController {
                     classNow,
                     parentName,
                     mobile,
+                    parentCode,
                     null,
                     null,
                     "0"
+
             );
 
             identityAuditingService.insert(identityAuditing);
