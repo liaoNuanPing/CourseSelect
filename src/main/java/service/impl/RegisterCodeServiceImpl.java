@@ -18,10 +18,13 @@ public class RegisterCodeServiceImpl implements RegisterCodeService {
         return registerCodeMapper.countAll();
     }
 
-    public int delById(Integer id){return registerCodeMapper.deleteByPrimaryKey(id);}
+    public int delById(String code){return registerCodeMapper.deleteByPrimaryKey(code);}
 
     public int insert(RegisterCode registerCode){return registerCodeMapper.insert(registerCode);}
 
+    public RegisterCode selectByCode(String code){
+        return registerCodeMapper.selectByPrimaryKey(code);
+    }
 
     @Override
     public List<RegisterCode> selectEnableCode() {

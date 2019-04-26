@@ -54,7 +54,7 @@ public class RegisterCodeController {
             String sql3 =
                     "select * " +
                             "from register_code " +
-                            "where CONCAT(id,code,disable) " +
+                            "where CONCAT(code,disable) " +
                             "LIKE '%" + search + "%' " +
                             orderString3 +
                             " LIMIT " + start + " ," + length;
@@ -65,7 +65,6 @@ public class RegisterCodeController {
             ResultSet rs = pstm.executeQuery(sql3);
             while (rs.next()) {
                 RegisterCode registerCode = new RegisterCode(
-                        rs.getInt("id"),
                         rs.getString("code"),
                         rs.getString("disable")
                 );//end CourseShow
@@ -94,11 +93,11 @@ public class RegisterCodeController {
     public String del(String perId, String[] ids) {
         try {
             if (perId != null) {
-                registerCodeService.delById(Integer.valueOf(perId));
+                registerCodeService.delById(perId);
 
             } else {
                 for (int i = 0; i < ids.length; i++)
-                    registerCodeService.delById(Integer.valueOf(ids[i]));
+                    registerCodeService.delById(ids[i]);
             }
         }catch (Exception e){
             logger.error(e.getMessage());
@@ -136,7 +135,7 @@ public class RegisterCodeController {
                 for (int j = 0; j < 30; j += 5) {
                     String code = uuid.substring(j, j + 5);
                     if (!codeMap.containsKey(code)) {
-                        registerCodeService.insert(new RegisterCode(null, code, "false"));
+                        registerCodeService.insert(new RegisterCode(code, "false"));
                         i++;
                         if (i >= number)
                             break out;

@@ -83,6 +83,7 @@ public class IdentityAuditingController {
                         rs.getString("class_now"),
                         rs.getString("parent_name"),
                         rs.getString("parent_phone"),
+                        rs.getString("parent_code"),
                         rs.getString("head_img"),
                         rs.getDate("register_time"),
                         rs.getString("auditing_status")
@@ -158,12 +159,14 @@ public class IdentityAuditingController {
                 identityAuditingService.update(auditing);
             else {
 //            通过
-                Student student = new Student(null,
+                Student student = new Student(
+                        null,
                         auditing.getStuName(),
                         auditing.getGrade(),
                         auditing.getClassNow(),
                         auditing.getParentName(),
                         auditing.getParentPhone(),
+                        auditing.getParentCode(),
                         auditing.getHeadImg()
                 );
 //            更新identityAuditing并插入Student记录

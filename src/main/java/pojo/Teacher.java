@@ -60,4 +60,16 @@ public class Teacher {
     public void setTeacherMail(String teacherMail) {
         this.teacherMail = teacherMail == null ? null : teacherMail.trim();
     }
+
+    public Teacher() {
+    }
+
+    public Teacher(Integer id, String teacher, Integer teacherId, String sex, String teacherPhone, String teacherMail) {
+        this.id = id;
+        this.teacher = teacher;
+        this.teacherId = teacherId;
+        this.sex = sex;
+        this.teacherPhone = teacherPhone;
+        this.teacherMail = teacherMail;
+    }
 }

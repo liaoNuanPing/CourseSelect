@@ -13,7 +13,7 @@ public interface RegisterCodeMapper {
 
     int deleteByExample(RegisterCodeExample example);
 
-    int deleteByPrimaryKey(Integer id);
+    int deleteByPrimaryKey(String code);
 
     int insert(RegisterCode record);
 
@@ -21,7 +21,7 @@ public interface RegisterCodeMapper {
 
     List<RegisterCode> selectByExample(RegisterCodeExample example);
 
-    RegisterCode selectByPrimaryKey(Integer id);
+    RegisterCode selectByPrimaryKey(String code);
 
     int updateByExampleSelective(@Param("record") RegisterCode record, @Param("example") RegisterCodeExample example);
 

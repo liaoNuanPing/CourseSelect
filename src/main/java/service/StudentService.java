@@ -3,7 +3,6 @@ package service;
 import org.springframework.stereotype.Service;
 import pojo.Student;
 
-@Service
 public interface StudentService {
 
 //    /**

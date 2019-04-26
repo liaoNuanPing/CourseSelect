@@ -53,14 +53,25 @@ public class WxController {
     @Autowired
     StuSelectService stuSelectService;
 
-//    volatile PerClassCourse perClassCourse;
+    @Autowired
+    RegisterCodeService registerCodeService;
 
-    @RequestMapping("/wx-getOpenId")
+    @RequestMapping("/wx-checkRegisterCode")
     @ResponseBody
-    public String getOpenId(HttpServletRequest request) {
-        String openId = request.getParameter("openId");
-        logger.debug(openId);
-        return openId;
+    public String checkRegisterCode(HttpServletRequest request) {
+        String registerCode = request.getParameter("register_code");
+        RegisterCode registerCodeList = registerCodeService.selectByCode(registerCode);
+        if (registerCodeList==null)
+            return JsonUtils.objectToJson(wxResultJson.setIsSuccessfulAndMsg(0, "注册码不存在"));
+        else if (registerCodeList.getCode().equals("true"))
+            return JsonUtils.objectToJson(wxResultJson.setIsSuccessfulAndMsg(0, "注册码无效"));
+        else if (registerCodeList.getCode().equals("false"))
+            return JsonUtils.objectToJson(wxResultJson.setIsSuccessfulAndMsg(1, ""));
+        else
+            return JsonUtils.objectToJson(wxResultJson.setIsSuccessfulAndMsg(0, "意外情况"));
+
+
+//        return openId;
     }
 
     /**
@@ -83,7 +94,7 @@ public class WxController {
 
             String stuName=new String(sn.getBytes(),"UTF-8");
 
-            if (openId == null || stuName == null || parentName == null || mobile == null ||parentCode=null|| grade == null || classNow == null ||
+            if (openId == null || stuName == null || parentName == null || mobile == null ||parentCode==null|| grade == null || classNow == null ||
                     "".equals(openId) || "".equals(stuName) || "".equals(parentName) || "".equals(mobile) ||  "".equals(parentCode)||"".equals(grade) || "".equals(classNow)) {
                 map.put("isSuccessful", "0");
                 map.put("msg", "学生信息不能有空");

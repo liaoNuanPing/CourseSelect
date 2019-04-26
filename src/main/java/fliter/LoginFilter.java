@@ -2,6 +2,7 @@ package fliter;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 public class LoginFilter implements Filter {
@@ -12,8 +13,12 @@ public class LoginFilter implements Filter {
         HttpServletRequest request= (HttpServletRequest) req;
         String uri= request.getRequestURI();
         System.out.println(uri);
-        if (uri.contains("js")||uri.contains("css")||uri .contains("jpg")||uri.contains("png")||uri.contains("ttf")||uri.contains("ico")||uri.contains("Login")
-                ||uri.contains("wx"))
+        HttpSession session=request.getSession();
+        if(session.getAttribute("isLogin")!=null&&session.getAttribute("isLogin")=="true") {
+            session.setMaxInactiveInterval(7200);
+            chain.doFilter(request, resp);
+        }
+        else if (uri.contains("js")||uri.contains("css")||uri .contains("jpg")||uri.contains("png")||uri.contains("ttf")||uri.contains("ico")||uri.contains("Login") ||uri.contains("wx"))
             chain.doFilter(request, resp);
         else{
             if (request.getSession().getAttribute("isLogin")==null)

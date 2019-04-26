@@ -12,22 +12,18 @@ public class TeacherServiceImpl implements TeacherService {
     @Autowired
     TeacherMapper teacherMapper;
 
-    @Override
     public int insert(Teacher teacher) {
        return teacherMapper.insert(teacher);
     }
 
-    @Override
     public int delById(Integer id) {
         return teacherMapper.deleteByPrimaryKey(id);
     }
 
-    @Override
     public int countAll() {
         return teacherMapper.countAll();
     }
 
-    @Override
     public Teacher selectById(Integer id) {
         teacherMapper.selectByPrimaryKey(id);
         return null;

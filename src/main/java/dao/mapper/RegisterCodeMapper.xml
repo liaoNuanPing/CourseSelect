@@ -2,14 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="dao.mapper.RegisterCodeMapper" >
   <resultMap id="BaseResultMap" type="pojo.RegisterCode" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="code" property="code" jdbcType="VARCHAR" />
+    <id column="code" property="code" jdbcType="VARCHAR" />
     <result column="disable" property="disable" jdbcType="CHAR" />
   </resultMap>
 
   <select id="countAll" resultType="java.lang.Integer" >
     SELECT count(id) FROM register_code
   </select>
+
   <sql id="Example_Where_Clause" >
     <where >
       <foreach collection="oredCriteria" item="criteria" separator="or" >
@@ -69,7 +69,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, code, disable
+    code, disable
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="pojo.RegisterCodeExample" >
     select
@@ -85,15 +85,15 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from register_code
-    where id = #{id,jdbcType=INTEGER}
+    where code = #{code,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from register_code
-    where id = #{id,jdbcType=INTEGER}
+    where code = #{code,jdbcType=VARCHAR}
   </delete>
   <delete id="deleteByExample" parameterType="pojo.RegisterCodeExample" >
     delete from register_code
@@ -102,17 +102,12 @@
     </if>
   </delete>
   <insert id="insert" parameterType="pojo.RegisterCode" >
-    insert into register_code (id, code, disable
-      )
-    values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR}, #{disable,jdbcType=CHAR}
-      )
+    insert into register_code (code, disable)
+    values (#{code,jdbcType=VARCHAR}, #{disable,jdbcType=CHAR})
   </insert>
   <insert id="insertSelective" parameterType="pojo.RegisterCode" >
     insert into register_code
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
       <if test="code != null" >
         code,
       </if>
@@ -121,9 +116,6 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
       <if test="code != null" >
         #{code,jdbcType=VARCHAR},
       </if>
@@ -141,9 +133,6 @@
   <update id="updateByExampleSelective" parameterType="map" >
     update register_code
     <set >
-      <if test="record.id != null" >
-        id = #{record.id,jdbcType=INTEGER},
-      </if>
       <if test="record.code != null" >
         code = #{record.code,jdbcType=VARCHAR},
       </if>
@@ -157,8 +146,7 @@
   </update>
   <update id="updateByExample" parameterType="map" >
     update register_code
-    set id = #{record.id,jdbcType=INTEGER},
-      code = #{record.code,jdbcType=VARCHAR},
+    set code = #{record.code,jdbcType=VARCHAR},
       disable = #{record.disable,jdbcType=CHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -167,19 +155,15 @@
   <update id="updateByPrimaryKeySelective" parameterType="pojo.RegisterCode" >
     update register_code
     <set >
-      <if test="code != null" >
-        code = #{code,jdbcType=VARCHAR},
-      </if>
       <if test="disable != null" >
         disable = #{disable,jdbcType=CHAR},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where code = #{code,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="pojo.RegisterCode" >
     update register_code
-    set code = #{code,jdbcType=VARCHAR},
-      disable = #{disable,jdbcType=CHAR}
-    where id = #{id,jdbcType=INTEGER}
+    set disable = #{disable,jdbcType=CHAR}
+    where code = #{code,jdbcType=VARCHAR}
   </update>
 </mapper>

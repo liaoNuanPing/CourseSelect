@@ -12,8 +12,8 @@
     <!-- 配置包扫描器，扫描所有带@Service注解的类 -->
     <context:component-scan base-package="service.impl"/>
 
-    <!-- 配置包扫描器，扫描所有带@Controller注解的类 -->
-    <context:component-scan base-package="controller"/>
+    <!--&lt;!&ndash; 配置包扫描器，扫描所有带@Controller注解的类 &ndash;&gt;-->
+    <!--<context:component-scan base-package="controller"/>-->
 
 	<!-- 配置包扫描器，扫描所有带@Comp注解的类 -->
 	<context:component-scan base-package="listener"/>

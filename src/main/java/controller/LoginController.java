@@ -27,14 +27,20 @@ public class LoginController {
         String psw = req.getParameter("pwd");
         String loginName = req.getParameter("count");
         AdminInfo select = adminInfoService.select();
-        if( select.getLoginName().equals(loginName)&&select.getPsw().equals(psw)) {
-            HttpSession session = req.getSession();
+        HttpSession session = req.getSession();
+//        新session
+        if (select.getLoginName().equals(loginName)&&select.getPsw().equals(psw)){
+            session.setMaxInactiveInterval(7200);
             session.setAttribute("isLogin","true");
             select.setLastLoginTime((select.getThisLoginTime()));
             select.setThisLoginTime(null);
             adminInfoService.update(select);
             resp.sendRedirect("index");
-        }else
+        } else if(session.getAttribute("isLogin")!=null&&session.getAttribute("isLogin")=="true"){
+            //session有效
+            session.setMaxInactiveInterval(7200);
+            resp.sendRedirect("index");
+        } else
             resp.sendRedirect("SystemLogin");
         return "success";
     }

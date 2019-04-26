@@ -3,9 +3,8 @@ package enums;
 public enum RegisterCodeEnum {
 
     NONE("",0),
-    ID("id",1),
-    CODE("code",2),
-    DISABLE("disable",3);
+    CODE("code",1),
+    DISABLE("disable",2);
 
     private String name;
     private int index;

@@ -30,10 +30,9 @@
 		<thead>
 			<tr class="text-c">
 				<th width="25"><input type="checkbox" name="" value=""></th>
-				<th width="40">id</th>
-				<th width="50">注册码</th>
-				<th width="100">状态</th>
-				<th width="40">操作</th>
+				<th width="100">注册码</th>
+				<th width="25">状态</th>
+				<th width="25">操作</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -66,16 +65,25 @@ $(function(){
         "serverSide": true,
         "ajax" : "loadRegisterCode",
         "columns": [
-            { "data": "id",
+            { "data": "code",
                 "bSortable": false,
                 "searchable": false,
                 "render": function ( data, type, full, meta ) {
                     return '<input type="checkbox" name="dels" value='+data+'>';
                 }
             },
-            {"data": "id"},
             {"data": "code"},
-            {"data": "disable"},
+            {
+                "data": "disable",
+                "render": function (data, type,full,row) {
+                    var html;
+                    if(data=="false")
+                        html =  "<td class=\"td-status\"><span class=\"label label-success radius\">可用</span></td>" ;
+                    else
+                        html =  "<td class=\"td-status\"><span class=\"label label-danger radius\">已被注册</span></td>" ;
+                    return html;
+                }
+			},
             { "data":  "id","bSortable": false,
                 "render": function (data, type,full,row) {
                     var html ="<td class=\"td-manage\"> <a title=\"删除\" href=\"javascript:;\" onclick=\"member_del(this,"+data+")\" class=\"ml-5\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\">&#xe6e2;</i></a></td>";
@@ -88,17 +96,6 @@ $(function(){
 	});
 });
 
-//json转二维数组
-function toArr(arr) {
-    for (var i=0; i<arr.length; i++) {
-        var tmpArr = []
-        for (var attr in arr[i]) {
-            tmpArr.push(arr[i][attr])
-        }
-        arr[i] = tmpArr
-    }
-    return arr
-}
 
 /*注册码-添加*/
 function member_add(){
@@ -110,10 +107,6 @@ function member_add(){
     });
 }
 
-/*用户-编辑*/
-function member_edit(title,url,id,w,h){
-    layer_show(title,url,w,h);
-}
 
 /*用户-删除*/
 function member_del(obj,id){

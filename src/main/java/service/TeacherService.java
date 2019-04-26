@@ -1,9 +1,8 @@
 package service;
 
-import org.springframework.stereotype.Service;
 import pojo.Teacher;
 
-@Service
+
 public interface TeacherService {
 
 //    /**
