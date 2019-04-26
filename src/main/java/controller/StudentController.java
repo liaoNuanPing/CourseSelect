@@ -38,8 +38,7 @@ public class StudentController {
     @ResponseBody
     public String studentPageShow(String id) {
         try {
-            String json= JsonUtils.objectToJson( studentService.selectById(Integer.valueOf(id)));
-            return json;
+            return JsonUtils.objectToJson( studentService.selectById(Integer.valueOf(id)));
         }catch (Exception e){
             return "";
         }
@@ -61,7 +60,7 @@ public class StudentController {
 
             Connection conn = ConnectDB.getConnection();
             String orderString3 = "order by " + StudentEnum.getNameByIndex(Integer.valueOf(orderColumn)) + " " + order + " ";
-            String where = "where CONCAT(id,stu_name, grade,class_now,parent_name,parent_phone,parent_code) LIKE '%" + search + "%'";
+            String where = "where CONCAT(id,stu_name, grade,class_now,parent_name,parent_code,parent_phone,parent_code) LIKE '%" + search + "%'";
 
             if ("".equals(search))
                 where="";

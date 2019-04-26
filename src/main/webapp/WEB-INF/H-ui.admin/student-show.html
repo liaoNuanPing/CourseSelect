@@ -52,6 +52,10 @@
 				<td id="parent_name">---</td>
 			</tr>
 			<tr>
+				<th class="text-r" >家长身份证：</th>
+				<td id="parent_code">-----------</td>
+			</tr>
+			<tr>
 				<th class="text-r" >家长手机：</th>
 				<td id="phone">-----------</td>
 			</tr>
@@ -79,12 +83,12 @@
 //        dataType: 'json',
         success: function(data){
             var arr = JSON.parse(data);
-            var nnn=arr["parentName"]
             if (data!="null") {
                 document.getElementById("stu_name").innerHTML = arr["stuName"]==null?"--":arr["stuName"];
                 document.getElementById("grade").innerHTML = arr["grade"]==null?"--":arr["grade"];
                 document.getElementById("class_now").innerHTML = arr["classNow"]==null?"--":arr["classNow"];
-                document.getElementById("parent_name").innerHTML = nnn;
+                document.getElementById("parent_name").innerHTML = arr["parentName"];
+                document.getElementById("parent_code").innerHTML = arr["parentCode"];
 //                document.getElementById("parent_name").innerHTML = arr["parentName"]==null?"--":arr["parentName"];
                 document.getElementById("phone").innerHTML = arr["parentPhone"]==null?"--":arr["parentPhone"];
                 document.getElementById("head_img_big").setAttribute("href", arr["headImg"]==null?"static/h-ui/images/ucnter/avatar-default.jpg":arr["headImg"]);

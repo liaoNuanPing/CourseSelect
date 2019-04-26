@@ -46,6 +46,14 @@
                 <input type="text" class="input-text" value="" placeholder="" name="parent_name" id="parent_name">
             </div>
         </div>
+
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">家长身份证：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="" name="parent_code" id="parent_code">
+			</div>
+		</div>
+
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-3">家长电话：</label>
             <div class="formControls col-xs-8 col-sm-9">
@@ -131,6 +139,7 @@ function addSelected() {
     document.getElementById("student_id").setAttribute("value",getUrlParam("id"));
     document.getElementById("student_name").setAttribute("value",getUrlParam("stuName"));
     document.getElementById("parent_name").setAttribute("value",getUrlParam("parentName"));
+    document.getElementById("parent_code").setAttribute("value",getUrlParam("parentCode"));
     document.getElementById("mobile").setAttribute("value",getUrlParam("parentPhone"));
     document.getElementById("classes").value= getUrlParam("classNow");
     document.getElementById("grade").value= getUrlParam("grade");
@@ -154,6 +163,15 @@ $(function(){
                 required:true,
             },
             term:{
+                required:true
+            },
+            parent_code:{
+                required:true
+            },
+            parent_name:{
+                required:true
+            },
+            mobile:{
                 required:true
             }
         },

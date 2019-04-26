@@ -41,6 +41,7 @@
 				<th width="100">年级</th>
 				<th width="100">班级</th>
 				<th width="90">家长姓名</th>
+				<th width="90">家长身份证</th>
 				<th width="150">手机手机</th>
 				<th width="150">头像</th>
 				<th width="100">操作</th>
@@ -86,6 +87,7 @@ $(function(){
             {"data": "grade"},
             {"data": "classNow"},
             {"data": "parentName"},
+            {"data": "parentCode"},
             {"data": "parentPhone"},
             {"data": "headImg",
                 "bSortable": false,
@@ -97,7 +99,7 @@ $(function(){
             { "data":  "id",
 				"bSortable": false,
                 "render": function (data, type, full, meta) {
-                    return "<td class=\"td-manage\">  <a title=\"编辑\" href=\"javascript:;\" onclick=\"member_edit('编辑','student-update.html?id="+full.id+"&stuName="+full.stuName+"&parentName="+full.parentName+"&parentPhone="+full.parentPhone+"&grade="+full.grade+"&classNow="+full.classNow+"','710','510')\" class=\"ml-5\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\">&#xe6df;</i></a> <a title=\"删除\" href=\"javascript:;\" onclick=\"member_del(this,"+data+")\" class=\"ml-5\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\">&#xe6e2;</i></a></td>";
+                    return "<td class=\"td-manage\">  <a title=\"编辑\" href=\"javascript:;\" onclick=\"member_edit('编辑','student-update.html?id="+full.id+"&stuName="+full.stuName+"&parentCode="+full.parentCode+"&parentName="+full.parentName+"&parentPhone="+full.parentPhone+"&grade="+full.grade+"&classNow="+full.classNow+"','710','510')\" class=\"ml-5\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\">&#xe6df;</i></a> <a title=\"删除\" href=\"javascript:;\" onclick=\"member_del(this,"+data+")\" class=\"ml-5\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\">&#xe6e2;</i></a></td>";
                 }
             }
         ]
