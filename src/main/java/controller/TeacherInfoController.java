@@ -132,8 +132,8 @@ public class TeacherInfoController {
     @ResponseBody
     public String update(HttpServletRequest request) throws Exception {
         try {
-            String oldId = request.getParameter("id");
-            String newId = request.getParameter("teacher_id");
+            //String oldId = request.getParameter("id");
+            //String newId = request.getParameter("teacher_id");
             String teacherName = request.getParameter("teacher");
             String sex = request.getParameter("sex");
             String mobile = request.getParameter("teacher_phone");
@@ -161,6 +161,7 @@ public class TeacherInfoController {
             if (perId != null) {
                 TeacherInfo teacher_info = teacher_infoService.selectById(Integer.valueOf(perId));
                 result += teacher_infoService.delById(Integer.valueOf(perId));
+            }
             else
                 for (int i = 0; i < ids.length; i++) {
                     TeacherInfo teacher_info = teacher_infoService.selectById(Integer.valueOf(ids[i]));

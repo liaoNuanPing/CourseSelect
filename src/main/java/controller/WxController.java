@@ -53,6 +53,8 @@ public class WxController {
     @Autowired
     StuSelectService stuSelectService;
 
+//    volatile PerClassCourse perClassCourse;
+
     @RequestMapping("/wx-getOpenId")
     @ResponseBody
     public String getOpenId(HttpServletRequest request) {
@@ -81,18 +83,57 @@ public class WxController {
 
             String stuName=new String(sn.getBytes(),"UTF-8");
 
-            if (openId == null || stuName == null || parentName == null || mobile == null ||parentCode==null|| grade == null || classNow == null ||
+            if (openId == null || stuName == null || parentName == null || mobile == null ||parentCode=null|| grade == null || classNow == null ||
                     "".equals(openId) || "".equals(stuName) || "".equals(parentName) || "".equals(mobile) ||  "".equals(parentCode)||"".equals(grade) || "".equals(classNow)) {
                 map.put("isSuccessful", "0");
                 map.put("msg", "学生信息不能有空");
                 return JsonUtils.objectToJson(map);
             }
 
+            logger.error("----------------1");
             if (wxStudentService.selectByOpenId(openId) != null) {
                 map.put("isSuccessful", "0");
                 map.put("msg", "openId重复了");
                 return JsonUtils.objectToJson(map);
             }
+            logger.error("-----------------2");
+
+//            String headImg = "";
+//            String newHeadImg = String.valueOf(System.currentTimeMillis()) + "[" + stuName + "And" + parentName + "]." + FileuploadController.studentHeadImg.substring(FileuploadController.studentHeadImg.lastIndexOf("."), FileuploadController.studentHeadImg.length());
+//            File dir = new File(Path.getTempPath() + "/");
+
+//            if (!dir.exists())
+//                dir.mkdir();
+//
+//            if (dir.exists() && dir.isDirectory()) {
+//                File[] files = dir.listFiles();
+//                Long biggest = Long.valueOf(10000);
+//                for (File file : files) {
+//                    if (file.getName().contains(openId)) {
+//                        Long t = Long.valueOf(file.getName().substring(0, file.getName().indexOf("[")));
+//                        if (t > biggest) {
+//                            biggest = t;
+//                            headImg = file.getName();
+//                        }
+//                    }
+//
+//                }
+//            }
+//            if ("".equals(headImg)) {
+//                newHeadImg = null;
+//            } else if (!new File(Path.getTempPath() + "/" + headImg).renameTo(new File(Path.getImagesPath() + "/" + newHeadImg)))
+//                throw new Exception("移动图片从temp到images不成功");
+            logger.error("-----------------4");
+//            IdentityAuditing identityAuditing = new IdentityAuditing(
+//                    null,
+//                    stuName,
+//                    parentName,
+//                    mobile,
+//                    grade,
+//                    classNow,
+//                    null,
+//                    null,
+//                    "0");
 
             IdentityAuditing identityAuditing = new IdentityAuditing(
                     null,
@@ -105,12 +146,17 @@ public class WxController {
                     null,
                     null,
                     "0"
+
             );
+
             identityAuditingService.insert(identityAuditing);
+            logger.error("-----------------5");
             wxStudentService.insert(new WxStudent(null, openId, null, identityAuditing.getId(), null));
+            logger.error("-----------------6");
             map.put("isSuccessful", "1");
             map.put("msg", "");
         } catch (Exception e) {
+            logger.error("-----------------7");
             map.put("isSuccessful", "0");
             map.put("msg", "发生异常");
             logger.error(e.getMessage());

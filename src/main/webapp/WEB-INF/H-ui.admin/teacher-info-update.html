@@ -26,69 +26,50 @@
 <div class="page-container">
 	<form method="post" action="/mapping-course-add" class="form form-horizontal" id="form-course-add" name="forma">
 
-        <!--<div class="row cl">-->
-			<!--<label class="form-label col-xs-4 col-sm-3">课程ID：</label>-->
-			<!--<div class="formControls col-xs-8 col-sm-9">-->
-				<!--<input type="text" class="input-text" value="" placeholder="" id="course_id" name="course_id">-->
-			<!--</div>-->
-		<!--</div>-->
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">id：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="" id="id" name="id">
+			</div>
+		</div>
 
 		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3">课程名：</label>
+			<label class="form-label col-xs-4 col-sm-3">科任老师：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" readonly class="input-text" value="" placeholder="" id="course_name" name="course_name">
+				<input type="text" class="input-text" value="" placeholder="" id="teacher" name="teacher">
 			</div>
 		</div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-3">可选数：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="默认9999" name="total_need" id="total_need">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-3">已选数：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="默认0" name="have" id="have">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>学期：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-				<select class="select" size="1" name="term" id="term">
-					<option value="" selected>请选择该课的学期</option>
-					<option value="0">全部</option>
-					<option value="1">上学期</option>
-					<option value="2">下学期</option>
-				</select>
-				</span></div>
-        </div>
-
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>可选年级：</label>
-			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-				<select class="select" size="1" name="grade" id="grade">
-					<option value="" selected>请选择该课可选的年级</option>
-					<option value="0">全部</option>
-				</select>
-				</span> </div>
+			<label class="form-label col-xs-4 col-sm-3">教师id：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="" id="teacher_id" name="teacher_id">
+			</div>
 		</div>
 
 		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>可选班级：</label>
-			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-				<select class="select" size="1" name="classes" id="classes">
-					<option value="" selected>请选择该课对应年级可选的班级</option>
-					<option value="0">全部</option>
-				</select>
-				</span> </div>
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>性别：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="" id="sex" name="sex">
+			</div>
 		</div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-3">教师手机：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="" name="teacher_phone" id="teacher_phone">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-3">教师邮箱：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="" name="teacher_mail" id="teacher_mail">
+            </div>
+        </div>
+
 
 		<div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
-				<!--<input class="btn btn-primary radius" type="button"  value="&nbsp;&nbsp;提交&nbsp;&nbsp;" onclick=sub()>-->
 				<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
 				<button onClick="layer_close();" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
             </div>
@@ -113,47 +94,44 @@ function article_save(){
 	alert("刷新父级的时候会自动关闭弹层。")
 	window.parent.location.reload();
 }
-
-//获取url中的参数
 function getUrlParam(name) {
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
 //    var r = window.location.search.substr(1).match(reg);  //匹配目标参数
     var r = decodeURI(decodeURI(window.location.search.substr(1))).match(reg);  //匹配目标参数
     if (r != null) return unescape(r[2]); return null; //返回参数值
 }
+
 function addSelected() {
-    document.getElementById("total_need").setAttribute("value",getUrlParam("total"));
-    document.getElementById("have").setAttribute("value",getUrlParam("have"));
-//    document.getElementById("term").setAttribute("value",getUrlParam("term"));
-    document.getElementById("course_name").setAttribute("value",getUrlParam("course_name"));
-    document.getElementById("classes").value= getUrlParam("to_class")=="全部"?0:getUrlParam("to_class");
-    document.getElementById("grade").value= getUrlParam("grade")=="全部"?0:getUrlParam("grade");
-    document.getElementById("term").value= getUrlParam("term")=="全部"?0:getUrlParam("term");
+	document.getElementById("teacher").setAttribute("value",getUrlParam("teacherName"));
+    document.getElementById("teacher_id").setAttribute("value",getUrlParam("teacherId"));
+    document.getElementById("sex").setAttribute("value",getUrlParam("Sex"));
+    document.getElementById("teacher_phone").setAttribute("value",getUrlParam("teacherPhone"));
+    document.getElementById("teacher_mail").value= getUrlParam("teacherMail");
 }
 
 $(function(){
-    gradeAndClasses();
 
 
     $("#form-course-add").validate({
         rules:{
-
-            grade:{
+            teacher:{
+                required:true,
+                minlength:2,
+                maxlength:16
+            },
+			teacher_id:{
 				required:true,
+				minlength:2,
+				maxlength:16
 			},
-			classes:{
-				required:true,
-			},
-            term:{
+            sex:{
+                required:true,
+            },
+            teacher_phone:{
+                required:true,
+            },
+            teacher_mail:{
                 required:true
-            },
-            total_need:{
-                required:true,
-                digits:true
-            },
-            have:{
-                required:true,
-                digits:true
             }
         },
         onkeyup:false,
@@ -162,12 +140,9 @@ $(function(){
         submitHandler:function(form){
             $(form).ajaxSubmit({
                 type: 'post',
-                url: "mapping-course-rule-update" ,
+                url: "mapping-student-update" ,
                 async:false,
-                data:{
-                    "id":getUrlParam("id"),
-                    "courseId":getUrlParam("courseId")
-                },
+                data:{"id":getUrlParam("id")},
                 success: function(data){
                     data=JSON.parse(data);
                     if(data["isSuccessful"]=="1") {
@@ -179,20 +154,34 @@ $(function(){
                         }, 1.5 * 1000 );//延迟1500毫米
 
                     }else {
-                        layer.msg('error!'+data["msg"],{icon:2,time:3500});
+                        layer.msg('更新失败!'+data["msg"],{icon:2,time:3500});
                     }
                 },
                 error: function(XmlHttpRequest, textStatus, errorThrown){
-                    layer.msg('error!请重试或联系管理员',{icon:2,time:3500});
+                    layer.msg('error!',{icon:2,time:3500});
                 }
             });
     }
-
-});
 });
 
 
+	$('.skin-minimal input').iCheck({
+		checkboxClass: 'icheckbox-blue',
+		radioClass: 'iradio-blue',
+		increaseArea: '20%'
+	});
+	
+	$list = $("#fileList"),
+	$btn = $("#btn-star"),
+	state = "pending",
+	uploader;
 
+	var uploader = WebUploader.create({
+		auto: true,
+		swf: 'lib/webuploader/0.1.5/Uploader.swf'
+
+})( jQuery );
 </script>
 </body>
 </html>
+<!--uploadStudentImage-->
