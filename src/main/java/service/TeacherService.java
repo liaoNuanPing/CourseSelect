@@ -1,10 +1,10 @@
 package service;
 
 import org.springframework.stereotype.Service;
-import pojo.TeacherInfo;
+import pojo.Teacher;
 
 @Service
-public interface TeacherInfoService {
+public interface TeacherService {
 
 //    /**
 //     *  根据教师名、教师id确定是否有该教师
@@ -14,9 +14,9 @@ public interface TeacherInfoService {
 //     */
 //    TeacherInfo selectWithoutId(String teacherName, String teacherId);
 
-    int insert(TeacherInfo teacher_info);
+    int insert(Teacher teacher_info);
     int delById(Integer id);
     int countAll();
 
-    TeacherInfo selectById(Integer id);
+    Teacher selectById(Integer id);
 }

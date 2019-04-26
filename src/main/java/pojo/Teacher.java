@@ -1,6 +1,6 @@
 package pojo;
 
-public class TeacherInfo {
+public class Teacher {
     private Integer id;
 
     private String teacher;

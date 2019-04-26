@@ -2,7 +2,7 @@ package enums;
 
 public enum TeacherEnum {
     NONE("",0),
-    ID（"id",1）,
+    ID("id",1),
     TEACHER("teacher",2),
     TEACHER_ID("teacher_id",3),
     SEX("sex",4),
@@ -12,7 +12,7 @@ public enum TeacherEnum {
 
     private String name;
     private int index;
-    TeacherInfoEnum(String name, int index){
+    TeacherEnum(String name, int index){
         this.name=name;
         this.index=index;
     }
@@ -34,7 +34,7 @@ public enum TeacherEnum {
     }
 
     public static String getNameByIndex(int index) {
-        for (TeacherInfoEnum c : TeacherInfoEnum.values()) {
+        for (TeacherEnum c : TeacherEnum.values()) {
             if (c.getIndex() == index) {
                 return c.name;
             }

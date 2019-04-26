@@ -1,9 +1,19 @@
 package pojo;
 
-public class TeacherClass {
+public class TeacherInClass {
+    private Integer id;
+
     private Integer courseId;
 
     private Integer teacherId;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public Integer getCourseId() {
         return courseId;
