@@ -14,13 +14,21 @@ public class RegisterCodeServiceImpl implements RegisterCodeService {
     @Autowired
     RegisterCodeMapper registerCodeMapper;
 
+    @Override
     public int countAll(){
         return registerCodeMapper.countAll();
     }
 
+    @Override
     public int delById(String code){return registerCodeMapper.deleteByPrimaryKey(code);}
 
+    @Override
     public int insert(RegisterCode registerCode){return registerCodeMapper.insert(registerCode);}
+
+    @Override
+    public int update(RegisterCode registerCode) {
+        return registerCodeMapper.updateByPrimaryKey(registerCode);
+    }
 
     public RegisterCode selectByCode(String code){
         return registerCodeMapper.selectByPrimaryKey(code);

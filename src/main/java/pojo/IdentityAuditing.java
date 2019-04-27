@@ -103,7 +103,10 @@ public class IdentityAuditing {
         this.auditingStatus = auditingStatus == null ? null : auditingStatus.trim();
     }
 
-    public IdentityAuditing(Integer id, String stuName, String grade, String classNow, String parentName, String parentPhone,String parentCode, String headImg, Date registerTime, String auditingStatus) {
+    public IdentityAuditing() {
+    }
+
+    public IdentityAuditing(Integer id, String stuName, String grade, String classNow, String parentName, String parentPhone, String parentCode, String headImg, Date registerTime, String auditingStatus) {
         this.id = id;
         this.stuName = stuName;
         this.grade = grade;

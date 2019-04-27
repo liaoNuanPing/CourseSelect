@@ -14,8 +14,6 @@ public class IdentityAuditingServiceImpl implements IdentityAuditingService {
     @Autowired
     IdentityAuditingMapper identityAuditingMapper;
 
-//    @Autowired
-//    StudentService studentService;
 
     public int countAll(){
         return identityAuditingMapper.countAll();

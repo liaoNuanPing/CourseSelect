@@ -15,6 +15,7 @@ public interface RegisterCodeService {
 
     int insert(RegisterCode registerCode);
 
+    int update(RegisterCode registerCode);
     /**
      * 根据微信传来的code查找数据库
      * @param code 注册码
@@ -23,5 +24,7 @@ public interface RegisterCodeService {
     RegisterCode selectByCode(String code);
 
     List<RegisterCode> selectEnableCode();
+
+
 
 }

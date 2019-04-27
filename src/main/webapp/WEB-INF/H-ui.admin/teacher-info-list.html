@@ -64,14 +64,14 @@ $(function(){
 		  {"orderable":false,"aTargets":[0]}// 制定列不参与排序
 		],
         "serverSide": true,
-        "ajax" : "loadTeacherInfo",
+        "ajax" : "loadTeacher",
         "columns": [
 			{"data": "id"},
             {"data": "teacher"},
-            {"data": "teacher_id"},
+            {"data": "teacherId"},
             {"data": "sex"},
-            {"data": "teacher_phone"},
-            {"data": "teacher_mail"},
+            {"data": "teacherPhone"},
+            {"data": "teacherMail"},
             { "data":  "id","bSortable": false,
                 "render": function (data, type,full,row) {
                     return"<td class=\"td-manage\"> <a title=\"编辑\" href=\"javascript:;\" onclick=\"member_edit('编辑','admin-update.html?Id="+full.id+'&Teacher'+full.teacher+'&TeacherId'+full.teacher_id+'&Sex='+full.sex+'&TeacherPhone='+full.teacher_phone+'&TeacherMail='+full.teacher_mail+"','410','410')\" class=\"ml-5\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\">&#xe6df;</i></a></td>";

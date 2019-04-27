@@ -56,22 +56,20 @@ public class WxController {
     @Autowired
     RegisterCodeService registerCodeService;
 
-    @RequestMapping("/wx-checkRegisterCode")
-    @ResponseBody
+    @RequestMapping(value = {"/wx-check-code"}, produces = "text/plain;charset=utf-8")
     public String checkRegisterCode(HttpServletRequest request) {
         String registerCode = request.getParameter("register_code");
         RegisterCode registerCodeList = registerCodeService.selectByCode(registerCode);
+        System.out.println(registerCodeList.getCode());
         if (registerCodeList==null)
-            return JsonUtils.objectToJson(wxResultJson.setIsSuccessfulAndMsg(0, "注册码不存在"));
-        else if (registerCodeList.getCode().equals("true"))
-            return JsonUtils.objectToJson(wxResultJson.setIsSuccessfulAndMsg(0, "注册码无效"));
-        else if (registerCodeList.getCode().equals("false"))
-            return JsonUtils.objectToJson(wxResultJson.setIsSuccessfulAndMsg(1, ""));
+            System.out.println("null");
+        else if (Boolean.valueOf( registerCodeList.getCode()))
+            System.out.println("注册码无效");
+        else if (!Boolean.valueOf(registerCodeList.getCode()))
+            System.out.println("注册码有效");
         else
-            return JsonUtils.objectToJson(wxResultJson.setIsSuccessfulAndMsg(0, "意外情况"));
-
-
-//        return openId;
+            System.out.println("意外情况");
+        return null;
     }
 
     /**
@@ -81,7 +79,6 @@ public class WxController {
     @RequestMapping(value = {"/wx-Audit-add"}, produces = "text/plain;charset=utf-8")
     @ResponseBody
     public String identityAuditAddWithTrans(HttpServletRequest request) {
-        Map<String, String> map = new HashMap<String, String>();
         try {
 
             String openId = request.getParameter("openId").equals("underfined") ? null : request.getParameter("openId");
@@ -91,23 +88,30 @@ public class WxController {
             String parentCode = request.getParameter("parent_code").equals("underfined") ? null : request.getParameter("parent_code");
             String grade = request.getParameter("grade").equals("underfined") ? null : request.getParameter("grade");
             String classNow = request.getParameter("class_now").equals("underfined") ? null : request.getParameter("class_now");
+            String registerCode = request.getParameter("register_code").equals("underfined") ? null : request.getParameter("register_code");
 
             String stuName=new String(sn.getBytes(),"UTF-8");
+            System.out.println(stuName);
 
             if (openId == null || stuName == null || parentName == null || mobile == null ||parentCode==null|| grade == null || classNow == null ||
                     "".equals(openId) || "".equals(stuName) || "".equals(parentName) || "".equals(mobile) ||  "".equals(parentCode)||"".equals(grade) || "".equals(classNow)) {
-                map.put("isSuccessful", "0");
-                map.put("msg", "学生信息不能有空");
-                return JsonUtils.objectToJson(map);
+                return JsonUtils.objectToJson( wxResultJson.setIsSuccessfulAndMsg(0,"学生信息不能有空"));
             }
 
-            logger.error("----------------1");
-            if (wxStudentService.selectByOpenId(openId) != null) {
-                map.put("isSuccessful", "0");
-                map.put("msg", "openId重复了");
-                return JsonUtils.objectToJson(map);
-            }
-            logger.error("-----------------2");
+            if (wxStudentService.selectByOpenId(openId) != null)
+                return JsonUtils.objectToJson( wxResultJson.setIsSuccessfulAndMsg(0,"openId重复了"));
+
+
+            RegisterCode checkCode=registerCodeService.selectByCode(registerCode);
+            if (checkCode==null)
+                return JsonUtils.objectToJson(wxResultJson.setIsSuccessfulAndMsg(0, "注册码不存在"));
+            else if (Boolean.valueOf( checkCode.getCode()))
+                return JsonUtils.objectToJson(wxResultJson.setIsSuccessfulAndMsg(0, "注册码无效"));
+            else if (!Boolean.valueOf( checkCode.getCode())) {
+
+                checkCode.setDisable("true");
+                registerCodeService.update(checkCode);
+
 
 //            String headImg = "";
 //            String newHeadImg = String.valueOf(System.currentTimeMillis()) + "[" + stuName + "And" + parentName + "]." + FileuploadController.studentHeadImg.substring(FileuploadController.studentHeadImg.lastIndexOf("."), FileuploadController.studentHeadImg.length());
@@ -134,7 +138,6 @@ public class WxController {
 //                newHeadImg = null;
 //            } else if (!new File(Path.getTempPath() + "/" + headImg).renameTo(new File(Path.getImagesPath() + "/" + newHeadImg)))
 //                throw new Exception("移动图片从temp到images不成功");
-            logger.error("-----------------4");
 //            IdentityAuditing identityAuditing = new IdentityAuditing(
 //                    null,
 //                    stuName,
@@ -146,34 +149,33 @@ public class WxController {
 //                    null,
 //                    "0");
 
-            IdentityAuditing identityAuditing = new IdentityAuditing(
-                    null,
-                    stuName,
-                    grade,
-                    classNow,
-                    parentName,
-                    mobile,
-                    parentCode,
-                    null,
-                    null,
-                    "0"
+                IdentityAuditing identityAuditing = new IdentityAuditing(
+                        null,
+                        stuName,
+                        grade,
+                        classNow,
+                        parentName,
+                        mobile,
+                        parentCode,
+                        null,
+                        null,
+                        "0"
 
-            );
+                );
 
-            identityAuditingService.insert(identityAuditing);
-            logger.error("-----------------5");
-            wxStudentService.insert(new WxStudent(null, openId, null, identityAuditing.getId(), null));
-            logger.error("-----------------6");
-            map.put("isSuccessful", "1");
-            map.put("msg", "");
+                identityAuditingService.insert(identityAuditing);
+                wxStudentService.insert(new WxStudent(null, openId, null, identityAuditing.getId(), null));
+                return JsonUtils.objectToJson(wxResultJson.setIsSuccessfulAndMsg(1, ""));
+            }else {
+                System.out.println("注册码意外情况");
+                return JsonUtils.objectToJson(wxResultJson.setIsSuccessfulAndMsg(0, "注册码意外情况"));
+            }
         } catch (Exception e) {
-            logger.error("-----------------7");
-            map.put("isSuccessful", "0");
-            map.put("msg", "发生异常");
             logger.error(e.getMessage());
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            System.out.println("发生异常");
+            return JsonUtils.objectToJson( wxResultJson.setIsSuccessfulAndMsg(0,"发生异常"));
         }
-        return JsonUtils.objectToJson(map);
     }
 
 
@@ -190,14 +192,29 @@ public class WxController {
         Map<String, String> map = new HashMap<String, String>();
         String status;
         String result = "正在审核中";
-        try {
-            WxStudent wxStudent = wxStudentService.selectByOpenId(openId);
-            Integer id = wxStudent.getAuditingId();
-            IdentityAuditing identityAuditing = identityAuditingService.selectById(id);
-            status = identityAuditing.getAuditingStatus();
-        } catch (Exception e) {
-            status = "3";
+
+        WxStudent wxStudent = wxStudentService.selectByOpenId(openId);
+
+        if (wxStudent == null) {
+            map.put("msg", "未提交审核");
+            map.put("status", "3");
+            return JsonUtils.objectToJson(map);
         }
+        if (wxStudent.getStuId()!=null) {
+            map.put("msg", "审核通过");
+            map.put("status", "1");
+            return JsonUtils.objectToJson(map);
+        }
+        Integer id = wxStudent.getAuditingId();
+        System.out.println(wxStudent.getOpenid());
+        IdentityAuditing identityAuditing = identityAuditingService.selectById(id);
+        if (identityAuditing==null){
+            map.put("msg", "未提交审核");
+            map.put("status", "3");
+            return JsonUtils.objectToJson(map);
+        }
+        status = identityAuditing.getAuditingStatus();
+
         if ("0".equals(status))
             result = "正在审核中";
         else if ("1".equals(status))
@@ -208,6 +225,7 @@ public class WxController {
             result = "未提交审核";
         else
             result = "未知错误";
+        System.out.println(result);
 
         map.put("msg", result);
         map.put("status", status);

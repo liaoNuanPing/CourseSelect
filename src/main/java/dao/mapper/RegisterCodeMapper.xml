@@ -7,7 +7,7 @@
   </resultMap>
 
   <select id="countAll" resultType="java.lang.Integer" >
-    SELECT count(id) FROM register_code
+    SELECT count(code) FROM register_code
   </select>
 
   <sql id="Example_Where_Clause" >

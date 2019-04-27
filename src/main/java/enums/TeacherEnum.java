@@ -7,8 +7,7 @@ public enum TeacherEnum {
     TEACHER_ID("teacher_id",3),
     SEX("sex",4),
     TEACHER_PHONE("teacher_phone",5),
-    TEACHER_MAIL("teacher_mail",6),
-    PARENT_PHONE("parent_phone",7);
+    TEACHER_MAIL("teacher_mail",6);
 
     private String name;
     private int index;

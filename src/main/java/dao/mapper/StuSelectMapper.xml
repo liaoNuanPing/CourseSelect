@@ -114,7 +114,7 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="pojo.StuSelect" >
+  <insert id="insert" parameterType="pojo.StuSelect" useGeneratedKeys="true" keyProperty="id">
     insert into stu_select (id, student_card, stu_name,
     grade, class_now, parent_name,
     parent_phone, parent_code, head_img, course_id,

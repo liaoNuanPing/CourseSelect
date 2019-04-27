@@ -117,7 +117,6 @@ public class TeacherController {
             String teacherMail = request.getParameter("teacher_mail");
 
             Teacher teacher = new Teacher(null,teacherName,"".equals(teacherId) ? null : Integer.valueOf(teacherId), sex, mobile, teacherMail);
-//        上传图片的链接只做一次，用完重制
             TeacherService.insert(teacher);
         } catch (Exception e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -158,12 +157,12 @@ public class TeacherController {
         try {
             int result = 0;
             if (perId != null) {
-                Teacher Teacher = TeacherService.selectById(Integer.valueOf(perId));
+                Teacher teacher = TeacherService.selectById(Integer.valueOf(perId));
                 result += TeacherService.delById(Integer.valueOf(perId));
             }
             else
                 for (int i = 0; i < ids.length; i++) {
-                    Teacher teacher_info = TeacherService.selectById(Integer.valueOf(ids[i]));
+                    Teacher teacher = TeacherService.selectById(Integer.valueOf(ids[i]));
                     result += TeacherService.delById(Integer.valueOf(ids[i]));
                 }
 
