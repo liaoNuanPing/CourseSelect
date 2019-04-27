@@ -25,10 +25,12 @@
 <body>
 <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 教师管理 <span class="c-gray en">&gt;</span> 教师信息 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" id="refresh" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
-	<div class="mt-20">
+    <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" id="delAllButton" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a href="javascript:;" onclick="member_add('添加教师信息','teacher-add.html','','510')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加教师信息</a></span>  </div>
+    <div class="mt-20">
 	<table class="table table-border table-bordered table-hover table-bg table-sort">
 		<thead>
 			<tr class="text-c">
+				<th width="25"><input type="checkbox" name="" value=""></th>
 				<th width="90">id</th>
 				<th width="150">科任老师</th>
 				<th width="90">教师id</th>
@@ -66,15 +68,23 @@ $(function(){
         "serverSide": true,
         "ajax" : "loadTeacher",
         "columns": [
+            { "data": "id",
+                "bSortable": false,
+                "searchable": false,
+                "render": function ( data, type, full, meta ) {
+                    return '<input type="checkbox" name="dels" value='+data+'>';
+                }
+            },
 			{"data": "id"},
-            {"data": "teacher"},
-            {"data": "teacherId"},
+            {"data": "name"},
+            {"data": "workerId"},
             {"data": "sex"},
-            {"data": "teacherPhone"},
-            {"data": "teacherMail"},
+            {"data": "phone"},
+            {"data": "email"},
             { "data":  "id","bSortable": false,
                 "render": function (data, type,full,row) {
-                    return"<td class=\"td-manage\"> <a title=\"编辑\" href=\"javascript:;\" onclick=\"member_edit('编辑','admin-update.html?Id="+full.id+'&Teacher'+full.teacher+'&TeacherId'+full.teacher_id+'&Sex='+full.sex+'&TeacherPhone='+full.teacher_phone+'&TeacherMail='+full.teacher_mail+"','410','410')\" class=\"ml-5\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\">&#xe6df;</i></a></td>";
+                    return"<td class=\"td-manage\"> " +
+                        "<a title=\"编辑\" href=\"javascript:;\" onclick=\"member_edit('编辑','teacher-update.html?id="+full.id+'&name='+full.name+'&workerId='+full.workerId+'&sex='+full.sex+'&phone='+full.phone+'&email='+full.email+"','410','410')\" class=\"ml-5\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\">&#xe6df;</i></a><a title='删除' href='javascript:;' onclick='member_del(this,"+data+")' class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a></td>";
                 }
             }
         ]
@@ -82,10 +92,77 @@ $(function(){
 	
 });
 
+
+/*添加*/
+function member_add(title,url,w,h){
+    layer_show(title,url,w,h);
+}
+
 /*用户-编辑*/
 function member_edit(title,url,w,h){
 	layer_show(title,url,w,h);
 }
+
+/*删除*/
+function member_del(obj,id){
+    layer.confirm('确认要删除吗？',function(index){
+        $.ajax({
+            type: 'POST',
+            url: 'mapping-teacher-del',
+            data:{"perId":id},
+            success: function(data){
+                $(obj).parents("tr").remove();
+                data=JSON.parse(data);
+                if(data["isSuccessful"]=="1") {
+                    layer.msg('已删除!', {icon: 1, time: 2000});
+                    $('.table-sort').DataTable().draw( false );
+                }else {
+                    layer.msg('error!'+data["msg"],{icon:2,time:3500});
+                }
+            },
+            error:function(data) {
+                layer.msg('error!请重试或联系管理员',{icon:2,time:3500});
+            }
+        });
+        $('.table-sort').DataTable().draw( false );
+    });
+
+}
+
+/* 批量删除 */
+$('#delAllButton').click(function() {
+    if ($("input[name='dels']:checked")[0] == null) {
+        alert("请选择需要删除的消息");
+        return;
+    }
+    if (confirm("确认删除吗？")) {
+
+        var ids = new Array;
+        $("input[name='dels']:checked").each(function() {
+            ids.push($(this).val());
+            n = $(this).parents("tr").index() + 1; // 获取checkbox所在行的顺序
+            $("#dt").find("tr:eq(" + n + ")").remove();
+        });
+        $.ajax({
+            url : "mapping-teacher-del",
+            data : {"ids":ids},
+            type : "post",
+            traditional: true,//这里设置为true
+            success : function(data) {
+                data=JSON.parse(data);
+                if(data["isSuccessful"]=="1") {
+                    layer.msg('已删除!', {icon: 1, time: 2000});
+                    $('.table-sort').DataTable().draw( false );
+                }else {
+                    layer.msg('error!'+data["msg"],{icon:2,time:3500});
+                }
+            },
+            error:function(data) {
+                layer.msg('删除错误!',{icon:2,time:1000});
+            }
+        });
+    }
+})
 </script> 
 </body>
 </html>

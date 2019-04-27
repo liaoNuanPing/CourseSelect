@@ -17,5 +17,7 @@ public interface TeacherService {
     int delById(Integer id);
     int countAll();
 
+    int update(Teacher teacher);
+
     Teacher selectById(Integer id);
 }

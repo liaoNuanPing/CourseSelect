@@ -19,12 +19,12 @@
 <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
 <script>DD_belatedPNG.fix('*');</script>
 <![endif]-->
-<title>新增图片</title>
+<title>新增教师</title>
 <link href="lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
 <div class="page-container">
-	<form method="post" action="/mapping-course-add" class="form form-horizontal" id="form-course-add" name="forma">
+	<form method="post" action="/mapping-teacher-add" class="form form-horizontal" id="form-add" name="forma">
 
         <!--<div class="row cl">-->
 			<!--<label class="form-label col-xs-4 col-sm-3">课程ID：</label>-->
@@ -32,54 +32,43 @@
 				<!--<input type="text" class="input-text" value="" placeholder="" id="course_id" name="course_id">-->
 			<!--</div>-->
 		<!--</div>-->
+
 		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>id：</label>
+			<label class="form-label col-xs-4 col-sm-3">教师工号：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" value="" placeholder="" id="id" name="id">
+				<input type="text" class="input-text" value="" placeholder="" id="worker_id" name="worker_id">
 			</div>
 		</div>
 
 		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>科任老师：</label>
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>姓名：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" value="" placeholder="" id="teacher" name="teacher">
+				<input type="text" class="input-text" value="" placeholder="" id="name" name="name">
 			</div>
 		</div>
-
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3">教师id：</label>
-			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" value="" placeholder="" id="teacher_id" name="teacher_id">
-			</div>
-		</div>
-
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>家长姓名：</label>
-			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" value="" placeholder="" id="parent_name" name="parent_name">
-			</div>
-		</div>
-
 
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>性别：</label>
-			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" value="" placeholder="" id="sex" name="sex">
-			</div>
-		</div>
-
-
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>教师手机：</label>
-			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" value="" placeholder="" id="teacher_phone" name="teacher_phone">
-			</div>
+			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+				<select class="select" size="1" name="sex" id="sex">
+					<option value="" selected>请选择性别</option>
+					<option value="男">男</option>
+					<option value="女">女</option>
+				</select>
+				</span></div>
 		</div>
 
 		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>教师邮箱：</label>
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>手机：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" value="" placeholder="" id="teacher_mail" name="teacher_mail">
+				<input type="text" class="input-text" value="" placeholder="" id="phone" name="phone">
+			</div>
+		</div>
+
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>邮箱：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="" id="email" name="email">
 			</div>
 		</div>
 
@@ -112,70 +101,57 @@ function article_save(){
 
 $(function(){
 
-    $("#form-teacher-info-add").validate({
-        rules:{
-            teacher:{
-                required:true,
-                minlength:2,
-                maxlength:16
+    $("#form-add").validate({
+        rules: {
+            name: {
+                required: true,
+                minlength: 2,
+                maxlength: 16
             },
-            teacher_id:{
-                required:true,
-                minlength:2,
-                maxlength:16
+            worker_id: {
+                required: true,
             },
-            teacher_phone:{
-                required:true,
-                isMobile:true
+            phone: {
+                required: true,
+                isMobile: true
             },
-            teacher_mail:{
-                required:true,
-				isMail:true
+            email: {
+                required: true
+//                isMail: true
             }
         },
-        onkeyup:false,
-        focusCleanup:true,
-        success:"valid",
-        submitHandler:function(form){
+        onkeyup: false,
+        focusCleanup: true,
+        success: "valid",
+        submitHandler: function (form) {
             $(form).ajaxSubmit({
                 type: 'post',
-                url: "mapping-teacher-info-hand-add",
-                async:false,
-                success: function(data){
-                    data=JSON.parse(data);
-                    if(data["isSuccessful"]=="1") {
+                url: "mapping-teacher-add",
+//                async:false,
+                success: function (data) {
+                    data = JSON.parse(data);
+                    if (data["isSuccessful"] == "1") {
                         layer.msg('添加成功!', {icon: 1, time: 2000});
-                        setTimeout( function(){
+                        setTimeout(function () {
                             var index = parent.layer.getFrameIndex(window.name);
-                            parent.$('.table-sort').DataTable().draw( false );
+                            parent.$('.table-sort').DataTable().draw(true);
                             parent.layer.close(index);
-                        }, 1.5 * 1000 );//延迟1500毫米
+                        }, 1.5 * 1000);//延迟1500毫米
 
-                    }else {
-                        layer.msg('添加失败!'+data["msg"],{icon:2,time:3500});
+                    } else {
+                        layer.msg('添加失败!' + data["msg"], {icon: 2, time: 3500});
                     }
                 },
-                error: function(XmlHttpRequest, textStatus, errorThrown){
-                    layer.msg('error!',{icon:2,time:1000});
+                error: function (XmlHttpRequest, textStatus, errorThrown) {
+                    layer.msg('error!', {icon: 2, time: 1000});
                 }
             });
 
-    }
+        }
+
+    });
 
 });
-
-
-	$('.skin-minimal input').iCheck({
-		checkboxClass: 'icheckbox-blue',
-		radioClass: 'iradio-blue',
-		increaseArea: '20%'
-	});
-
-	$list = $("#fileList"),
-	$btn = $("#btn-star"),
-	state = "pending"
-
-})( jQuery );
 </script>
 </body>
 </html>

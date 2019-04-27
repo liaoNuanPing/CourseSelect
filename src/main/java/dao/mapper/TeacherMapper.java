@@ -32,4 +32,5 @@ public interface TeacherMapper {
     int updateByPrimaryKey(Teacher record);
 
     int countAll();
+
 }

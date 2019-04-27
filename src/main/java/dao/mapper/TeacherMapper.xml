@@ -3,13 +3,12 @@
 <mapper namespace="dao.mapper.TeacherMapper" >
   <resultMap id="BaseResultMap" type="pojo.Teacher" >
     <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="teacher" property="teacher" jdbcType="VARCHAR" />
-    <result column="teacher_id" property="teacherId" jdbcType="INTEGER" />
-    <result column="sex" property="sex" jdbcType="VARCHAR" />
-    <result column="teacher_phone" property="teacherPhone" jdbcType="VARCHAR" />
-    <result column="teacher_mail" property="teacherMail" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="worker_id" property="workerId" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="CHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
   </resultMap>
-
 
   <select id="countAll" resultType="java.lang.Integer" >
     SELECT count(id) FROM teacher
@@ -74,7 +73,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, teacher, teacher_id, sex, teacher_phone, teacher_mail
+    id, name, worker_id, sex, phone, email
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="pojo.TeacherExample" >
     select
@@ -107,12 +106,10 @@
     </if>
   </delete>
   <insert id="insert" parameterType="pojo.Teacher" >
-    insert into teacher (id, teacher, teacher_id, 
-      sex, teacher_phone, teacher_mail
-      )
-    values (#{id,jdbcType=INTEGER}, #{teacher,jdbcType=VARCHAR}, #{teacherId,jdbcType=INTEGER}, 
-      #{sex,jdbcType=VARCHAR}, #{teacherPhone,jdbcType=VARCHAR}, #{teacherMail,jdbcType=VARCHAR}
-      )
+    insert into teacher (id, name, worker_id, 
+      sex, phone, email)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{workerId,jdbcType=VARCHAR}, 
+      #{sex,jdbcType=CHAR}, #{phone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="pojo.Teacher" >
     insert into teacher
@@ -120,40 +117,40 @@
       <if test="id != null" >
         id,
       </if>
-      <if test="teacher != null" >
-        teacher,
+      <if test="name != null" >
+        name,
       </if>
-      <if test="teacherId != null" >
-        teacher_id,
+      <if test="workerId != null" >
+        worker_id,
       </if>
       <if test="sex != null" >
         sex,
       </if>
-      <if test="teacherPhone != null" >
-        teacher_phone,
+      <if test="phone != null" >
+        phone,
       </if>
-      <if test="teacherMail != null" >
-        teacher_mail,
+      <if test="email != null" >
+        email,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="teacher != null" >
-        #{teacher,jdbcType=VARCHAR},
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
       </if>
-      <if test="teacherId != null" >
-        #{teacherId,jdbcType=INTEGER},
+      <if test="workerId != null" >
+        #{workerId,jdbcType=VARCHAR},
       </if>
       <if test="sex != null" >
-        #{sex,jdbcType=VARCHAR},
+        #{sex,jdbcType=CHAR},
       </if>
-      <if test="teacherPhone != null" >
-        #{teacherPhone,jdbcType=VARCHAR},
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
       </if>
-      <if test="teacherMail != null" >
-        #{teacherMail,jdbcType=VARCHAR},
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -169,20 +166,20 @@
       <if test="record.id != null" >
         id = #{record.id,jdbcType=INTEGER},
       </if>
-      <if test="record.teacher != null" >
-        teacher = #{record.teacher,jdbcType=VARCHAR},
+      <if test="record.name != null" >
+        name = #{record.name,jdbcType=VARCHAR},
       </if>
-      <if test="record.teacherId != null" >
-        teacher_id = #{record.teacherId,jdbcType=INTEGER},
+      <if test="record.workerId != null" >
+        worker_id = #{record.workerId,jdbcType=VARCHAR},
       </if>
       <if test="record.sex != null" >
-        sex = #{record.sex,jdbcType=VARCHAR},
+        sex = #{record.sex,jdbcType=CHAR},
       </if>
-      <if test="record.teacherPhone != null" >
-        teacher_phone = #{record.teacherPhone,jdbcType=VARCHAR},
+      <if test="record.phone != null" >
+        phone = #{record.phone,jdbcType=VARCHAR},
       </if>
-      <if test="record.teacherMail != null" >
-        teacher_mail = #{record.teacherMail,jdbcType=VARCHAR},
+      <if test="record.email != null" >
+        email = #{record.email,jdbcType=VARCHAR},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -192,11 +189,11 @@
   <update id="updateByExample" parameterType="map" >
     update teacher
     set id = #{record.id,jdbcType=INTEGER},
-      teacher = #{record.teacher,jdbcType=VARCHAR},
-      teacher_id = #{record.teacherId,jdbcType=INTEGER},
-      sex = #{record.sex,jdbcType=VARCHAR},
-      teacher_phone = #{record.teacherPhone,jdbcType=VARCHAR},
-      teacher_mail = #{record.teacherMail,jdbcType=VARCHAR}
+      name = #{record.name,jdbcType=VARCHAR},
+      worker_id = #{record.workerId,jdbcType=VARCHAR},
+      sex = #{record.sex,jdbcType=CHAR},
+      phone = #{record.phone,jdbcType=VARCHAR},
+      email = #{record.email,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -204,31 +201,31 @@
   <update id="updateByPrimaryKeySelective" parameterType="pojo.Teacher" >
     update teacher
     <set >
-      <if test="teacher != null" >
-        teacher = #{teacher,jdbcType=VARCHAR},
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
       </if>
-      <if test="teacherId != null" >
-        teacher_id = #{teacherId,jdbcType=INTEGER},
+      <if test="workerId != null" >
+        worker_id = #{workerId,jdbcType=VARCHAR},
       </if>
       <if test="sex != null" >
-        sex = #{sex,jdbcType=VARCHAR},
+        sex = #{sex,jdbcType=CHAR},
       </if>
-      <if test="teacherPhone != null" >
-        teacher_phone = #{teacherPhone,jdbcType=VARCHAR},
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
       </if>
-      <if test="teacherMail != null" >
-        teacher_mail = #{teacherMail,jdbcType=VARCHAR},
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="pojo.Teacher" >
     update teacher
-    set teacher = #{teacher,jdbcType=VARCHAR},
-      teacher_id = #{teacherId,jdbcType=INTEGER},
-      sex = #{sex,jdbcType=VARCHAR},
-      teacher_phone = #{teacherPhone,jdbcType=VARCHAR},
-      teacher_mail = #{teacherMail,jdbcType=VARCHAR}
+    set name = #{name,jdbcType=VARCHAR},
+      worker_id = #{workerId,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=CHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

@@ -3,15 +3,15 @@ package pojo;
 public class Teacher {
     private Integer id;
 
-    private String teacher;
+    private String name;
 
-    private Integer teacherId;
+    private String workerId;
 
     private String sex;
 
-    private String teacherPhone;
+    private String phone;
 
-    private String teacherMail;
+    private String email;
 
     public Integer getId() {
         return id;
@@ -21,20 +21,20 @@ public class Teacher {
         this.id = id;
     }
 
-    public String getTeacher() {
-        return teacher;
+    public String getName() {
+        return name;
     }
 
-    public void setTeacher(String teacher) {
-        this.teacher = teacher == null ? null : teacher.trim();
+    public void setName(String name) {
+        this.name = name == null ? null : name.trim();
     }
 
-    public Integer getTeacherId() {
-        return teacherId;
+    public String getWorkerId() {
+        return workerId;
     }
 
-    public void setTeacherId(Integer teacherId) {
-        this.teacherId = teacherId;
+    public void setWorkerId(String workerId) {
+        this.workerId = workerId == null ? null : workerId.trim();
     }
 
     public String getSex() {
@@ -45,31 +45,31 @@ public class Teacher {
         this.sex = sex == null ? null : sex.trim();
     }
 
-    public String getTeacherPhone() {
-        return teacherPhone;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setTeacherPhone(String teacherPhone) {
-        this.teacherPhone = teacherPhone == null ? null : teacherPhone.trim();
+    public void setPhone(String phone) {
+        this.phone = phone == null ? null : phone.trim();
     }
 
-    public String getTeacherMail() {
-        return teacherMail;
+    public String getEmail() {
+        return email;
     }
 
-    public void setTeacherMail(String teacherMail) {
-        this.teacherMail = teacherMail == null ? null : teacherMail.trim();
+    public void setEmail(String email) {
+        this.email = email == null ? null : email.trim();
     }
 
     public Teacher() {
     }
 
-    public Teacher(Integer id, String teacher, Integer teacherId, String sex, String teacherPhone, String teacherMail) {
+    public Teacher(Integer id, String name, String workerId, String sex, String phone, String email) {
         this.id = id;
-        this.teacher = teacher;
-        this.teacherId = teacherId;
+        this.name = name;
+        this.workerId = workerId;
         this.sex = sex;
-        this.teacherPhone = teacherPhone;
-        this.teacherMail = teacherMail;
+        this.phone = phone;
+        this.email = email;
     }
 }

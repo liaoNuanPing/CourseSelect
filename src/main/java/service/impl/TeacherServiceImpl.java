@@ -24,8 +24,14 @@ public class TeacherServiceImpl implements TeacherService {
         return teacherMapper.countAll();
     }
 
+    @Override
+    public int update(Teacher teacher) {
+        return teacherMapper.updateByPrimaryKey(teacher);
+    }
+
+
     public Teacher selectById(Integer id) {
-        teacherMapper.selectByPrimaryKey(id);
-        return null;
+        return teacherMapper.selectByPrimaryKey(id);
+
     }
 }

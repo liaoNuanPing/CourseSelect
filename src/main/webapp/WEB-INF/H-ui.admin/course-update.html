@@ -87,58 +87,58 @@ function addSelected() {
     document.getElementById("course_name").setAttribute("value",getUrlParam("course_name"));
 }
 
-$(function(){
+$(function() {
 
 
     gradeAndClasses();
 
 
     $("#form-course-add").validate({
-        rules:{
-            course_name:{
-                required:true,
-                minlength:2,
-                maxlength:16
+        rules: {
+            course_name: {
+                required: true,
+                minlength: 2,
+                maxlength: 16
             },
-            course_desc:{
-                required:true,
-                maxlength:100
+            course_desc: {
+                required: true,
+                maxlength: 100
             }
         },
-        onkeyup:false,
-        focusCleanup:true,
-        success:"valid",
-        submitHandler:function(form){
+        onkeyup: false,
+        focusCleanup: true,
+        success: "valid",
+        submitHandler: function (form) {
             $(form).ajaxSubmit({
                 type: 'post',
-                url: "mapping-course-update" ,
-                async:false,
-                data:{
-                    "id":getUrlParam("id"),
-                    "course_desc":$("#course_desc").val(),
-                    "course_name":$("#course_name").val()
+                url: "mapping-course-update",
+                async: false,
+                data: {
+                    "id": getUrlParam("id"),
+                    "course_desc": $("#course_desc").val(),
+                    "course_name": $("#course_name").val()
                 },
-                success: function(data){
-                    data=JSON.parse(data);
-                    if(data["isSuccessful"]=="1") {
+                success: function (data) {
+                    data = JSON.parse(data);
+                    if (data["isSuccessful"] == "1") {
                         layer.msg('更新成功!', {icon: 1, time: 2000});
-                        setTimeout( function(){
+                        setTimeout(function () {
                             var index = parent.layer.getFrameIndex(window.name);
-                            parent.$('.table-sort').DataTable().draw( false );
+                            parent.$('.table-sort').DataTable().draw(false);
                             parent.layer.close(index);
-                        }, 1.5 * 1000 );//延迟1500毫米
+                        }, 1.5 * 1000);//延迟1500毫米
 
-                    }else {
-                        layer.msg('更新失败!'+data["msg"],{icon:2,time:3500});
+                    } else {
+                        layer.msg('更新失败!' + data["msg"], {icon: 2, time: 3500});
                     }
                 },
-                error: function(XmlHttpRequest, textStatus, errorThrown){
-                    layer.msg('error!请重试或联系管理员',{icon:2,time:3500});
+                error: function (XmlHttpRequest, textStatus, errorThrown) {
+                    layer.msg('error!请重试或联系管理员', {icon: 2, time: 3500});
                 }
             });
-    }
+        }
 
-});
+    });
 });
 
 

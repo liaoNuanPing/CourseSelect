@@ -1,6 +1,7 @@
 package controller;
 
 import enums.TeacherEnum;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +24,10 @@ import java.util.List;
 @Controller
 @Transactional(rollbackFor = { Exception.class })
 public class TeacherController {
+
+    private WxResultJson wxResultJson=new WxResultJson();
+    private final Logger logger = LoggerUtlis.getLogger(TeacherController.class);
+
 
     @Autowired
     TeacherService TeacherService;
@@ -59,13 +64,13 @@ public class TeacherController {
 
             Connection conn = ConnectDB.getConnection();
             String orderString3 = "order by " + TeacherEnum.getNameByIndex(Integer.valueOf(orderColumn)) + " " + order + " ";
-            String where = "where CONCAT(id,teacher, teacher_id,sex,teacher_phone,teacher_mail) LIKE '%" + search + "%'";
+            String where = "where CONCAT(teacher,teacher_id,sex,teacher_phone,teacher_mail) LIKE '%" + search + "%'";
 
             if ("".equals(search))
                 where="";
             String sql3 =
                     "select * " +
-                            "from teacher_info " +
+                            "from teacher " +
                             where +
                             " " +
                             orderString3 +
@@ -79,11 +84,11 @@ public class TeacherController {
             while (rs.next()) {
                 Teacher teacher = new Teacher(
                         rs.getInt("id"),
-                        rs.getString("teacher"),
-                        rs.getInt("teacher_id"),
+                        rs.getString("name"),
+                        rs.getString("worker_id"),
                         rs.getString("sex"),
-                        rs.getString("teacher_phone"),
-                        rs.getString("teacher_email")
+                        rs.getString("phone"),
+                        rs.getString("email")
                 );
                 teacherList.add(teacher);
             }//end while
@@ -106,63 +111,85 @@ public class TeacherController {
     }
 
 
-    @RequestMapping(value = {"/mapping-teacher_info-hand-add"},produces = "text/plain;charset=utf-8")
+    @RequestMapping(value = {"/mapping-teacher-add"},produces = "text/plain;charset=utf-8")
     @ResponseBody
-    public String handMakeAdd(HttpServletRequest request) throws Exception {
+    public String add(HttpServletRequest request) throws Exception {
         try {
-            String teacherId = request.getParameter("teacher_id");
-            String teacherName = request.getParameter("teacher") == null ? "" : request.getParameter("teacher");
-            String sex = request.getParameter("sex") == null ? "" : request.getParameter("sex");
-            String mobile = request.getParameter("teacher_phone");
-            String teacherMail = request.getParameter("teacher_mail");
+            String workerId = request.getParameter("worker_id");
+            String name = request.getParameter("name");
+            String sex = request.getParameter("sex");
+            String phone = request.getParameter("phone");
+            String email = request.getParameter("email");
 
-            Teacher teacher = new Teacher(null,teacherName,"".equals(teacherId) ? null : Integer.valueOf(teacherId), sex, mobile, teacherMail);
+            if (workerId==null)
+                return JsonUtils.objectToJson( wxResultJson.setIsSuccessfulAndMsg(0, "教师id不为空"));
+            if (name==null)
+                return JsonUtils.objectToJson( wxResultJson.setIsSuccessfulAndMsg(0, "姓名不为空"));
+            if (sex==null)
+                return JsonUtils.objectToJson( wxResultJson.setIsSuccessfulAndMsg(0, "性别不为空"));
+            if (phone==null)
+                return JsonUtils.objectToJson( wxResultJson.setIsSuccessfulAndMsg(0, "电话不为空"));
+            if (email==null)
+                return JsonUtils.objectToJson( wxResultJson.setIsSuccessfulAndMsg(0, "邮箱不为空"));
+
+            Teacher teacher = new Teacher(null,name,workerId, sex, phone, email);
             TeacherService.insert(teacher);
+            return JsonUtils.objectToJson(wxResultJson.setIsSuccessfulAndMsg(1, ""));
+
         } catch (Exception e) {
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            LoggerUtlis.getLogger(this.getClass()).error("------mapping-teacher_info-hand-add-" + e.getMessage());
-            return JsonUtils.objectToJson(new WxResultJson(0, "添加错误"));
+            LoggerUtlis.getLogger(this.getClass()).error("------mapping-teacher-add-----" + e.getMessage());
+            return JsonUtils.objectToJson(wxResultJson.setIsSuccessfulAndMsg(0, "添加错误"));
         }
-        return JsonUtils.objectToJson(new WxResultJson(1, ""));
     }
 
-//    @RequestMapping(value = {"/mapping-teacher_info-update"},produces = "text/plain;charset=utf-8")
-//    @ResponseBody
-//    public String update(HttpServletRequest request) throws Exception {
-//        try {
-//            //String oldId = request.getParameter("id");
-//            //String newId = request.getParameter("teacher_id");
-//            String teacherName = request.getParameter("teacher");
-//            String sex = request.getParameter("sex");
-//            String mobile = request.getParameter("teacher_phone");
-//            String teacherMail = request.getParameter("teacher_mail");
-//
-//            Teacher oTeacher_info = TeacherService.selectById(Integer.valueOf(oldId));
-//            Teacher nTeacher_info;
-//
-//            TeacherService.delById(Integer.valueOf(oldId));
-//            TeacherService.insert(nTeacher_info);
-//
-//        } catch (Exception e) {
-//            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-//            LoggerUtlis.getLogger(this.getClass()).error("------mapping-teacher_info-update-" + e.getMessage());
-//            return JsonUtils.objectToJson(new WxResultJson(0, "更新错误"));
-//        }
-//        return JsonUtils.objectToJson(new WxResultJson(1, ""));
-//    }
+    @RequestMapping(value = {"/mapping-teacher-update"},produces = "text/plain;charset=utf-8")
+    @ResponseBody
+    public String update(HttpServletRequest request) throws Exception {
+        try {
+            String id = request.getParameter("id");
+            String workerId = request.getParameter("worker_id");
+            String name = request.getParameter("name");
+            String sex = request.getParameter("sex");
+            String phone = request.getParameter("phone");
+            String email = request.getParameter("email");
 
-    @RequestMapping("/mapping-teacher_info-del")
+            if (workerId==null)
+                return JsonUtils.objectToJson( wxResultJson.setIsSuccessfulAndMsg(0, "教师id不为空"));
+            if (name==null)
+                return JsonUtils.objectToJson( wxResultJson.setIsSuccessfulAndMsg(0, "姓名不为空"));
+            if (sex==null)
+                return JsonUtils.objectToJson( wxResultJson.setIsSuccessfulAndMsg(0, "性别不为空"));
+            if (phone==null)
+                return JsonUtils.objectToJson( wxResultJson.setIsSuccessfulAndMsg(0, "电话不为空"));
+            if (email==null)
+                return JsonUtils.objectToJson( wxResultJson.setIsSuccessfulAndMsg(0, "邮箱不为空"));
+
+            Teacher teacher = TeacherService.selectById(Integer.valueOf(id));
+            teacher.setName(name);
+            teacher.setWorkerId(workerId);
+            teacher.setSex(sex);
+            teacher.setPhone(phone);
+            teacher.setEmail(email);
+            TeacherService.update(teacher);
+            return JsonUtils.objectToJson(wxResultJson.setIsSuccessfulAndMsg(1, ""));
+
+
+        } catch (Exception e) {
+            LoggerUtlis.getLogger(this.getClass()).error("------mapping-teacher-update------" + e.getMessage());
+            return JsonUtils.objectToJson(wxResultJson.setIsSuccessfulAndMsg(0, "更新异常："+e.getMessage()));
+        }
+    }
+
+    @RequestMapping("/mapping-teacher-del")
     @ResponseBody
     public String del(String perId, String[] ids) throws Exception {
         try {
             int result = 0;
             if (perId != null) {
-                Teacher teacher = TeacherService.selectById(Integer.valueOf(perId));
                 result += TeacherService.delById(Integer.valueOf(perId));
             }
             else
                 for (int i = 0; i < ids.length; i++) {
-                    Teacher teacher = TeacherService.selectById(Integer.valueOf(ids[i]));
                     result += TeacherService.delById(Integer.valueOf(ids[i]));
                 }
 
