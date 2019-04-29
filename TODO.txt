@@ -16,15 +16,7 @@ websocket 审核数
 限制服务器线程数
 999后期代码重新整合，上传git
 
-授课
+
 删除审核不删wx_student
 openId重复
 1选课加锁
-
--- 注册码表（id,注册码，disable‘true’|‘false’）
-DROP TABLE IF EXISTS `register_code`;
-CREATE TABLE register_code(
-  `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `code` VARCHAR(5) NOT NULL UNIQUE COMMENT '注册码',
-  `disable` ENUM('true','false') NOT NULL DEFAULT 'false' COMMENT '是否不可用'
-);

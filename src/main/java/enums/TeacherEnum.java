@@ -3,11 +3,11 @@ package enums;
 public enum TeacherEnum {
     NONE("",0),
     ID("id",1),
-    TEACHER("teacher",2),
-    TEACHER_ID("teacher_id",3),
+    NAME("name",2),
+    WORKER_ID("worker_id",3),
     SEX("sex",4),
-    TEACHER_PHONE("teacher_phone",5),
-    TEACHER_MAIL("teacher_mail",6);
+    PHONE("phone",5),
+    EMAIL("email",6);
 
     private String name;
     private int index;

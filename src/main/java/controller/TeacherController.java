@@ -32,22 +32,7 @@ public class TeacherController {
     @Autowired
     TeacherService TeacherService;
 
-    /**
-     * 点击姓名显示详情页面
-     * @param  id 教师id
-     * @return json
-     */
-    @RequestMapping(value = {"/mapping-teacher_info-page-show"},produces = "text/plain;charset=utf-8")
-    @ResponseBody
-    public String teacherPageShow(String id) {
-        try {
-            String json= JsonUtils.objectToJson( TeacherService.selectById(Integer.valueOf(id)));
-            return json;
-        }catch (Exception e){
-            return "";
-        }
-    }
-
+    
     @RequestMapping(value = {"/loadTeacher"},produces = "text/plain;charset=utf-8")
     @ResponseBody
     public String allTeacherShow(HttpServletRequest request) {
@@ -64,7 +49,7 @@ public class TeacherController {
 
             Connection conn = ConnectDB.getConnection();
             String orderString3 = "order by " + TeacherEnum.getNameByIndex(Integer.valueOf(orderColumn)) + " " + order + " ";
-            String where = "where CONCAT(teacher,teacher_id,sex,teacher_phone,teacher_mail) LIKE '%" + search + "%'";
+            String where = "where CONCAT(name,worker_id,sex,phone,email) LIKE '%" + search + "%'";
 
             if ("".equals(search))
                 where="";

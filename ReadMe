@@ -1,4 +1,23 @@
 选课系统
 controller -》 service接口 -》 serviceImpl实现 -》 mapper接口 -》mapper.xml实现
 
+java        源码
+    const       保存一些变量
+    controller  负责接收前端传来的东西、写逻辑
+    dao         数据库的具体操作
+    enums       与前端dataTable顺序与数据库关联
+    filter      写一些过滤器
+    listen      写一些监听器
+    pojo        是数据库实体类
+    service     主要负责调用数据库操作的方法，与调用操作方法之前一些数据的处理，是接口来的，里面的impl是具体是实现
+    utils       写一些工具类
+
+resource    资源文件，一般情况不改
+
+webapp      前端相关
+    static/temp        上传图片临时文件夹
+    static/image       图片文件夹
+
+pom.xml         填写相关包依赖
+db.sql          填写设计的数据库
 云服务器数据库帐号密码都是root

@@ -80,9 +80,8 @@ public class WxController {
     @ResponseBody
     public String identityAuditAddWithTrans(HttpServletRequest request) {
         try {
-
             String openId = request.getParameter("openId").equals("underfined") ? null : request.getParameter("openId");
-            String sn = request.getParameter("student_name").equals("underfined") ? null : request.getParameter("student_name");
+            String stuName = request.getParameter("student_name").equals("underfined") ? null : request.getParameter("student_name");
             String parentName = request.getParameter("parent_name").equals("underfined") ? null : request.getParameter("parent_name");
             String mobile = request.getParameter("mobile").equals("underfined") ? null : request.getParameter("mobile");
             String parentCode = request.getParameter("parent_code").equals("underfined") ? null : request.getParameter("parent_code");
@@ -90,23 +89,36 @@ public class WxController {
             String classNow = request.getParameter("class_now").equals("underfined") ? null : request.getParameter("class_now");
             String registerCode = request.getParameter("register_code").equals("underfined") ? null : request.getParameter("register_code");
 
-            String stuName=new String(sn.getBytes(),"UTF-8");
-            System.out.println(stuName);
 
+            logger.error("------openId："+openId+"----------");
+            logger.error("------stuName："+stuName+"----------");
+            logger.error("------parentName："+parentName+"----------");
+            logger.error("------mobile："+mobile+"----------");
+            logger.error("------parentCode："+parentCode+"----------");
+            logger.error("------grade："+grade+"----------");
+            logger.error("------classNow："+classNow+"----------");
+            logger.error("------registerCode："+registerCode+"----------");
             if (openId == null || stuName == null || parentName == null || mobile == null ||parentCode==null|| grade == null || classNow == null ||
                     "".equals(openId) || "".equals(stuName) || "".equals(parentName) || "".equals(mobile) ||  "".equals(parentCode)||"".equals(grade) || "".equals(classNow)) {
+                logger.error("------学生信息不能有空----------");
                 return JsonUtils.objectToJson( wxResultJson.setIsSuccessfulAndMsg(0,"学生信息不能有空"));
             }
 
-            if (wxStudentService.selectByOpenId(openId) != null)
-                return JsonUtils.objectToJson( wxResultJson.setIsSuccessfulAndMsg(0,"openId重复了"));
+            if (wxStudentService.selectByOpenId(openId) != null) {
+                logger.error("------openId重复了----------");
+                return JsonUtils.objectToJson(wxResultJson.setIsSuccessfulAndMsg(0, "openId重复了"));
+            }
 
 
             RegisterCode checkCode=registerCodeService.selectByCode(registerCode);
-            if (checkCode==null)
+            if (checkCode==null) {
+                logger.error("------注册码不存在----------");
                 return JsonUtils.objectToJson(wxResultJson.setIsSuccessfulAndMsg(0, "注册码不存在"));
-            else if (Boolean.valueOf( checkCode.getCode()))
+            }
+            else if (Boolean.valueOf( checkCode.getCode())) {
+                logger.error("------注册码无效----------");
                 return JsonUtils.objectToJson(wxResultJson.setIsSuccessfulAndMsg(0, "注册码无效"));
+            }
             else if (!Boolean.valueOf( checkCode.getCode())) {
 
                 checkCode.setDisable("true");
@@ -165,14 +177,17 @@ public class WxController {
 
                 identityAuditingService.insert(identityAuditing);
                 wxStudentService.insert(new WxStudent(null, openId, null, identityAuditing.getId(), null));
+                logger.error("------成功----------");
                 return JsonUtils.objectToJson(wxResultJson.setIsSuccessfulAndMsg(1, ""));
             }else {
                 System.out.println("注册码意外情况");
+                logger.error("------注册码意外情况----------");
                 return JsonUtils.objectToJson(wxResultJson.setIsSuccessfulAndMsg(0, "注册码意外情况"));
             }
         } catch (Exception e) {
             logger.error(e.getMessage());
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            logger.error("------发生异常----------");
             System.out.println("发生异常");
             return JsonUtils.objectToJson( wxResultJson.setIsSuccessfulAndMsg(0,"发生异常"));
         }
